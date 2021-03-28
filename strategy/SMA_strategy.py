@@ -5,23 +5,40 @@
 # @File    : SMA_strategy.py
 import ccxt
 import talib
+import numpy as np
 import pandas as pd
 
-exchange = ccxt.okex()
+exchange = ccxt.binance()
 
-# data = exchange.fetch_ohlcv("EOS/USDT", timeframe="15m", limit=1500)
+history_df = pd.read_csv("dataset/ltc_15min.csv")
 
-# print(data)
-# df = pd.DataFrame(data, columns=["time_stamp", "open", "high", "low", "close", "vol"])
-# df['time_stamp'] = pd.to_datetime(df["time_stamp"], unit="ms")
-# print(df)
-# df.to_csv("dataset/ecos_15min.csv", index=False)
-# real = talib.SMA(df["close"], timeperiod=10)
-# print(real)
-history_df = pd.read_csv("dataset/Binance_EOSUSDT_1h.csv")
-# print(history_df['unix'][1])
-history_df["10MA"] = talib.SMA(history_df["close"], timeperiod=10)
-history_df["5MA"] = talib.SMA(history_df["close"], timeperiod=5)
+long_ma = 60
+short_ma = 30
+coin_name = "ltc"
+history_df["LongMA"] = talib.SMA(history_df["close"], timeperiod=long_ma)
+history_df["ShortMA"] = talib.SMA(history_df["close"], timeperiod=short_ma)
 
-print(history_df)
+# print(history_df)
+start_new = {"USDT": 100,
+             coin_name: 0}
 
+# print(len(history_df))
+
+for index, row in history_df.iterrows():
+    # print(row)
+    # exit()
+    if np.isnan(row['LongMA']) or np.isnan(row["ShortMA"]):
+        continue
+    # print(row)
+    if start_new["USDT"] > 0 and row["ShortMA"] > row["LongMA"]:
+        start_new[coin_name] = start_new["USDT"] / row['close']
+        start_new["USDT"] = 0
+        # print(start_new)
+        # break
+    if start_new[coin_name] > 0 and row["LongMA"] > row["ShortMA"]:
+        start_new["USDT"] = start_new[coin_name] * row["close"]
+        start_new[coin_name] = 0
+
+# print(start_new)
+print("币价值自身变化", history_df['close'][len(history_df) - 1] / history_df['open'][0])
+print("最终剩余价值", (row["close"] * start_new[coin_name] + start_new["USDT"])/100)
