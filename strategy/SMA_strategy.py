@@ -10,11 +10,10 @@ import pandas as pd
 
 exchange = ccxt.binance()
 
-history_df = pd.read_csv("dataset/ltc_15min.csv")
-
-long_ma = 60
-short_ma = 30
-coin_name = "ltc"
+history_df = pd.read_csv("dataset/4hour/ETH_4hour.csv")
+long_ma = 20
+short_ma = 10
+coin_name = "coin"
 history_df["LongMA"] = talib.SMA(history_df["close"], timeperiod=long_ma)
 history_df["ShortMA"] = talib.SMA(history_df["close"], timeperiod=short_ma)
 
