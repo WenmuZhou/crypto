@@ -2,7 +2,8 @@
 # -*- coding:utf-8 -*-
 import pandas as pd
 
-def evaluate_investment(source_data, tittle,time='交易日期'):
+
+def evaluate_investment(source_data, tittle, time='交易日期'):
     temp = source_data.copy()
     # ===新建一个dataframe保存回测指标
     results = pd.DataFrame()
@@ -13,7 +14,9 @@ def evaluate_investment(source_data, tittle,time='交易日期'):
     # ===计算年化收益
     # annual_return = (temp[tittle].iloc[-1]) ** (
     #         '1 days 00:00:00' / (temp[time].iloc[-1] - temp[time].iloc[0]) * 365) - 1
-    # results.loc[0, '年化收益'] = str(round(annual_return * 100, 2)) + '%'
+    annual_return = pow(temp[tittle].iloc[-1], 365 / len(temp)) - 1
+
+    results.loc[0, '年化收益'] = str(round(annual_return * 100, 2)) + '%'
 
     # ===计算最大回撤，最大回撤的含义：《如何通过3行代码计算最大回撤》https://mp.weixin.qq.com/s/Dwt4lkKR_PEnWRprLlvPVw
     # 计算当日之前的资金曲线的最高点
@@ -32,7 +35,6 @@ def evaluate_investment(source_data, tittle,time='交易日期'):
     results.loc[0, '最大回撤结束时间'] = str(end_date)
 
     # ===年化收益/回撤比：我个人比较关注的一个指标
-    # results.loc[0, '年化收益/回撤比'] = round(annual_return / abs(max_draw_down), 2)
+    results.loc[0, '年化收益/回撤比'] = round(annual_return / abs(max_draw_down), 2)
 
     return results.T
-
