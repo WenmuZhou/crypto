@@ -1,7 +1,6 @@
 # ！/usr/bin/env python
 # -*- coding:utf-8 -*-
 import ccxt
-# import talib
 
 exchange = ccxt.binance()
 

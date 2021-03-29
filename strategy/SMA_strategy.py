@@ -3,16 +3,13 @@
 # @Time    : 2021/3/26 15:21
 # @Author  : Adolf
 # @File    : SMA_strategy.py
-import ccxt
 import talib
 import numpy as np
 import pandas as pd
 
-exchange = ccxt.binance()
-
-history_df = pd.read_csv("dataset/4hour/ETH_4hour.csv")
-long_ma = 20
-short_ma = 10
+history_df = pd.read_csv("dataset/day/BTC.csv")
+long_ma = 10
+short_ma = 5
 coin_name = "coin"
 history_df["LongMA"] = talib.SMA(history_df["close"], timeperiod=long_ma)
 history_df["ShortMA"] = talib.SMA(history_df["close"], timeperiod=short_ma)
