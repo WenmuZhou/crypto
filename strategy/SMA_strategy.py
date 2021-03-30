@@ -7,9 +7,9 @@ import talib
 import numpy as np
 import pandas as pd
 
-history_df = pd.read_csv("dataset/day/BTC.csv")
-long_ma = 10
-short_ma = 5
+history_df = pd.read_csv("dataset/day/XRP.csv")
+long_ma = 60
+short_ma = 30
 coin_name = "coin"
 history_df["LongMA"] = talib.SMA(history_df["close"], timeperiod=long_ma)
 history_df["ShortMA"] = talib.SMA(history_df["close"], timeperiod=short_ma)

@@ -16,7 +16,7 @@ def ema_test(coin_name_, ma_len=10, mode="SMA"):
     df["EMA"] = talib.EMA(df["close"], timeperiod=ma_len)
     df["SMA"] = talib.SMA(df["close"], timeperiod=ma_len)
 
-    df.dropna(subset=['EMA', 'SMA'], inplace=True)
+    # df.dropna(subset=['EMA', 'SMA'], inplace=True)
 
     df['coin_pct'] = df['close'].pct_change(1)
 
@@ -29,6 +29,9 @@ def ema_test(coin_name_, ma_len=10, mode="SMA"):
 
     df.dropna(subset=['pos'], inplace=True)
     df.reset_index(drop=True, inplace=True)
+
+    if len(df) == 0:
+        return 0, 0
 
     df.loc[df['pos'] != df['pos'].shift(1), 'trade_time'] = df['time_stamp']
 
@@ -62,11 +65,12 @@ fin_list = []
 for coin_name in coin_list:
     for ma_len in ma_list:
         for mode_type in mode_list:
-            coin_net, strategy_net = ema_test(coin_name_="BTC", ma_len=10, mode="SMA")
+            coin_net, strategy_net = ema_test(coin_name_=coin_name, ma_len=ma_len, mode=mode_type)
             # print(coin_net, strategy_net)
-            res = [coin_name, ma_len, mode_type, coin_net, strategy_net, strategy_net > coin_net]
-            fin_list.append(res)
+            if coin_net != 0:
+                res = [coin_name, ma_len, mode_type, coin_net, strategy_net, strategy_net > coin_net]
+                fin_list.append(res)
 
-res_df = pd.DataFrame(fin_list)
-res_df.to_csv("result/单均线策略测试.csv")
+res_df = pd.DataFrame(fin_list, columns=["币名", "周期", "周期线类型", "币自身回报", "策略回报", "策略是否跑赢大盘"])
+res_df.to_csv("result/单均线策略测试.csv", encoding="gbk", index=False)
 print(res_df)
