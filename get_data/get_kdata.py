@@ -8,7 +8,7 @@ exchange = ccxt.binance()
 # exchange.apiKey = "e3cDWMh8N1uugwePjZK0OLZ73dMCl45kX7kIbniN9kjx42r5UtBAGs1S6JKvEXiu"
 # exchange.secret = "F6OShDNksFqTqCqD8mGbAEmi7sDubGWxHakra3nA8xVn3RWbw9qsDqNMi75OhNVG"
 #
-coin_list = ["BTC", "ETH", "EOS", "FIL", "LTC", "XRP", "DOT", "FIL", "KSM", "CAKE"]
+coin_list = ["BTC", "ETH", "EOS", "FIL", "LTC", "XRP", "DOT", "FIL", "KSM", "CAKE", "BNB"]
 
 
 # start_time = 1616016600000

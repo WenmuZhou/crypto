@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2021/3/29 19:37
 # @Author  : Adolf
-# @File    : ema_strategy.py
+# @File    : ma_1_strategy.py
 import talib
 import numpy as np
 import pandas as pd
@@ -11,7 +11,7 @@ trade_rate = 1.5 / 1000
 
 
 def ema_test(coin_name_, ma_len=10, mode="SMA"):
-    df = pd.read_csv("dataset/day/" + coin_name_ + ".csv")
+    df = pd.read_csv("dataset/30min/" + coin_name_ + ".csv")
 
     df["EMA"] = talib.EMA(df["close"], timeperiod=ma_len)
     df["SMA"] = talib.SMA(df["close"], timeperiod=ma_len)
