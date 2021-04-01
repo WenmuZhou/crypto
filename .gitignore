@@ -9,4 +9,5 @@ _build
 build/
 dist/
 
+.idea
 .vscode
