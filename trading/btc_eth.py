@@ -68,8 +68,10 @@ def auto_trade():
             exchange.create_limit_buy_order(symbol="BTC/USDT", price=trick["ask"],
                                             amount=balance_my["USDT"] / trick["ask"])
     elif now_style == "eth":
-        if balance_my["BTC"] != 0:
-            exchange.create_market_sell_order(symbol="BTC/ETH", amount=balance_my["BTC"])
+        if balance_my["BTC"] > 0.00001:
+            trick = exchange.fetch_ticker(symbol="ETH/BTC")
+            exchange.create_limit_buy_order(symbol="ETH/BTC",price=trick["ask"],
+                                            amount=balance_my["BTC"] / trick["ask"])
         elif balance_my["USDT"] > 1:
             trick = exchange.fetch_ticker(symbol="ETH/USDT")
             exchange.create_limit_buy_order(symbol="ETH/USDT", price=trick["ask"],

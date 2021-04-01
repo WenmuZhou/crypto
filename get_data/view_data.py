@@ -13,7 +13,7 @@ pd.set_option("display.max_rows", 1000)
 
 exchange = ccxt.binance()
 
-data = exchange.fetch_ohlcv("LTC/USDT", timeframe="30m", limit=100)
+data = exchange.fetch_ohlcv("ETH/USDT", timeframe="30m", limit=100)
 df = pd.DataFrame(data, columns=["time", "open", "high", "low", "close", "volume"])
 df["ma10"] = talib.SMA(df["close"], timeperiod=10)
 df["ma5"] = talib.SMA(df["close"], timeperiod=5)
