@@ -9,6 +9,6 @@ _build
 build/
 dist/
 
-.idea
-.vscode
+.idea/
+.vscode/
 .DS_Store
