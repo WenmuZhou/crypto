@@ -5,7 +5,7 @@
 # @File    : s_2b.py
 import pandas as pd
 
-df = pd.read_csv("result/牛熊分割线.csv", encoding="gbk")
+df = pd.read_csv("result/牛熊分割线熊市买入.csv", encoding="gbk")
 
 # print(df)
 tmp_dict = dict()
@@ -22,4 +22,4 @@ print(tmp_dict)
 
 df2 = pd.DataFrame(tmp_dict).T
 print(df2)
-df2.to_csv("result/牛熊分割线.csv", encoding="gbk")
+df2.to_csv("result/牛熊分割线熊市买入.csv", encoding="gbk")
