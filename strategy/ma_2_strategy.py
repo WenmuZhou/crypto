@@ -9,7 +9,7 @@ import pandas as pd
 
 
 def ma_2_test(coin_name, long_ma=60, short_ma=30):
-    history_df = pd.read_csv("dataset/30min/" + coin_name + ".csv")
+    history_df = pd.read_csv("dataset/day/" + coin_name + ".csv")
     coin_name = "coin"
     history_df["LongMA"] = talib.SMA(history_df["close"], timeperiod=long_ma)
     history_df["ShortMA"] = talib.SMA(history_df["close"], timeperiod=short_ma)
@@ -22,7 +22,7 @@ def ma_2_test(coin_name, long_ma=60, short_ma=30):
     history_df.reset_index(drop=True, inplace=True)
     # print(len(history_df))
     if len(history_df) == 0:
-        return 0,0
+        return 0, 0
 
     for index, row in history_df.iterrows():
         # print(row)
@@ -46,12 +46,19 @@ def ma_2_test(coin_name, long_ma=60, short_ma=30):
     coin_net = history_df['close'][len(history_df) - 1] / history_df['open'][0]
     strategy_net = (row["close"] * start_new[coin_name] + start_new["USDT"]) / 100
 
+    print("coin name:", coin_name)
+    print("time period", short_ma, long_ma)
+    print("coin_net", coin_net)
+    print("strategy_net", strategy_net)
     return coin_net, strategy_net
 
 
+# coin_net, strategy_net = ma_2_test(coin_name="BTC", long_ma=25, short_ma=7)
+# print("币自身回报", coin_net)
+# print("策略收益率", strategy_net)
 coin_list = ["BNB", "BTC", "DOT", "EOS", "ETH", "FIL", "LTC", "XRP"]
-long_ma_list = [5, 10, 20, 30, 60, 90, 120, 180, 240, 360]
-short_ma_list = [3, 5, 10, 20, 30, 50, 60, 90, 120, 180, 240]
+long_ma_list = [5, 7, 10, 20, 25, 30, 60, 90, 99, 120, 180, 240, 360]
+short_ma_list = [3, 5, 7, 10, 20, 25, 30, 50, 60, 90, 99, 120, 180, 240]
 
 fin_list = []
 for coin_name in coin_list:
@@ -65,8 +72,7 @@ for coin_name in coin_list:
                 if coin_net != 0:
                     res = [coin_name, short_ma, long_ma, coin_net, strategy_net, strategy_net > coin_net]
                     fin_list.append(res)
-                # break
 
 res_df = pd.DataFrame(fin_list, columns=["币名", "短均线周期", "长均线周期", "币自身回报", "策略回报", "策略是否跑赢大盘"])
-res_df.to_csv("result/双均线策略测试30分钟.csv", encoding="gbk", index=False)
+res_df.to_csv("result/双均线策略测试.csv", encoding="gbk", index=False)
 print(res_df)

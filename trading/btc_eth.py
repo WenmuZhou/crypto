@@ -82,12 +82,4 @@ def auto_trade():
         elif balance_my["ETH"] != 0:
             exchange.create_market_sell_order(symbol="ETH/USDT", amount=balance_my["ETH"])
 
-
-# while True:
-    # now_time = time.time()
-    # if int(now_time) % 86400000 < 10000:
 auto_trade()
-# time.sleep(400000)
-    # time.sleep(86399998)
-    # else:
-    #     time.sleep(10000)

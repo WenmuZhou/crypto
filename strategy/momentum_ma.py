@@ -4,6 +4,7 @@
 # @Author  : Adolf
 # @File    : momentum_ma.py
 import time
+import numpy as np
 import pandas as pd
 import talib
 
@@ -50,5 +51,29 @@ df["ltc_60_ma"] = talib.SMA(df['ltc_close'], timeperiod=60)
 df = df.dropna(how="any")
 df.reset_index(drop=True, inplace=True)
 
+df.loc[df["btc_close"] > df["btc_30_ma"], "btc_30_bull"] = 1
+df.loc[df["eth_close"] > df["eth_30_ma"], "eth_30_bull"] = 1
+df.loc[df["ltc_close"] > df["ltc_30_ma"], "ltc_30_bull"] = 1
+
+df.loc[df["btc_close"] > df["btc_60_ma"], "btc_60_bull"] = 1
+df.loc[df["eth_close"] > df["eth_60_ma"], "eth_60_bull"] = 1
+df.loc[df["ltc_close"] > df["ltc_60_ma"], "ltc_60_bull"] = 1
+
+df = df.fillna(0)
+df.loc[sum([df["btc_30_bull"], df["eth_30_bull"], df["ltc_30_bull"]]) > 1, "market_30_bull"] = 1
+df.loc[sum([df["btc_60_bull"], df["eth_60_bull"], df["ltc_60_bull"]]) > 1, "market_60_bull"] = 1
+df = df.fillna(0)
 print(df)
+
+df.loc[max(enumerate([df["btc_30_mom"], df["eth_30_mom"], df["ltc_30_mom"]]), key=lambda x: x[1])[0], 'style'] = 'coin1'
+df.loc[(df['coin1_mom'] < 0) & (df['coin2_mom'] < 0), 'style'] = 'empty'
+
+df['style'].fillna(method='ffill', inplace=True)
+# 收盘才能确定风格，实际的持仓pos要晚一天。
+df['pos'] = df['style'].shift(1)
+# 删除持仓为nan的天数
+df.dropna(subset=['pos'], inplace=True)
+
+df.loc[df['pos'] == 'coin1', 'strategy_pct'] = df['coin1_pct']
+df.loc[df['pos'] == 'coin2', 'strategy_pct'] = df['coin2_pct']
 # print(df_coin1)
