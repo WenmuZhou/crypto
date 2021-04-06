@@ -9,9 +9,9 @@ pd.set_option("expand_frame_repr", False)
 pd.set_option("display.max_rows", 1000)
 
 df_coin1 = pd.read_csv("dataset/day/BTC.csv")
-df_coin2 = pd.read_csv("dataset/day/LTC.csv")
+df_coin2 = pd.read_csv("dataset/day/ETH.csv")
 
-trade_rate = 2 / 1000
+trade_rate = 1.5 / 1000
 # trade_rate = 0
 momentum_days = 20
 
@@ -80,4 +80,5 @@ plt.show()
 #
 # # 保存文件
 print(df.tail(10))
-# df.to_csv('result/数字货币轮动.csv', index=False)
+print(df["strategy_net"])
+df.to_csv('result/数字货币轮动.csv', index=False)

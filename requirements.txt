@@ -3,4 +3,4 @@ pandas
 numpy
 matplotlib
 mplfinance
-backtrader[plotting]
+backtrader
