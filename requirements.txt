@@ -1,0 +1,6 @@
+ccxt
+pandas
+numpy
+matplotlib
+mplfinance
+backtrader[plotting]
