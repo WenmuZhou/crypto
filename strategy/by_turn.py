@@ -9,7 +9,7 @@ pd.set_option("expand_frame_repr", False)
 pd.set_option("display.max_rows", 1000)
 
 df_coin1 = pd.read_csv("dataset/day/BTC.csv")
-df_coin2 = pd.read_csv("dataset/day/ETH.csv")
+df_coin2 = pd.read_csv("dataset/day/LTC.csv")
 
 trade_rate = 2 / 1000
 # trade_rate = 0
