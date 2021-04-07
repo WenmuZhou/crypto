@@ -23,7 +23,7 @@ def auto_trade():
             print(coin)
             balance_my[coin["asset"]] = float(coin["free"])
 
-    momentum_days = 17
+    momentum_days = 10
 
     data_btc = exchange.fetch_ohlcv("BTC/USDT", timeframe="1d", limit=30)
     date_eth = exchange.fetch_ohlcv("ETH/USDT", timeframe="1d", limit=30)

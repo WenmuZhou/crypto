@@ -4,10 +4,12 @@
 # @Author  : Adolf
 # @File    : two_ma_pro.py
 import os
+import talib
 import pandas as pd
 
-btc_df = pd.read_csv("dataset/day/BTC.csv")
-eth_df = pd.read_csv("dataset/day/ETH.csv")
-eos_df = pd.read_csv("dataset/day/EOS.csv")
-ltc_df = pd.read_csv("dataset/day/LTC.csv")
-xrp_df = pd.read_csv("dataset/day/XRP.csv")
+df = pd.read_csv("dataset/day/LTC.csv")
+
+df["ma_short"] = talib.SMA(df["close"], timeperiod=7)
+df["ma_long"] = talib.SMA(df["close"], timeperiod=25)
+
+df[(df["long_ma"]<df["ma_short"])]
