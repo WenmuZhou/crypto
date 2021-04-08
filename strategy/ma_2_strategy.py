@@ -60,6 +60,7 @@ coin_list = ["BNB", "BTC", "DOT", "EOS", "ETH", "FIL", "LTC", "XRP"]
 long_ma_list = [5, 7, 10, 20, 25, 30, 60, 90, 99, 120, 180, 240, 360]
 short_ma_list = [3, 5, 7, 10, 20, 25, 30, 50, 60, 90, 99, 120, 180, 240]
 
+
 fin_list = []
 for coin_name in coin_list:
     for long_ma in long_ma_list:

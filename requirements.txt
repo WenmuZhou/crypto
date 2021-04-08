@@ -4,3 +4,5 @@ numpy
 matplotlib
 mplfinance
 backtrader
+tqdm
+ray
