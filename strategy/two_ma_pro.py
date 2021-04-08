@@ -6,10 +6,10 @@
 import os
 import talib
 import pandas as pd
+import mplfinance as mp
 
 df = pd.read_csv("dataset/day/LTC.csv")
 
 df["ma_short"] = talib.SMA(df["close"], timeperiod=7)
 df["ma_long"] = talib.SMA(df["close"], timeperiod=25)
 
-df[(df["long_ma"]<df["ma_short"])]
