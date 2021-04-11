@@ -6,3 +6,4 @@ mplfinance
 backtrader
 tqdm
 ray
+scikit-opt
