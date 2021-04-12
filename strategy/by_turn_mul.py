@@ -76,12 +76,12 @@ def turn_strategy(coin_list_, momentum_day_):
 
 
 # coin_list = ["BTC", "ETH", "EOS", "LTC", "XRP"]
-coin_list = ["BTC", "ETH"]
+coin_list = ["BTC", "ETH", "BNB"]
 # momentum_day = 18
-for momentum_day in range(3, 31):
-    df = turn_strategy(coin_list, momentum_day_=momentum_day)
-    print(momentum_day, df.tail(1)["strategy_net"].item())
+# for momentum_day in range(3, 31):
+#     df = turn_strategy(coin_list, momentum_day_=momentum_day)
+#     print(momentum_day, df.tail(1)["strategy_net"].item())
+df = turn_strategy(coin_list,momentum_day_=20)
+print(df.tail)
 
-print(df.tail(1))
-
-# res_df.to_csv('result/数字货币轮动_测试.csv', index=False)
+df.to_csv('result/20_btc_eth_ltc_bnb_turn.csv', index=False)

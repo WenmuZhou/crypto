@@ -87,8 +87,8 @@ coin_list = ["BTC", "ETH", "EOS", "LTC", "XRP", "BNB", "DOT", "FIL"]
 @ray.remote
 def ray_accelerate(coin_name):
     res_item = []
-    for short_period in range(3, 61):
-        for long_period in range(7, 100):
+    for short_period in range(3, 31):
+        for long_period in range(7, 61):
             if short_period >= long_period:
                 continue
             coin_net, strategy_net = main_two_ma_strategy(coin_name_=coin_name, long_period_=long_period,
@@ -101,7 +101,10 @@ def ray_accelerate(coin_name):
 # tqdm_coin_list = tqdm(coin_list)
 
 futures = [ray_accelerate.remote(i) for i in coin_list]
-print(ray.get(futures))
+# print(ray.get(futures))
+res = ray.get(futures)
+res_df = pd.DataFrame(res, columns=["coin", "short_period", "long_period", "coin_net", "strategy_net", "is_win"])
+print(res_df)
 
 # res = []
 
