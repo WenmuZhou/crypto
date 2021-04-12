@@ -24,8 +24,9 @@ def turn_strategy(coin_list_, momentum_day_):
         df_[coin_name + '_pct'] = df_['close'].pct_change(periods=1)
         df_[coin_name + '_momentum'] = df_['close'].pct_change(periods=momentum_day_)
         # print(df_)
-        del df_['high'], df_['low'], df_['vol'], df_['time_stamp']
-        df_ = df_[["time", "open", "close", coin_name + '_pct', coin_name + '_momentum']]
+        df_['time_stamp'] = pd.to_datetime(df_["time"], unit="ms")
+        del df_['high'], df_['low'], df_['vol'], df_['time']
+        df_ = df_[["time_stamp", "open", "close", coin_name + '_pct', coin_name + '_momentum']]
         df_.rename(columns={'open': coin_name + '_open', 'close': coin_name + '_close'}, inplace=True)
         # print(df)
         if res_df is None:
@@ -33,7 +34,7 @@ def turn_strategy(coin_list_, momentum_day_):
         else:
             print(res_df)
             print(df_)
-            res_df = pd.merge(left=res_df, right=df_, how='left', left_on=['time'], right_on=["time"], validate="1:1")
+            res_df = pd.merge(left=res_df, right=df_, how='left', left_on=['time_stamp'], right_on=["time_stamp"])
 
     res_df = res_df.dropna(how="any")
     res_df.reset_index(drop=True, inplace=True)
