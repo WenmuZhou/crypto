@@ -60,7 +60,7 @@ def auto_trade():
     print(balance_my)
 
     if now_style == "btc":
-        if balance_my["ETH"] != 0:
+        if balance_my["ETH"] >= 0.001:
             exchange.create_market_sell_order(symbol="ETH/BTC", amount=balance_my["ETH"])
         elif balance_my["USDT"] > 1:
             trick = exchange.fetch_ticker(symbol="BTC/USDT")
