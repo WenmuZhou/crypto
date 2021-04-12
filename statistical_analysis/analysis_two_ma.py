@@ -7,8 +7,10 @@
 # @Function  :
 import pandas as pd
 
-df = pd.read_csv("result/two_ma_pro.csv")
+pd.set_option("expand_frame_repr", False)
 
 # print(df)
 # print(df["is_win"].count())
-print(df.describe())
+# print(df.describe())
+df = pd.read_csv("dataset/day/ETH.csv")
+print(df)

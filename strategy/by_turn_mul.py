@@ -23,18 +23,23 @@ def turn_strategy(coin_list_, momentum_day_):
         df_ = pd.read_csv("dataset/day/" + coin_name + ".csv")
         df_[coin_name + '_pct'] = df_['close'].pct_change(periods=1)
         df_[coin_name + '_momentum'] = df_['close'].pct_change(periods=momentum_day_)
-        del df_['high'], df_['low'], df_['vol']
+        # print(df_)
+        del df_['high'], df_['low'], df_['vol'], df_['time_stamp']
+        df_ = df_[["time", "open", "close", coin_name + '_pct', coin_name + '_momentum']]
         df_.rename(columns={'open': coin_name + '_open', 'close': coin_name + '_close'}, inplace=True)
         # print(df)
         if res_df is None:
             res_df = df_
         else:
-            res_df = pd.merge(res_df, df_, how='outer', on=['time_stamp'])
+            print(res_df)
+            print(df_)
+            res_df = pd.merge(left=res_df, right=df_, how='left', left_on=['time'], right_on=["time"], validate="1:1")
 
     res_df = res_df.dropna(how="any")
     res_df.reset_index(drop=True, inplace=True)
 
-    # print(res_df)
+    print(res_df)
+    exit()
     for index, row in res_df.iterrows():
         nb_coin_name = "empty"
         max_mom = 0
@@ -76,12 +81,12 @@ def turn_strategy(coin_list_, momentum_day_):
 
 
 # coin_list = ["BTC", "ETH", "EOS", "LTC", "XRP"]
-coin_list = ["BTC", "ETH", "BNB"]
+coin_list = ["BTC", "ETH"]
 # momentum_day = 18
 # for momentum_day in range(3, 31):
 #     df = turn_strategy(coin_list, momentum_day_=momentum_day)
 #     print(momentum_day, df.tail(1)["strategy_net"].item())
-df = turn_strategy(coin_list,momentum_day_=20)
+df = turn_strategy(coin_list, momentum_day_=20)
 print(df.tail)
 
 df.to_csv('result/20_btc_eth_ltc_bnb_turn.csv', index=False)
