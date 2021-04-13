@@ -34,7 +34,7 @@ def turn_strategy(coin_list_, momentum_day_):
         else:
             print(res_df)
             print(df_)
-            res_df = pd.merge(left=res_df, right=df_, how='left', left_on=['time_stamp'], right_on=["time_stamp"])
+            res_df = pd.merge(left=res_df, right=df_, how='left', on=['time_stamp'])
 
     res_df = res_df.dropna(how="any")
     res_df.reset_index(drop=True, inplace=True)

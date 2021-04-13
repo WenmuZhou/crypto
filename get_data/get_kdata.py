@@ -15,13 +15,14 @@ coin_list = ["BTC", "ETH", "EOS", "FIL", "LTC", "XRP", "DOT", "FIL", "KSM", "CAK
 # time_diff = 899100000
 def get_exchange_data(coin_name):
     res_data = []
-    for i in range(20):
+    for i in range(5):
         data = exchange.fetch_ohlcv(coin_name + "/USDT", timeframe="1d", limit=1000)
         res_data = data + res_data
     # print(res_data)
     print(len(res_data))
     df = pd.DataFrame(res_data, columns=["time", "open", "high", "low", "close", "vol"])
     df['time_stamp'] = pd.to_datetime(df["time"], unit="ms")
+    df.drop_duplicates(subset=['time_stamp'], inplace=True)
     df.to_csv("dataset/day/" + coin_name + ".csv", index=False)
 
 
