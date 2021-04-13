@@ -13,7 +13,7 @@ pd.set_option("display.max_rows", 2000)
 # print(df)
 # print(df["is_win"].count())
 # print(df.describe())
-df1 = pd.read_csv("dataset/day/ETH.csv")
+df1 = pd.read_csv("dataset/1d/ETH.csv")
 df1['coin1_pct'] = df1['close'].pct_change(periods=1)
 df1['coin1_momentum'] = df1['close'].pct_change(periods=20)
 # print(df_)
@@ -22,7 +22,7 @@ del df1['high'], df1['low'], df1['vol'], df1['time']
 df1 = df1[["time_stamp", "open", "close", 'coin1_pct', 'coin1_momentum']]
 df1.rename(columns={'open': 'coin1_open', 'close': 'coin1_close'}, inplace=True)
 
-df2 = pd.read_csv("dataset/day/BTC.csv")
+df2 = pd.read_csv("dataset/1d/BTC.csv")
 df2['coin2_pct'] = df2['close'].pct_change(periods=1)
 df2['coin2_momentum'] = df2['close'].pct_change(periods=20)
 df2['time_stamp'] = pd.to_datetime(df2["time"], unit="ms")
