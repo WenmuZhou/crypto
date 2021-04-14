@@ -14,15 +14,20 @@ exchange.apiKey = "e3cDWMh8N1uugwePjZK0OLZ73dMCl45kX7kIbniN9kjx42r5UtBAGs1S6JKvE
 exchange.secret = "F6OShDNksFqTqCqD8mGbAEmi7sDubGWxHakra3nA8xVn3RWbw9qsDqNMi75OhNVG"
 
 
+# wenmu
+# exchange.apiKey = "J0p53QWHzOaU6h7ZmmGukFfJ7C97tN3rhhs7s3jFmZJ2rNHZvxYvoYDHklMrWWZq"
+# exchange.secret = "0MOMZJC3fNW0FsDL5Xu3qj2YNK8dPVqDgbxqR3USCi396uy1aCXxW2Tto78nuGWA"
+
+
 def auto_trade():
     balance = exchange.fetch_balance()
     balance_my = dict()
-
+    # print(balance)
     for coin in balance["info"]["balances"]:
         if coin["asset"] in ["USDT", "BTC", "ETH"]:
-            print(coin)
+            # print(coin)
             balance_my[coin["asset"]] = float(coin["free"])
-
+    print(balance_my)
     momentum_days = 10
 
     data_btc = exchange.fetch_ohlcv("BTC/USDT", timeframe="1d", limit=30)
@@ -70,7 +75,7 @@ def auto_trade():
     elif now_style == "eth":
         if balance_my["BTC"] > 0.0001:
             trick = exchange.fetch_ticker(symbol="ETH/BTC")
-            exchange.create_limit_buy_order(symbol="ETH/BTC",price=trick["ask"],
+            exchange.create_limit_buy_order(symbol="ETH/BTC", price=trick["ask"],
                                             amount=balance_my["BTC"] / trick["ask"])
         elif balance_my["USDT"] > 1:
             trick = exchange.fetch_ticker(symbol="ETH/USDT")
@@ -81,5 +86,6 @@ def auto_trade():
             exchange.create_market_sell_order(symbol="BTC/USDT", amount=balance_my["BTC"])
         elif balance_my["ETH"] != 0:
             exchange.create_market_sell_order(symbol="ETH/USDT", amount=balance_my["ETH"])
+
 
 auto_trade()
