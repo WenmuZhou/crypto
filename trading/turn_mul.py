@@ -7,6 +7,9 @@
 # @Function  :
 import ccxt
 import pandas as pd
+import json
+import requests
+import logging
 
 exchange = ccxt.binance()
 
@@ -19,6 +22,30 @@ exchange.apiKey = "J0p53QWHzOaU6h7ZmmGukFfJ7C97tN3rhhs7s3jFmZJ2rNHZvxYvoYDHklMrW
 exchange.secret = "0MOMZJC3fNW0FsDL5Xu3qj2YNK8dPVqDgbxqR3USCi396uy1aCXxW2Tto78nuGWA"
 
 coin_list = ["BTC", "ETH", "EOS", "XRP", "DOT", "BNB", "ADA", "UNI"]
+
+
+def post_msg_to_dingtalk(title="quant", msg="",
+                         token="f0e92e8bb1c4d9c9d838f50b1c0fd627760f50121d551c26068d23086714bfaa",
+                         at=[], type="markdown"):
+    url = "https://oapi.dingtalk.com/robot/send?access_token=" + token
+    if type == "markdown":
+        # 使用markdown时at不起作用，大佬们有空调一下
+        data = {"msgtype": "markdown",
+                "markdown": {"title": "[quant]" + title, "text": "" + msg},
+                "at": {}
+                }
+    if type == "text":
+        data = {"msgtype": "text",
+                "text": {"content": "[quant]" + title + "-" + msg},
+                "at": {}
+                }
+    data["at"]["atMobiles"] = at
+    json_data = json.dumps(data)
+    try:
+        response = requests.post(url=url, data=json_data, headers={"Content-Type": "application/json"}).json()
+        assert response["errcode"] == 0
+    except:
+        logging.getLogger().error("发送钉钉提醒失败，请检查")
 
 
 def get_balance_info(coin_list):
@@ -43,11 +70,11 @@ def get_balance_info(coin_list):
                     max_value_coin = coin["asset"]
     print("how much money I have:", balance_my_value * 6.72)
 
-    return balance_my, max_value_coin
+    return balance_my, max_value_coin, balance_my_value
 
 
 def auto_trade_v2(coin_list):
-    balance_my, max_value_coin = get_balance_info(coin_list)
+    balance_my, max_value_coin, balance_my_value = get_balance_info(coin_list)
     momentum_days = 5
 
     coin_mom = {}
@@ -85,6 +112,9 @@ def auto_trade_v2(coin_list):
             exchange.create_limit_buy_order(symbol=now_style + "/USDT", price=trick["ask"],
                                             amount=balance_my["USDT"] / trick['ask'])
 
+    balance_my_new, max_value_coin_new, balance_my_value = get_balance_info(coin_list)
+    post_msg_to_dingtalk(
+        msg="原来持有的币种：{},买入的新币种为：{},账户余额：{}".format(max_value_coin, max_value_coin_new, balance_my_value * 6.72))
     # balance_my_new, max_value_coin_new = get_balance_info(coin_list)
     # print("balance_my_new", balance_my_new)
     # print("max_value_coin_new", max_value_coin_new)
@@ -92,6 +122,8 @@ def auto_trade_v2(coin_list):
 
 auto_trade_v2(coin_list)
 
-balance_my_new, max_value_coin_new = get_balance_info(coin_list)
-print("balance_my_new:", balance_my_new)
-print("max_value_coin_new:ZZ", max_value_coin_new)
+# print("balance_my_new:", balance_my_new)
+# print("max_value_coin_new:ZZ", max_value_coin_new)
+
+
+# post_msg_to_dingtalk(msg="test!test!")

@@ -7,3 +7,4 @@ backtrader
 tqdm
 ray
 scikit-opt
+requests
