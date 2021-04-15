@@ -6,7 +6,9 @@
 # import numpy as np
 import numpy as np
 import pandas as pd
+import ray
 
+ray.init()
 # import time
 # import mplfinance as mlp
 import matplotlib.pyplot as plt
@@ -17,11 +19,12 @@ pd.set_option("display.max_rows", 1000)
 trade_rate = 1.5 / 1000
 
 
+@ray.remote
 def turn_strategy(coin_list_, short_momentum_day_, long_momentum_day_):
     res_df = None
     for coin_name in coin_list_:
         # print(coin_name)
-        df_ = pd.read_csv("dataset/4h/" + coin_name + ".csv")
+        df_ = pd.read_csv("dataset/1h/" + coin_name + ".csv")
         # print("coin name:", coin_name)
         # print("how long test:", len(df_))
         # print('=' * 20)
@@ -98,32 +101,41 @@ def turn_strategy(coin_list_, short_momentum_day_, long_momentum_day_):
     # 将无关的变量删除
     res_df.drop(['max2here', 'dd2here'], axis=1, inplace=True)
 
-    return res_df, max_draw_down, start_date, end_date
+    # return res_df, max_draw_down, start_date, end_date
+    return res_df.tail(1)['strategy_net'].item(), max_draw_down, start_date, end_date
 
 
-coin_list = ["BTC", "ETH", "DOT", "ADA", "UNI", "EOS", "BNB", "XRP"]
-# coin_list = ["BTC", "ETH"]
+# coin_list = ["BTC", "ETH", "DOT", "ADA", "UNI", "EOS", "BNB", "XRP"]
+coin_list = ["BTC", "ETH"]
+
+futures = [turn_strategy.remote(coin_list, short_momentum_day_=i, long_momentum_day_=i) for i in range(3, 101)]
+result = ray.get(futures)
+
+for i in range(len(result)):
+    print(i, result[i + 3][:2])
+    # print(result[i - 3][1])
+
 # momentum_day = 18
 # for momentum_day in range(3, 31):
 #     df = turn_strategy(coin_list, momentum_day_=momentum_day)
 #     print(momentum_day, df.tail(1)["strategy_net"].item())
-res_list = list()
-for i in range(3, 101):
-    df, max_draw_down, start_date, end_date = turn_strategy(coin_list, short_momentum_day_=i, long_momentum_day_=i)
-    # print(len(df))
-    # print('time period:', i)
-    # print('strategy net:', df.tail(1)['strategy_net'].item())
-    # print('-' * 100)
-    print(i, df.tail(1)['strategy_net'].item())
-    print(max_draw_down)
-    res_list.append(df.tail(1)['strategy_net'].item())
-    # print(df.columns)
-    print('=' * 20)
-    # for columns_name in df.columns.tolist():
-    #     if "_net" not in columns_name:
-    #         continue
-    #     plt.plot(df['time_stamp'], df[columns_name], label=columns_name)
-    # break
+# res_list = list()
+# for i in range(3, 101):
+#     df, max_draw_down, start_date, end_date = turn_strategy(coin_list, short_momentum_day_=i, long_momentum_day_=i)
+# print(len(df))
+# print('time period:', i)
+# print('strategy net:', df.tail(1)['strategy_net'].item())
+# print('-' * 100)
+# print(i, df.tail(1)['strategy_net'].item(),max_draw_down)
+# print(max_draw_down)
+# res_list.append(df.tail(1)['strategy_net'].item())
+# print(df.columns)
+# print('=' * 20)
+# for columns_name in df.columns.tolist():
+#     if "_net" not in columns_name:
+#         continue
+#     plt.plot(df['time_stamp'], df[columns_name], label=columns_name)
+# break
 
 # plt.plot(res_list)
 # plt.show()
