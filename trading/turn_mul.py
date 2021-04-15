@@ -90,8 +90,8 @@ def auto_trade_v2(coin_list):
     # print("max_value_coin_new", max_value_coin_new)
 
 
-# auto_trade_v2(coin_list)
+auto_trade_v2(coin_list)
 
 balance_my_new, max_value_coin_new = get_balance_info(coin_list)
 print("balance_my_new:", balance_my_new)
-print("max_value_coin_new:", max_value_coin_new)
+print("max_value_coin_new:ZZ", max_value_coin_new)
