@@ -9,10 +9,9 @@ import ccxt
 import pandas as pd
 import datetime
 from trading.utils import post_msg_to_dingtalk, get_balance_info
-from trading.laboratory import api_key_dict,api_secret_dict
+from trading.laboratory import api_key_dict, api_secret_dict
 
 exchange = ccxt.binance()
-
 
 # wenmu
 exchange.apiKey = api_key_dict["wenmu"]
@@ -61,19 +60,21 @@ def auto_trade_v2(coin_list):
                                             amount=balance_my["USDT"] / trick['ask'])
 
     balance_my_new, max_value_coin_new, balance_my_value = get_balance_info(coin_list, exchange)
-    post_msg_to_dingtalk(
-        msg="当前时间：{},原来持有的币种：{},买入的新币种为：{},账户余额：{}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                                                           max_value_coin, max_value_coin_new, balance_my_value * 6.72))
+    post_msg_to_dingtalk(title="rich",
+                         msg="当前时间：{},原来持有的币种：{},买入的新币种为：{},账户余额：{}".format(
+                             datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                             max_value_coin, max_value_coin_new, balance_my_value * 6.72),
+                         token="8392f247561974cf01f63efc77bfeb814c70a00453aee8eb26c405081af03dbe")
     # balance_my_new, max_value_coin_new = get_balance_info(coin_list)
     # print("balance_my_new", balance_my_new)
     # print("max_value_coin_new", max_value_coin_new)
 
 
-# auto_trade_v2(coin_list)
+auto_trade_v2(coin_list)
 
-balance_my_new, max_value_coin_new, balance_my_value = get_balance_info(coin_list, exchange)
-print("balance_my_new:", balance_my_new)
-print("max_value_coin_new:", max_value_coin_new)
-print("balance_my_value:", balance_my_value)
+# balance_my_new, max_value_coin_new, balance_my_value = get_balance_info(coin_list, exchange)
+# print("balance_my_new:", balance_my_new)
+# print("max_value_coin_new:", max_value_coin_new)
+# print("balance_my_value:", balance_my_value)
 
 # post_msg_to_dingtalk(msg="test!test!")
