@@ -13,7 +13,6 @@ from trading.laboratory import api_key_dict, api_secret_dict
 
 exchange = ccxt.binance()
 
-# wenmu
 exchange.apiKey = api_key_dict["wenmu"]
 exchange.secret = api_secret_dict["wenmu"]
 

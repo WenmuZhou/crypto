@@ -19,7 +19,7 @@ trade_rate = 1.5 / 1000
 
 
 def main_two_ma_strategy(coin_name_, short_period_, long_period_):
-    df = pd.read_csv("dataset/day/" + coin_name_ + ".csv")
+    df = pd.read_csv("dataset/15m/" + coin_name_ + ".csv")
     df["ma_short"] = talib.SMA(df["close"], timeperiod=short_period_)
     df["ma_long"] = talib.SMA(df["close"], timeperiod=long_period_)
     df.rename(columns={"vol": "volume"}, inplace=True)
@@ -87,8 +87,8 @@ coin_list = ["BTC", "ETH", "EOS", "LTC", "XRP", "BNB", "DOT", "FIL"]
 @ray.remote
 def ray_accelerate(coin_name):
     res_item = []
-    for short_period in range(3, 31):
-        for long_period in range(7, 61):
+    for short_period in range(3, 201):
+        for long_period in range(7, 251):
             if short_period >= long_period:
                 continue
             coin_net, strategy_net = main_two_ma_strategy(coin_name_=coin_name, long_period_=long_period,
@@ -98,14 +98,17 @@ def ray_accelerate(coin_name):
     return res_item
 
 
-# tqdm_coin_list = tqdm(coin_list)
+# print(main_two_ma_strategy("LTC", 7, 25))
+# exit()
 
 futures = [ray_accelerate.remote(i) for i in coin_list]
-# print(ray.get(futures))
-res = ray.get(futures)
+res = ray.get(futures)[0]
+# print(res)
 res_df = pd.DataFrame(res, columns=["coin", "short_period", "long_period", "coin_net", "strategy_net", "is_win"])
-print(res_df)
+# print(res_df)
+res_df.to_csv("result/two_ma_pro_15min.csv", index=False)
 
+# tqdm_coin_list = tqdm(coin_list)
 # res = []
 
 # for coin_name in tqdm_coin_list:
@@ -124,7 +127,7 @@ print(res_df)
 # print("=============================")
 
 # res_df = pd.DataFrame(res, columns=["coin", "short_period", "long_period", "coin_net", "strategy_net", "is_win"])
-# res_df.to_csv("result/two_ma_pro.csv", index=False)
+# res_df.to_csv("result/two_ma_pro_15min.csv", index=False)
 # print(res_df)
 # if plot_true:
 #     plot_image(df)
