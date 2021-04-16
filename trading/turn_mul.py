@@ -61,8 +61,9 @@ def auto_trade_v2(coin_list):
 
     balance_my_new, max_value_coin_new, balance_my_value = get_balance_info(coin_list, exchange)
     post_msg_to_dingtalk(title="rich",
-                         msg="当前时间：{},原来持有的币种：{},买入的新币种为：{},账户余额：{}".format(
+                         msg="当前时间：{},原来持有的币种：{},策略名称：{},买入的新币种为：{},账户余额：{}".format(
                              datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                             "rotational chase",
                              max_value_coin, max_value_coin_new, balance_my_value * 6.72),
                          token="8392f247561974cf01f63efc77bfeb814c70a00453aee8eb26c405081af03dbe")
     # balance_my_new, max_value_coin_new = get_balance_info(coin_list)
