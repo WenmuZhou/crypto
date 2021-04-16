@@ -8,8 +8,8 @@ import matplotlib.pyplot as plt
 pd.set_option("expand_frame_repr", False)
 pd.set_option("display.max_rows", 1000)
 
-df_coin1 = pd.read_csv("dataset/day/BTC.csv")
-df_coin2 = pd.read_csv("dataset/day/ETH.csv")
+df_coin1 = pd.read_csv("dataset/1d/BTC.csv")
+df_coin2 = pd.read_csv("dataset/1d/ETH.csv")
 
 trade_rate = 1.5 / 1000
 # trade_rate = 0
@@ -63,6 +63,8 @@ df.reset_index(drop=True, inplace=True)
 # # 计算净值
 df['coin1_net'] = df['coin1_close'] / df['coin1_close'][0]
 df['coin2_net'] = df['coin2_close'] / df['coin2_close'][0]
+
+df['coin1_net_test'] = (1 + df['coin1_pct']).cumprod()
 df['strategy_net'] = (1 + df['strategy_pct_adjust']).cumprod()
 
 # df['time_stamp'] = df['time_stamp'].apply(lambda x: int(time.mktime(time.strptime(x, "%Y-%m-%d %H:%M:%S")) * 1000))
@@ -73,12 +75,12 @@ res = evaluate_investment(df, 'strategy_net', time='time_stamp')
 print(res)
 #
 # # 绘制图形
-plt.plot(df['time_stamp'], df['strategy_net'], label='strategy')
-plt.plot(df['time_stamp'], df['coin1_net'], label='coin1_net')
-plt.plot(df['time_stamp'], df['coin2_net'], label='coin2_net')
-plt.show()
+# plt.plot(df['time_stamp'], df['strategy_net'], label='strategy')
+# plt.plot(df['time_stamp'], df['coin1_net'], label='coin1_net')
+# plt.plot(df['time_stamp'], df['coin2_net'], label='coin2_net')
+# plt.show()
 #
 # # 保存文件
-print(df.tail(10))
-print(df["strategy_net"])
-df.to_csv('result/数字货币轮动.csv', index=False)
+print(df.tail(1))
+# print(df["strategy_net"])
+# df.to_csv('result/数字货币轮动.csv', index=False)

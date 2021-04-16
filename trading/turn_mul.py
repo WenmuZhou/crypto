@@ -16,7 +16,7 @@ exchange = ccxt.binance()
 exchange.apiKey = api_key_dict["wenmu"]
 exchange.secret = api_secret_dict["wenmu"]
 
-coin_list = ["BTC", "ETH", "EOS", "XRP", "DOT", "BNB", "ADA", "UNI"]
+coin_list = ["BTC", "ETH", "EOS", "XRP", "DOT", "BNB", "ADA", "UNI", "DOGE", "FIL"]
 
 
 def auto_trade_v2(coin_list):
@@ -51,7 +51,7 @@ def auto_trade_v2(coin_list):
             trick = exchange.fetch_ticker(symbol=max_value_coin + "/USDT")
             exchange.create_limit_sell_order(symbol=max_value_coin + "/USDT", price=trick["bid"],
                                              amount=balance_my[max_value_coin])
-            balance_my_new, max_value_coin_new,balance_my_value = get_balance_info(coin_list, exchange)
+            balance_my_new, max_value_coin_new, balance_my_value = get_balance_info(coin_list, exchange)
 
         if now_style != "USDT":
             trick = exchange.fetch_ticker(symbol=now_style + "/USDT")
