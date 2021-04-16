@@ -10,6 +10,7 @@ import pandas as pd
 import json
 import requests
 import logging
+import datetime
 
 exchange = ccxt.binance()
 
@@ -114,7 +115,8 @@ def auto_trade_v2(coin_list):
 
     balance_my_new, max_value_coin_new, balance_my_value = get_balance_info(coin_list)
     post_msg_to_dingtalk(
-        msg="原来持有的币种：{},买入的新币种为：{},账户余额：{}".format(max_value_coin, max_value_coin_new, balance_my_value * 6.72))
+        msg="当前时间：{},原来持有的币种：{},买入的新币种为：{},账户余额：{}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                                                           max_value_coin, max_value_coin_new, balance_my_value * 6.72))
     # balance_my_new, max_value_coin_new = get_balance_info(coin_list)
     # print("balance_my_new", balance_my_new)
     # print("max_value_coin_new", max_value_coin_new)
