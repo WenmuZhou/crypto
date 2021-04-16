@@ -20,7 +20,7 @@ api_secret_dict = \
     {"wenmu": "0MOMZJC3fNW0FsDL5Xu3qj2YNK8dPVqDgbxqR3USCi396uy1aCXxW2Tto78nuGWA",
      "nan": "F6OShDNksFqTqCqD8mGbAEmi7sDubGWxHakra3nA8xVn3RWbw9qsDqNMi75OhNVG"}
 
-post_msg_to_dingtalk(title="rich", msg="当前时间：{}".format(
+post_msg_to_dingtalk(title="rich", msg="当前时间:{}".format(
     datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
                      token="8392f247561974cf01f63efc77bfeb814c70a00453aee8eb26c405081af03dbe")
 
@@ -31,7 +31,7 @@ for api_name, api_key in api_key_dict.items():
 
     balance_my, max_value_coin, balance_my_value = get_balance_info(coin_list, exchange)
 
-    post_msg_to_dingtalk(title="rich", msg="账户所有人：{}\n,账户余额：{}".format(
+    post_msg_to_dingtalk(title="rich", msg="账户所有人:{}\n,账户余额：{}".format(
         api_name, balance_my_value * 6.72),
                          token="8392f247561974cf01f63efc77bfeb814c70a00453aee8eb26c405081af03dbe")
 
