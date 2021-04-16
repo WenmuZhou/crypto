@@ -6,19 +6,13 @@
 # @File     : balance_inquire.py
 # @Function  :
 import ccxt
-from trading.utils import get_balance_info, post_msg_to_dingtalk
 import datetime
+from trading.utils import get_balance_info, post_msg_to_dingtalk
+from trading.laboratory import api_key_dict, api_secret_dict
 
 exchange = ccxt.binance()
 
 coin_list = ["BTC", "ETH", "EOS", "XRP", "DOT", "BNB", "ADA", "UNI"]
-
-api_key_dict = \
-    {"wenmu": "J0p53QWHzOaU6h7ZmmGukFfJ7C97tN3rhhs7s3jFmZJ2rNHZvxYvoYDHklMrWWZq",
-     "nan": "e3cDWMh8N1uugwePjZK0OLZ73dMCl45kX7kIbniN9kjx42r5UtBAGs1S6JKvEXiu"}
-api_secret_dict = \
-    {"wenmu": "0MOMZJC3fNW0FsDL5Xu3qj2YNK8dPVqDgbxqR3USCi396uy1aCXxW2Tto78nuGWA",
-     "nan": "F6OShDNksFqTqCqD8mGbAEmi7sDubGWxHakra3nA8xVn3RWbw9qsDqNMi75OhNVG"}
 
 post_msg_to_dingtalk(title="rich", msg="当前时间:{}".format(
     datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")),

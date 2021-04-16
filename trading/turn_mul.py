@@ -9,16 +9,14 @@ import ccxt
 import pandas as pd
 import datetime
 from trading.utils import post_msg_to_dingtalk, get_balance_info
+from trading.laboratory import api_key_dict,api_secret_dict
 
 exchange = ccxt.binance()
 
-# me
-# exchange.apiKey = "e3cDWMh8N1uugwePjZK0OLZ73dMCl45kX7kIbniN9kjx42r5UtBAGs1S6JKvEXiu"
-# exchange.secret = "F6OShDNksFqTqCqD8mGbAEmi7sDubGWxHakra3nA8xVn3RWbw9qsDqNMi75OhNVG"
 
 # wenmu
-exchange.apiKey = "J0p53QWHzOaU6h7ZmmGukFfJ7C97tN3rhhs7s3jFmZJ2rNHZvxYvoYDHklMrWWZq"
-exchange.secret = "0MOMZJC3fNW0FsDL5Xu3qj2YNK8dPVqDgbxqR3USCi396uy1aCXxW2Tto78nuGWA"
+exchange.apiKey = api_key_dict["wenmu"]
+exchange.secret = api_secret_dict["wenmu"]
 
 coin_list = ["BTC", "ETH", "EOS", "XRP", "DOT", "BNB", "ADA", "UNI"]
 
