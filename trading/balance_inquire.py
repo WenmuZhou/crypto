@@ -12,7 +12,7 @@ from trading.laboratory import api_key_dict, api_secret_dict
 
 exchange = ccxt.binance()
 
-coin_list = ["BTC", "ETH", "EOS", "XRP", "DOT", "BNB", "ADA", "UNI"]
+coin_list = ["BTC", "ETH", "EOS", "XRP", "DOT", "BNB", "ADA", "UNI", "DOGE", "FIL"]
 
 post_msg_to_dingtalk(title="rich", msg="当前时间:{}".format(
     datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
