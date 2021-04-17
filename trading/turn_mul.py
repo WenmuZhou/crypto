@@ -56,13 +56,14 @@ def auto_trade(coin_list, user, time_periods="4h", momentum_days=5, msg_to_ding=
                                             amount=balance_my["USDT"] / trick['ask'])
 
     balance_my_new, max_value_coin_new, balance_my_value = get_balance_info(coin_list, exchange)
-    print("")
+    if max_value_coin_new == max_value_coin:
+        msg_to_ding = False
     if msg_to_ding:
-        post_msg_to_dingtalk(msg="当前时间:{}\n\n账户所有人:{}\n\n原来持有的币种:{}\n\n"
-                                 "买入的新币种为:{}\n\n账户余额:{:.2f}元".format(
-            datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            user,
-            max_value_coin, max_value_coin_new, balance_my_value))
+        post_msg_to_dingtalk(
+            msg="调仓时间:{}\n\n账户所有人:{}\n\n原来持有的币种:{}\n\n买入的新币种为:{}\n\n账户余额:{:.2f}元".format(
+                datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                user,
+                max_value_coin, max_value_coin_new, balance_my_value))
 
 
 coin_list_1 = ["EOS", "ANT", "DOT", "CHZ", "ADA", "UNI", "DOGE", "FIL", "CAKE", "ONT", "TLM", "BNB"]
