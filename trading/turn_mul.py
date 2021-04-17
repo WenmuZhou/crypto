@@ -49,15 +49,15 @@ def auto_trade_v2(coin_list):
     if max_value_coin != now_style:
         while max_value_coin_new != "USDT":
             trick = exchange.fetch_ticker(symbol=max_value_coin + "/USDT")
-            exchange.create_limit_sell_order(symbol=max_value_coin + "/USDT", price=trick["bid"],
+            exchange.create_limit_sell_order(symbol=max_value_coin + "/USDT", price=trick["ask"],
                                              amount=balance_my[max_value_coin])
 
             balance_my_new, max_value_coin_new, balance_my_value = get_balance_info(coin_list, exchange)
 
         if now_style != "USDT":
             trick = exchange.fetch_ticker(symbol=now_style + "/USDT")
-            exchange.create_limit_buy_order(symbol=now_style + "/USDT", price=trick["ask"],
-                                            amount=balance_my["USDT"] / trick['ask'])
+            exchange.create_limit_buy_order(symbol=now_style + "/USDT", price=trick["bid"],
+                                            amount=balance_my["USDT"] / trick['bid'])
 
     balance_my_new, max_value_coin_new, balance_my_value = get_balance_info(coin_list, exchange)
     post_msg_to_dingtalk(title="rich",
