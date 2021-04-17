@@ -10,7 +10,7 @@ import talib
 import pandas as pd
 import mplfinance as mpf
 
-ray.init()
+# ray.init()
 
 pd.set_option("expand_frame_repr", False)
 pd.set_option("display.max_rows", 1000)
@@ -19,7 +19,7 @@ trade_rate = 1.5 / 1000
 
 
 def main_two_ma_strategy(coin_name_, short_period_, long_period_):
-    df = pd.read_csv("dataset/15m/" + coin_name_ + ".csv")
+    df = pd.read_csv("dataset/4h/" + coin_name_ + ".csv")
     df["ma_short"] = talib.SMA(df["close"], timeperiod=short_period_)
     df["ma_long"] = talib.SMA(df["close"], timeperiod=long_period_)
     df.rename(columns={"vol": "volume"}, inplace=True)
@@ -60,6 +60,7 @@ def main_two_ma_strategy(coin_name_, short_period_, long_period_):
     strategy_net_ = df.tail(1)["strategy_net"].item()
     # print("coin_net:", coin_net_)
     # print("strategy_net:", strategy_net_)
+    df.to_csv("result/reef_4h_6_45.csv")
     return coin_net_, strategy_net_
 
 
@@ -74,7 +75,8 @@ def plot_image(df_):
              addplot=add_plot)
 
 
-coin_list = ["BTC", "ETH", "EOS", "LTC", "XRP", "BNB", "DOT", "FIL"]
+# coin_list = ["BTC", "ETH", "EOS", "LTC", "XRP", "BNB", "DOT", "FIL"]
+coin_list = ["REEF"]
 
 
 # for coin_name in coin_list:
@@ -98,37 +100,37 @@ def ray_accelerate(coin_name):
     return res_item
 
 
-# print(main_two_ma_strategy("LTC", 7, 25))
-# exit()
+def simple_test(coin_list):
+    tqdm_coin_list = tqdm(coin_list)
+    res = []
+    for coin_name in tqdm_coin_list:
+        for short_period in trange(3, 180):
+            for long_period in range(7, 240):
+                tqdm_coin_list.set_description("Now Processing %s" % coin_name)
+                if short_period >= long_period:
+                    continue
+                coin_net, strategy_net = main_two_ma_strategy(coin_name_=coin_name, long_period_=long_period,
+                                                              short_period_=short_period)
+                res.append([coin_name, short_period, long_period, coin_net, strategy_net, strategy_net > coin_net])
+    print("short_period:", short_period)
+    print("long_period:", long_period)
+    print("coin_net:", coin_net)
+    print("strategy_net:", strategy_net)
+    print("=============================")
 
-futures = [ray_accelerate.remote(i) for i in coin_list]
-res = ray.get(futures)[0]
-# print(res)
-res_df = pd.DataFrame(res, columns=["coin", "short_period", "long_period", "coin_net", "strategy_net", "is_win"])
-# print(res_df)
-res_df.to_csv("result/two_ma_pro_15min.csv", index=False)
+    res_df = pd.DataFrame(res, columns=["coin", "short_period", "long_period", "coin_net", "strategy_net", "is_win"])
+    res_df.to_csv("result/two_ma_pro_reef_4h.csv", index=False)
 
-# tqdm_coin_list = tqdm(coin_list)
-# res = []
 
-# for coin_name in tqdm_coin_list:
-#     for short_period in range(3, 61):
-#         for long_period in range(7, 100):
-#             tqdm_coin_list.set_description("Now Processing %s" % coin_name)
-#             if short_period >= long_period:
-#                 continue
-#             coin_net, strategy_net = main_two_ma_strategy(coin_name_=coin_name, long_period_=long_period,
-#                                                           short_period_=short_period)
-#             res.append([coin_name, short_period, long_period, coin_net, strategy_net, strategy_net > coin_net])
-# print("short_period:", short_period)
-# print("long_period:", long_period)
-# print("coin_net:", coin_net)
-# print("strategy_net:", strategy_net)
-# print("=============================")
+# simple_test(coin_list)
+main_two_ma_strategy("REEF", 6, 45)
 
-# res_df = pd.DataFrame(res, columns=["coin", "short_period", "long_period", "coin_net", "strategy_net", "is_win"])
-# res_df.to_csv("result/two_ma_pro_15min.csv", index=False)
-# print(res_df)
-# if plot_true:
-#     plot_image(df)
-# df.to_csv("tmp/test.csv")
+
+def ray_use(coin_list):
+    ray.init()
+    futures = [ray_accelerate.remote(i) for i in coin_list]
+    res = ray.get(futures)[0]
+    # print(res)
+    res_df = pd.DataFrame(res, columns=["coin", "short_period", "long_period", "coin_net", "strategy_net", "is_win"])
+    # print(res_df)
+    res_df.to_csv("result/two_ma_pro_15min.csv", index=False)

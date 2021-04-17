@@ -10,8 +10,8 @@ exchange = ccxt.binance()
 # exchange.secret = "F6OShDNksFqTqCqD8mGbAEmi7sDubGWxHakra3nA8xVn3RWbw9qsDqNMi75OhNVG"
 #
 coin_list = ["BTC", "ETH", "EOS", "FIL", "LTC", "XRP", "DOT", "KSM", "CAKE", "BNB", "ADA", "UNI"]
-time_period = "15m"
-range_number = 20
+time_period = "4h"
+range_number = 10
 limit_number = 1000
 
 # coin_list = ["BTC"]
