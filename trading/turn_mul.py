@@ -13,19 +13,15 @@ from trading.laboratory import api_key_dict, api_secret_dict
 
 exchange = ccxt.binance()
 
-exchange.apiKey = api_key_dict["wenmu"]
-exchange.secret = api_secret_dict["wenmu"]
 
-coin_list = ["BTC", "ETH", "EOS", "XRP", "DOT", "BNB", "ADA", "UNI", "DOGE", "FIL"]
-
-
-def auto_trade_v2(coin_list):
+def auto_trade(coin_list, user, time_periods="4h", momentum_days=5):
+    exchange.apiKey = api_key_dict[user]
+    exchange.secret = api_secret_dict[user]
     balance_my, max_value_coin, balance_my_value = get_balance_info(coin_list, exchange)
-    momentum_days = 5
 
     coin_mom = {}
     for coin_name in coin_list:
-        data = exchange.fetch_ohlcv(coin_name + "/USDT", timeframe="4h", limit=30)
+        data = exchange.fetch_ohlcv(coin_name + "/USDT", timeframe=time_periods, limit=30)
         df = pd.DataFrame(data, columns=["time", "open", "high", "low", "close", "vol"])
 
         df['coin_pct'] = df['close'].pct_change(1)
@@ -60,22 +56,14 @@ def auto_trade_v2(coin_list):
                                             amount=balance_my["USDT"] / trick['bid'])
 
     balance_my_new, max_value_coin_new, balance_my_value = get_balance_info(coin_list, exchange)
-    post_msg_to_dingtalk(title="rich",
-                         msg="当前时间:{},策略名称:{},原来持有的币种:{},买入的新币种为:{},账户余额:{}".format(
-                             datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                             "rotational chase",
-                             max_value_coin, max_value_coin_new, balance_my_value * 6.72),
-                         token="8392f247561974cf01f63efc77bfeb814c70a00453aee8eb26c405081af03dbe")
-    # balance_my_new, max_value_coin_new = get_balance_info(coin_list)
-    # print("balance_my_new", balance_my_new)
-    # print("max_value_coin_new", max_value_coin_new)
+    post_msg_to_dingtalk(msg="当前时间:{},账户所有人:{},原来持有的币种:{},买入的新币种为:{},账户余额:{:.2f}万元".format(
+        datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        user,
+        max_value_coin, max_value_coin_new, balance_my_value * 6.72))
 
 
-auto_trade_v2(coin_list)
+coin_list_1 = ["EOS", "ANT", "DOT", "CHZ", "ADA", "UNI", "DOGE", "FIL", "CAKE", "ONT", "TLM"]
+auto_trade(coin_list_1, user="wenmu")
 
-# balance_my_new, max_value_coin_new, balance_my_value = get_balance_info(coin_list, exchange)
-# print("balance_my_new:", balance_my_new)
-# print("max_value_coin_new:", max_value_coin_new)
-# print("balance_my_value:", balance_my_value)
-
-# post_msg_to_dingtalk(msg="test!test!")
+# coin_list_2 = ["BTC","ETH","ADA","UNI","FIL"]
+# auto_trade(coin_list_2,user="wxz")

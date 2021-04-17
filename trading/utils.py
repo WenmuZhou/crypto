@@ -10,8 +10,8 @@ import requests
 import logging
 
 
-def post_msg_to_dingtalk(title="quant", msg="",
-                         token="f0e92e8bb1c4d9c9d838f50b1c0fd627760f50121d551c26068d23086714bfaa",
+def post_msg_to_dingtalk(title="rich", msg="",
+                         token="8392f247561974cf01f63efc77bfeb814c70a00453aee8eb26c405081af03dbe",
                          at=[], type="markdown"):
     url = "https://oapi.dingtalk.com/robot/send?access_token=" + token
     if type == "markdown":

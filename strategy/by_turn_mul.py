@@ -24,7 +24,7 @@ def turn_strategy(coin_list_, short_momentum_day_, long_momentum_day_):
     res_df = None
     for coin_name in coin_list_:
         # print(coin_name)
-        df_ = pd.read_csv("dataset/1h/" + coin_name + ".csv")
+        df_ = pd.read_csv("dataset/4h/" + coin_name + ".csv")
         # print("coin name:", coin_name)
         # print("how long test:", len(df_))
         # print('=' * 20)
