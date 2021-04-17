@@ -12,11 +12,14 @@ from trading.laboratory import api_key_dict, api_secret_dict
 
 exchange = ccxt.binance()
 
-coin_list = ["BTC", "ETH", "EOS", "XRP", "DOT", "BNB", "ADA", "UNI", "DOGE", "FIL"]
+coin_list = ["BTC", "ETH", "XRP", "EOS", "ANT", "DOT", "CHZ", "ADA", "UNI", "DOGE", "FIL", "CAKE", "ONT",
+             "TLM", "BNB"]
 
-post_msg_to_dingtalk(title="rich", msg="当前时间:{}".format(
-    datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")),
-                     token="8392f247561974cf01f63efc77bfeb814c70a00453aee8eb26c405081af03dbe")
+res_msg = "======定时账户余额查询======"
+res_msg += "\n\n"
+res_msg += "当前时间:{}\n\n".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+res_msg += "-------------------"
+res_msg += "\n\n"
 
 for api_name, api_key in api_key_dict.items():
     api_secret = api_secret_dict[api_name]
@@ -25,9 +28,9 @@ for api_name, api_key in api_key_dict.items():
 
     balance_my, max_value_coin, balance_my_value = get_balance_info(coin_list, exchange)
 
-    post_msg_to_dingtalk(title="rich", msg="账户所有人:{}\n,账户余额：{:.2f}万元,目前持仓：{}".format(
-        api_name, balance_my_value * 6.72, max_value_coin),
-                         token="8392f247561974cf01f63efc77bfeb814c70a00453aee8eb26c405081af03dbe")
+    res_msg += "账户所有人:{}\n\n账户余额：{:.2f}万元\n\n目前持仓：{}\n\n".format(
+        api_name, balance_my_value, max_value_coin)
+    res_msg += "-------------------"
+    res_msg += "\n\n"
 
-post_msg_to_dingtalk(title="rich", msg="--------分割线---------",
-                     token="8392f247561974cf01f63efc77bfeb814c70a00453aee8eb26c405081af03dbe")
+post_msg_to_dingtalk(msg=res_msg)

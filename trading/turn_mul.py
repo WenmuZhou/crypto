@@ -14,7 +14,7 @@ from trading.laboratory import api_key_dict, api_secret_dict
 exchange = ccxt.binance()
 
 
-def auto_trade(coin_list, user, time_periods="4h", momentum_days=5):
+def auto_trade(coin_list, user, time_periods="4h", momentum_days=5, msg_to_ding=True):
     exchange.apiKey = api_key_dict[user]
     exchange.secret = api_secret_dict[user]
     balance_my, max_value_coin, balance_my_value = get_balance_info(coin_list, exchange)
@@ -38,32 +38,34 @@ def auto_trade(coin_list, user, time_periods="4h", momentum_days=5):
             if max_value <= 0:
                 now_style = "USDT"
 
-    print("now_style:", now_style)
     print("origin balance:", balance_my)
     print("origin position:", max_value_coin)
+
+    print("now_style:", now_style)
     max_value_coin_new = max_value_coin
     if max_value_coin != now_style:
-        while max_value_coin_new != "USDT":
-            trick = exchange.fetch_ticker(symbol=max_value_coin + "/USDT")
-            exchange.create_limit_sell_order(symbol=max_value_coin + "/USDT", price=trick["ask"],
-                                             amount=balance_my[max_value_coin])
-
-            balance_my_new, max_value_coin_new, balance_my_value = get_balance_info(coin_list, exchange)
+        if max_value_coin_new != "USDT":
+            # trick = exchange.fetch_ticker(symbol=max_value_coin + "/USDT")
+            exchange.create_market_sell_order(symbol=max_value_coin + "/USDT",
+                                              amount=balance_my[max_value_coin])
+            # balance_my_new, max_value_coin_new, balance_my_value = get_balance_info(coin_list, exchange)
 
         if now_style != "USDT":
             trick = exchange.fetch_ticker(symbol=now_style + "/USDT")
-            exchange.create_limit_buy_order(symbol=now_style + "/USDT", price=trick["bid"],
-                                            amount=balance_my["USDT"] / trick['bid'])
+            exchange.create_limit_buy_order(symbol=now_style + "/USDT", price=trick['ask'],
+                                            amount=balance_my["USDT"] / trick['ask'])
 
     balance_my_new, max_value_coin_new, balance_my_value = get_balance_info(coin_list, exchange)
-    post_msg_to_dingtalk(msg="当前时间:{},账户所有人:{},原来持有的币种:{},买入的新币种为:{},账户余额:{:.2f}元".format(
-        datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        user,
-        max_value_coin, max_value_coin_new, balance_my_value * 6.72))
+    print("")
+    if msg_to_ding:
+        post_msg_to_dingtalk(msg="当前时间:{},账户所有人:{},原来持有的币种:{},买入的新币种为:{},账户余额:{:.2f}元".format(
+            datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            user,
+            max_value_coin, max_value_coin_new, balance_my_value))
 
 
-coin_list_1 = ["EOS", "ANT", "DOT", "CHZ", "ADA", "UNI", "DOGE", "FIL", "CAKE", "ONT", "TLM"]
-auto_trade(coin_list_1, user="wenmu")
+coin_list_1 = ["EOS", "ANT", "DOT", "CHZ", "ADA", "UNI", "DOGE", "FIL", "CAKE", "ONT", "TLM", "BNB"]
+auto_trade(coin_list_1, user="wenmu", msg_to_ding=False)
 
 # coin_list_2 = ["BTC","ETH","ADA","UNI","FIL"]
-# auto_trade(coin_list_2,user="wxz")
+# auto_trade(coin_list_2,user="wxt")

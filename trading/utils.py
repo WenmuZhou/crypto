@@ -54,6 +54,6 @@ def get_balance_info(coin_list, exchange):
                 if trick["ask"] * (float(coin["free"]) + float(coin["locked"])) > max_value:
                     max_value = trick["ask"] * (float(coin["free"]) + float(coin["locked"]))
                     max_value_coin = coin["asset"]
-    print("how much money I have:", balance_my_value * 6.72)
+    # print("how much money I have:", balance_my_value * 6.72)
 
-    return balance_my, max_value_coin, balance_my_value
+    return balance_my, max_value_coin, balance_my_value * 6.72

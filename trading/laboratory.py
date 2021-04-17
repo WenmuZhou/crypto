@@ -19,13 +19,13 @@ exchange = ccxt.binance()
 
 api_key_dict = {
     "nan": "e3cDWMh8N1uugwePjZK0OLZ73dMCl45kX7kIbniN9kjx42r5UtBAGs1S6JKvEXiu",
-    "wxz": "mwjDrEH3A589k2CrEegogdJmwdRhUw9NXVF2nlTiTgZfjQZ34A7vKQRvVfF1Phkf",
+    "wxt": "mwjDrEH3A589k2CrEegogdJmwdRhUw9NXVF2nlTiTgZfjQZ34A7vKQRvVfF1Phkf",
     "wenmu": "J0p53QWHzOaU6h7ZmmGukFfJ7C97tN3rhhs7s3jFmZJ2rNHZvxYvoYDHklMrWWZq",
     "yujl": "b1hTOVS08l5Lk9O7BjqcIvbUURnIIbFQA9CtjPGFPaYM4Yz2xNzQ3UPs0nbcR1c0",
 }
 api_secret_dict = {
     "nan": "F6OShDNksFqTqCqD8mGbAEmi7sDubGWxHakra3nA8xVn3RWbw9qsDqNMi75OhNVG",
-    "wxz": "6iO7HlFO40PhjIuTi1s50rRos46juRII5f7h1AeI9dXSRPpXj3sNEIf7KJlzRo4u",
+    "wxt": "6iO7HlFO40PhjIuTi1s50rRos46juRII5f7h1AeI9dXSRPpXj3sNEIf7KJlzRo4u",
     "wenmu": "0MOMZJC3fNW0FsDL5Xu3qj2YNK8dPVqDgbxqR3USCi396uy1aCXxW2Tto78nuGWA",
     "yujl": "ehFJFU8xZgnfSdVCFZAGbyQWGsK94pKvoRlOJBmiG19MK4VOHFhWK1PbIBLwtYna"
 }
