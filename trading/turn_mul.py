@@ -56,7 +56,7 @@ def auto_trade(coin_list, user, time_periods="4h", momentum_days=5):
                                             amount=balance_my["USDT"] / trick['bid'])
 
     balance_my_new, max_value_coin_new, balance_my_value = get_balance_info(coin_list, exchange)
-    post_msg_to_dingtalk(msg="当前时间:{},账户所有人:{},原来持有的币种:{},买入的新币种为:{},账户余额:{:.2f}万元".format(
+    post_msg_to_dingtalk(msg="当前时间:{},账户所有人:{},原来持有的币种:{},买入的新币种为:{},账户余额:{:.2f}元".format(
         datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         user,
         max_value_coin, max_value_coin_new, balance_my_value * 6.72))
