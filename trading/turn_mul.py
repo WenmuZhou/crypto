@@ -69,5 +69,5 @@ def auto_trade(coin_list, user, time_periods="4h", momentum_days=5, msg_to_ding=
 coin_list_1 = ["EOS", "ANT", "DOT", "CHZ", "ADA", "UNI", "DOGE", "FIL", "CAKE", "ONT", "TLM", "BNB"]
 auto_trade(coin_list_1, user="wenmu", msg_to_ding=True)
 
-coin_list_2 = ["BTC","ETH"]
-auto_trade(coin_list_2,user="wxt",momentum_days=30)
+coin_list_2 = ["BTC", "ETH"]
+auto_trade(coin_list_2, user="wxt", momentum_days=20)

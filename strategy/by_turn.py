@@ -13,7 +13,7 @@ df_coin2 = pd.read_csv("dataset/4h/ETH.csv")
 
 trade_rate = 1.5 / 1000
 # trade_rate = 0
-momentum_days = 32
+momentum_days = 20
 
 
 df_coin1['coin1_pct'] = df_coin1['close'].pct_change(1)

@@ -8,7 +8,6 @@ import numpy as np
 import pandas as pd
 import ray
 
-ray.init()
 # import time
 # import mplfinance as mlp
 import matplotlib.pyplot as plt
@@ -19,7 +18,7 @@ pd.set_option("display.max_rows", 1000)
 trade_rate = 1.5 / 1000
 
 
-@ray.remote
+# @ray.remote
 def turn_strategy(coin_list_, short_momentum_day_, long_momentum_day_):
     res_df = None
     for coin_name in coin_list_:
@@ -108,11 +107,22 @@ def turn_strategy(coin_list_, short_momentum_day_, long_momentum_day_):
 # coin_list = ["BTC", "ETH", "DOT", "ADA", "UNI", "EOS", "BNB", "XRP"]
 coin_list = ["BTC", "ETH"]
 
-futures = [turn_strategy.remote(coin_list, short_momentum_day_=i, long_momentum_day_=i) for i in range(3, 101)]
-result = ray.get(futures)
+for i in range(3,100):
+    strategy_net, max_draw_down, start_date, end_date = turn_strategy(coin_list, short_momentum_day_=i,
+                                                                      long_momentum_day_=i)
+    print(i)
+    print(strategy_net)
+    print(max_draw_down)
+    print('==========')
 
-for i in range(len(result)):
-    print(i, result[i + 3][:2])
+
+def ray_test(coin_list):
+    ray.init()
+    futures = [turn_strategy.remote(coin_list, short_momentum_day_=i, long_momentum_day_=i) for i in range(3, 101)]
+    result = ray.get(futures)
+
+    for i in range(len(result)):
+        print(i, result[i + 3][:2])
     # print(result[i - 3][1])
 
 # momentum_day = 18
