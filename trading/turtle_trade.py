@@ -15,13 +15,12 @@ from trading.laboratory import api_key_dict, api_secret_dict
 
 exchange = ccxt.binance()
 
-exchange.apiKey = api_key_dict["yujl"]
-exchange.secret = api_secret_dict["yujl"]
-
 coin_list = ["BTC"]
 
 
-def auto_trade(coin_list_, exchange_):
+def auto_trade(coin_list_, exchange_, user=""):
+    exchange.apiKey = api_key_dict[user]
+    exchange.secret = api_secret_dict[user]
     balance_my, max_value_coin, balance_my_value = get_balance_info(coin_list_, exchange_)
     for coin_name in coin_list:
         data = exchange.fetch_ohlcv(coin_name + "/USDT", timeframe="1d", limit=30)
@@ -54,7 +53,7 @@ def auto_trade(coin_list_, exchange_):
                                  msg="当前时间:{},策略名称:{},原来持有的币种:{},买入的新币种为:{},账户余额:{}".format(
                                      datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                                      "turtle BTC",
-                                     max_value_coin, max_value_coin_new, balance_my_value * 6.72),
+                                     max_value_coin, max_value_coin_new, balance_my_value),
                                  token="8392f247561974cf01f63efc77bfeb814c70a00453aee8eb26c405081af03dbe")
 
         else:
@@ -62,8 +61,8 @@ def auto_trade(coin_list_, exchange_):
                                  msg="当前时间:{},策略名称:{},本次没有调仓,账户余额:{}".format(
                                      datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                                      "turtle BTC",
-                                     balance_my_value * 6.72),
+                                     balance_my_value),
                                  token="8392f247561974cf01f63efc77bfeb814c70a00453aee8eb26c405081af03dbe")
 
 
-auto_trade(coin_list, exchange)
+auto_trade(coin_list, exchange, user="yujl")

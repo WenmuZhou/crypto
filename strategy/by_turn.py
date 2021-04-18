@@ -8,12 +8,13 @@ import matplotlib.pyplot as plt
 pd.set_option("expand_frame_repr", False)
 pd.set_option("display.max_rows", 1000)
 
-df_coin1 = pd.read_csv("dataset/1d/BTC.csv")
-df_coin2 = pd.read_csv("dataset/1d/ETH.csv")
+df_coin1 = pd.read_csv("dataset/4h/BTC.csv")
+df_coin2 = pd.read_csv("dataset/4h/ETH.csv")
 
 trade_rate = 1.5 / 1000
 # trade_rate = 0
-momentum_days = 20
+momentum_days = 32
+
 
 df_coin1['coin1_pct'] = df_coin1['close'].pct_change(1)
 df_coin2['coin2_pct'] = df_coin2['close'].pct_change(1)
@@ -64,15 +65,15 @@ df.reset_index(drop=True, inplace=True)
 df['coin1_net'] = df['coin1_close'] / df['coin1_close'][0]
 df['coin2_net'] = df['coin2_close'] / df['coin2_close'][0]
 
-df['coin1_net_test'] = (1 + df['coin1_pct']).cumprod()
+# df['coin1_net_test'] = (1 + df['coin1_pct']).cumprod()
 df['strategy_net'] = (1 + df['strategy_pct_adjust']).cumprod()
 
 # df['time_stamp'] = df['time_stamp'].apply(lambda x: int(time.mktime(time.strptime(x, "%Y-%m-%d %H:%M:%S")) * 1000))
-df['time_stamp'] = df['time_stamp'].apply(lambda x: int(time.mktime(time.strptime(x, "%Y-%m-%d")) * 1000))
+# df['time_stamp'] = df['time_stamp'].apply(lambda x: int(time.mktime(time.strptime(x, "%Y-%m-%d")) * 1000))
 
 # 评估策略的好坏
-res = evaluate_investment(df, 'strategy_net', time='time_stamp')
-print(res)
+# res = evaluate_investment(df, 'strategy_net', time='time')
+# print(res)
 #
 # # 绘制图形
 # plt.plot(df['time_stamp'], df['strategy_net'], label='strategy')
