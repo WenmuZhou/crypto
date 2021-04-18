@@ -49,20 +49,15 @@ def auto_trade(coin_list_, exchange_, user=""):
 
                 max_value_coin_new = "USDT"
 
-            post_msg_to_dingtalk(title="rich",
-                                 msg="当前时间:{},策略名称:{},原来持有的币种:{},买入的新币种为:{},账户余额:{}".format(
-                                     datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                                     "turtle BTC",
-                                     max_value_coin, max_value_coin_new, balance_my_value),
-                                 token="8392f247561974cf01f63efc77bfeb814c70a00453aee8eb26c405081af03dbe")
+            post_msg_to_dingtalk(msg="当前时间:{},账户所有人:{},原来持有的币种:{},买入的新币种为:{},账户余额:{}".format(
+                datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                user,
+                max_value_coin, max_value_coin_new, balance_my_value))
 
         else:
-            post_msg_to_dingtalk(title="rich",
-                                 msg="当前时间:{},策略名称:{},本次没有调仓,账户余额:{}".format(
-                                     datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                                     "turtle BTC",
-                                     balance_my_value),
-                                 token="8392f247561974cf01f63efc77bfeb814c70a00453aee8eb26c405081af03dbe")
+            post_msg_to_dingtalk(msg="当前时间:{},账户所有人:{},本次没有调仓,账户余额:{}".format(
+                datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                user, balance_my_value))
 
 
 auto_trade(coin_list, exchange, user="yujl")
