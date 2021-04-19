@@ -34,15 +34,15 @@ def post_msg_to_dingtalk(title="rich", msg="",
         logging.getLogger().error("发送钉钉提醒失败，请检查")
 
 
-def get_balance_info(coin_list, exchange):
+def get_balance_info(exchange):
     balance = exchange.fetch_balance()
     balance_my = dict()
     balance_my_value = 0
     max_value = 0
 
     for coin in balance["info"]["balances"]:
-        if coin["asset"] in coin_list + ["USDT"]:
-            balance_my[coin["asset"]] = float(coin["free"])
+        if float(coin["free"]) + float(coin["locked"]) > 0:
+            balance_my[coin["asset"]] = float(coin["free"]) + float(coin["locked"])
             if coin["asset"] == "USDT":
                 balance_my_value += (float(coin["free"]) + float(coin["locked"]))
                 if float(coin["free"]) + float(coin["locked"]) > max_value:
@@ -54,6 +54,5 @@ def get_balance_info(coin_list, exchange):
                 if trick["ask"] * (float(coin["free"]) + float(coin["locked"])) > max_value:
                     max_value = trick["ask"] * (float(coin["free"]) + float(coin["locked"]))
                     max_value_coin = coin["asset"]
-    # print("how much money I have:", balance_my_value * 6.72)
 
     return balance_my, max_value_coin, balance_my_value * 6.72

@@ -105,7 +105,7 @@ class BasisTrading:
 
         for coin in balance["info"]["balances"]:
             if float(coin["free"]) + float(coin["locked"]) > 0:
-                print(coin)
+                # print(coin)
                 balance_my[coin["asset"]] = float(coin["free"]) + float(coin["locked"])
                 if coin["asset"] == "USDT":
                     balance_my_value += (float(coin["free"]) + float(coin["locked"]))
