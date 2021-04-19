@@ -77,8 +77,11 @@ class BasisTrading:
             self.post_msg_to_dingtalk(
                 msg=message)
             print(message)
+            print('---------')
         else:
+            print("账户所有人:", kwargs["user"])
             print("本次操作没有调仓")
+            print('---------')
 
     def post_msg_to_dingtalk(self, msg="", at=[], type="markdown"):
         url = "https://oapi.dingtalk.com/robot/send?access_token=" + self.token
