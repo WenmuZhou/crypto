@@ -16,7 +16,21 @@ exchange = ccxt.binance()
 def get_balance_inquire():
     res_msg = "======定时账户余额查询======"
     res_msg += "\n\n"
-    res_msg += "当前时间:{}\n\n".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    now_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # print(now_time.split(" ")[1][:2])
+    balance_dict = {}
+    with open("log/balance_value", "r") as f:
+        for line in f.readlines():
+            one_balance = line.strip().split(":")
+            balance_dict[one_balance[0]] = float(one_balance[1])
+    # print(now_time)
+    if now_time.split(" ")[1][:2] == "20":
+        write_file = True
+    else:
+        write_file = False
+    if write_file:
+        file = open("log/balance_value", "w")
+    res_msg += "当前时间:{}\n\n".format(now_time)
     res_msg += "-------------------"
     res_msg += "\n\n"
 
@@ -27,10 +41,23 @@ def get_balance_inquire():
 
         balance_my, max_value_coin, balance_my_value = get_balance_info(exchange)
 
-        res_msg += "账户所有人:{}\n\n账户余额：{:.2f}万元\n\n目前持仓：{}\n\n".format(
-            api_name, balance_my_value, max_value_coin)
+        today_rate_of_return = (balance_my_value - balance_dict[api_name]) / balance_dict[api_name]
+
+        res_msg += "账户所有人:{}\n\n账户余额:{:.2f}万元\n\n目前持仓:{}\n\n今日收益率:{:.2f}%\n\n".format(
+            api_name, balance_my_value, max_value_coin, today_rate_of_return * 100)
+        if write_file:
+            file.write(api_name)
+            file.write(":")
+            file.write(str(balance_my_value))
+            file.write("\n")
         res_msg += "-------------------"
         res_msg += "\n\n"
 
-    post_msg_to_dingtalk(msg=res_msg)
+    # post_msg_to_dingtalk(msg=res_msg)
+    if write_file:
+        file.close()
     print(res_msg)
+
+
+if __name__ == '__main__':
+    get_balance_inquire()
