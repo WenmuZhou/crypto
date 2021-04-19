@@ -13,15 +13,12 @@ import talib
 from trading.utils import post_msg_to_dingtalk, get_balance_info
 from trading.UserInfo import api_key_dict, api_secret_dict
 
-exchange = ccxt.binance()
 
-coin_list = ["BTC"]
-
-
-def auto_trade(coin_list_, exchange_, user=""):
+def turtle_trade_v2(coin_list, user=""):
+    exchange = ccxt.binance()
     exchange.apiKey = api_key_dict[user]
     exchange.secret = api_secret_dict[user]
-    balance_my, max_value_coin, balance_my_value = get_balance_info(coin_list_, exchange_)
+    balance_my, max_value_coin, balance_my_value = get_balance_info(coin_list, exchange)
     for coin_name in coin_list:
         data = exchange.fetch_ohlcv(coin_name + "/USDT", timeframe="1d", limit=30)
         df = pd.DataFrame(data, columns=["time", "open", "high", "low", "close", "vol"])
@@ -60,4 +57,4 @@ def auto_trade(coin_list_, exchange_, user=""):
                 user, balance_my_value))
 
 
-auto_trade(coin_list, exchange, user="yujl")
+# turtle_trade_v2(coin_list, exchange, user="yujl")
