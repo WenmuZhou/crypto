@@ -11,7 +11,7 @@ import pandas as pd
 import datetime
 import talib
 from trading.utils import post_msg_to_dingtalk, get_balance_info
-from trading.laboratory import api_key_dict, api_secret_dict
+from trading.UserInfo import api_key_dict, api_secret_dict
 
 exchange = ccxt.binance()
 

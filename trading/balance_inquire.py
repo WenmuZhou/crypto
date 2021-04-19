@@ -8,7 +8,7 @@
 import ccxt
 import datetime
 from trading.utils import get_balance_info, post_msg_to_dingtalk
-from trading.laboratory import api_key_dict, api_secret_dict
+from trading.UserInfo import api_key_dict, api_secret_dict
 
 exchange = ccxt.binance()
 
