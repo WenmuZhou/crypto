@@ -33,3 +33,4 @@ def get_balance_inquire():
         res_msg += "\n\n"
 
     post_msg_to_dingtalk(msg=res_msg)
+    print(res_msg)

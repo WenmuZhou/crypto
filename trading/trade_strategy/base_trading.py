@@ -70,11 +70,15 @@ class BasisTrading:
             if now_style != "USDT":
                 self.buy(now_style, balance_my)
 
+            message = "调仓时间:{}\n\n账户所有人:{}\n\n原来持有的币种:{}\n\n买入的新币种为:{}\n\n账户余额:{:.2f}万元".format(
+                datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                kwargs["user"],
+                max_value_coin, now_style, balance_my_value)
             self.post_msg_to_dingtalk(
-                msg="调仓时间:{}\n\n账户所有人:{}\n\n原来持有的币种:{}\n\n买入的新币种为:{}\n\n账户余额:{:.2f}万元".format(
-                    datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                    kwargs["user"],
-                    max_value_coin, now_style, balance_my_value))
+                msg=message)
+            print(message)
+        else:
+            print("本次操作没有调仓")
 
     def post_msg_to_dingtalk(self, msg="", at=[], type="markdown"):
         url = "https://oapi.dingtalk.com/robot/send?access_token=" + self.token
