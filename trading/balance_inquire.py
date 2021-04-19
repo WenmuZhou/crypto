@@ -53,7 +53,7 @@ def get_balance_inquire():
         res_msg += "-------------------"
         res_msg += "\n\n"
 
-    # post_msg_to_dingtalk(msg=res_msg)
+    post_msg_to_dingtalk(msg=res_msg)
     if write_file:
         file.close()
     print(res_msg)
