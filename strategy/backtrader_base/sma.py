@@ -13,9 +13,11 @@
 import pandas as pd
 import backtrader as bt
 
-import strategy_base
+from strategy.backtrader_base.strategy_base import BaseStrategy
+from strategy.backtrader_base.backtrader_pipeline import BTPipeline
 
-class SMAStrategy(strategy_base.BaseStrategy):
+
+class SMAStrategy(BaseStrategy):
 
     def __init__(self):
         print("=======================")
@@ -53,17 +55,16 @@ class SMAStrategy(strategy_base.BaseStrategy):
         self.cerebro.broker.set_slippage_perc(0.001)
         self.cerebro.addsizer(bt.sizers.PercentSizer, percents=self.buy_percent)
         analyzers = {'sharp': bt.analyzers.SharpeRatio, 'annual_return': bt.analyzers.AnnualReturn,
-         'drawdown': bt.analyzers.DrawDown}
-        for name,ana_class in analyzers.items():
+                     'drawdown': bt.analyzers.DrawDown}
+        for name, ana_class in analyzers.items():
             self.cerebro.addanalyzer(ana_class, _name=name)
         back_rets = self.cerebro.run()
 
         return back_rets
 
 
-
 if __name__ == "__main__":
-    data_path = r'E:\\dataset\\day_stock_data\\sz.000338.csv'
+    data_path = "dataset/1d/BTC.csv"
     df = pd.read_csv(data_path)
-    strategy_tester = SMAStrategy()
-    strategy_tester.run(df)
+    bt_pipeline = BTPipeline(SMAStrategy)
+    bt_pipeline.run(df)

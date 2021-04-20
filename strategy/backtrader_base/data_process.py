@@ -10,10 +10,10 @@
 @Time      :  2021/4/20 15:57
 """
 
-import data_base
+import strategy.backtrader_base.data_base as data_base
+
 
 class DataProc(data_base.BaseData):
-
     # lines = ('AskPrice1',)
     # params = (('AskPrice1', 10),)
 

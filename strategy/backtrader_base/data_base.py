@@ -9,8 +9,9 @@
 @Author    :  yujl
 @Time      :  2021/4/20 15:41
 """
-
+import pandas as pd
 import backtrader as bt
+
 
 class BaseData(bt.feeds.PandasData):
 
@@ -30,6 +31,7 @@ class BaseData(bt.feeds.PandasData):
             # openinterest=self.openinterest,
         )
         return data
+
 
 if __name__ == "__main__":
     pass

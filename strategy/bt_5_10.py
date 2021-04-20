@@ -93,7 +93,6 @@ class TestStrategy(bt.Strategy):
 if __name__ == '__main__':
     # 初始化模型
     cerebro = bt.Cerebro()
-
     # 构建策略
     strats = cerebro.addstrategy(TestStrategy)
     # 每次买100股

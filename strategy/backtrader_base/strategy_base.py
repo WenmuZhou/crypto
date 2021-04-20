@@ -13,7 +13,8 @@
 import pandas as pd
 import backtrader as bt
 
-import data_process
+import strategy.backtrader_base.data_process as data_process
+
 
 class BaseStrategy(bt.Strategy):
     """封装bt.Strategy类
@@ -27,6 +28,7 @@ class BaseStrategy(bt.Strategy):
         buy_comm: 佣金
         bar_executed: 处理的数据个数
     """
+
     def log(self, txt, dt=None, do_print=False):
         if do_print:
             dt = dt or self.datas[0].datetime.date(0)
@@ -63,7 +65,9 @@ class BaseStrategy(bt.Strategy):
 
         # 订单因为缺少资金之类的原因被拒绝执行
         elif order.status in [order.Canceled, order.Margin, order.Rejected]:
-            self.log('Order status: {}, Canceled-{}/Margin-{}/Rejected-{}'.format(order.status, order.Canceled, order.Margin, order.Rejected), do_print=True)
+            self.log(
+                'Order status: {}, Canceled-{}/Margin-{}/Rejected-{}'.format(order.status, order.Canceled, order.Margin,
+                                                                             order.Rejected), do_print=True)
 
         # 订单状态处理完成，设为空
         self.order = None
@@ -91,6 +95,6 @@ class BaseStrategy(bt.Strategy):
         self.cerebro.adddata(data)
 
 
-
 if __name__ == "__main__":
-    pass
+    # test_1 = BaseStrategy()
+    test = bt.Strategy()

@@ -20,6 +20,7 @@ import pandas as pd
 import sma
 import ketler
 
+
 class BTPipeline:
     def __init__(self, config_dict):
         """完成初始化工作
@@ -48,7 +49,7 @@ class BTPipeline:
         """
 
         self.strategies = config_dict.get('strategy', None)
-        if self.strategies == None:
+        if self.strategies is None:
             raise ValueError("The strategies is None")
         if not isinstance(self.strategies, list):
             raise ValueError("The strategies must be a list")
@@ -68,7 +69,7 @@ class BTPipeline:
 
         self.cash = config_dict.get('cash', 10000000)
         self.commision = config_dict.get('commision', 0.001)
-        self.slip_style = config_dict.get('slip_style', 1)      #
+        self.slip_style = config_dict.get('slip_style', 1)  #
         self.slip_value = config_dict.get('slip_value', 0.001)
         self.buy_percent = config_dict.get('percent', 90)
         self.analyzers = config_dict.get('analyzer', {'sharp': bt.analyzers.SharpeRatio})
@@ -109,16 +110,16 @@ class BTPipeline:
 
         self.cerebro.broker.setcash(self.cash)
         self.cerebro.broker.setcommission(commission=self.commision)
-        if self.slip_style == 1: #百分比滑点
+        if self.slip_style == 1:  # 百分比滑点
             self.cerebro.broker.set_slippage_perc(self.slip_value)
-        elif self.slip_style == 0: #固定滑点
+        elif self.slip_style == 0:  # 固定滑点
             self.cerebro.broker.set_slippage_fixed(self.slip_value)
         else:
             raise ValueError("The slip style {} is not supported".format(self.slip_style))
         self.cerebro.addsizer(bt.sizers.PercentSizer, percents=self.buy_percent)
 
         # 加载回测指标
-        for name,ana_class in self.analyzers.items():
+        for name, ana_class in self.analyzers.items():
             self.cerebro.addanalyzer(ana_class, _name=name)
 
         back_rets = self.cerebro.run()
@@ -128,13 +129,13 @@ class BTPipeline:
         return back_rets
 
 
-
 if __name__ == "__main__":
     config = dict()
     config['strategy'] = [ketler.KetlerStrategy]
     config['suffix'] = '.csv'
     config['datetime'] = 'date'
-    config['analyzer'] = {'sharp': bt.analyzers.SharpeRatio, 'annual_return': bt.analyzers.AnnualReturn, 'drawdown': bt.analyzers.DrawDown}
+    config['analyzer'] = {'sharp': bt.analyzers.SharpeRatio, 'annual_return': bt.analyzers.AnnualReturn,
+                          'drawdown': bt.analyzers.DrawDown}
     pipe_tester = BTPipeline(config)
     ret = pipe_tester.run('E:\\dataset\\day_stock_data\\')
 
