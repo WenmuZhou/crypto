@@ -10,7 +10,10 @@
 @Time      :  2021/4/20 10:05
 """
 
+import pandas as pd
 import backtrader as bt
+
+import data_process
 
 class BaseStrategy(bt.Strategy):
     """封装bt.Strategy类
@@ -34,6 +37,9 @@ class BaseStrategy(bt.Strategy):
         self.buy_price = None
         self.buy_comm = None
         self.bar_executed = 0
+
+        self.data_proc = data_process.DataProc()
+        self.cerebro = bt.Cerebro()
 
     def next(self):
         pass
@@ -79,6 +85,12 @@ class BaseStrategy(bt.Strategy):
     def stop(self):
         self.log(u'Ending Value %.2f' %
                  (self.broker.getvalue()), do_print=True)
+
+    def process_data(self, df):
+        data = self.data_proc.data_process(df)
+        self.cerebro.adddata(data)
+
+
 
 if __name__ == "__main__":
     pass

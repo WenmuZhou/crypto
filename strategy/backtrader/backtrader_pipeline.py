@@ -18,6 +18,7 @@ from backtrader import TimeFrame
 import pandas as pd
 
 import sma
+import ketler
 
 class BTPipeline:
     def __init__(self, config_dict):
@@ -122,7 +123,7 @@ class BTPipeline:
 
         back_rets = self.cerebro.run()
 
-        self.cerebro.plot(style='candle')
+        # self.cerebro.plot(style='candle')
 
         return back_rets
 
@@ -130,7 +131,7 @@ class BTPipeline:
 
 if __name__ == "__main__":
     config = dict()
-    config['strategy'] = [sma.SMAStrategy ]
+    config['strategy'] = [ketler.KetlerStrategy]
     config['suffix'] = '.csv'
     config['datetime'] = 'date'
     config['analyzer'] = {'sharp': bt.analyzers.SharpeRatio, 'annual_return': bt.analyzers.AnnualReturn, 'drawdown': bt.analyzers.DrawDown}
@@ -140,3 +141,4 @@ if __name__ == "__main__":
     print('Sharpe Ratio: ', ret[0].analyzers.sharp.get_analysis())
     print('annual return: ', ret[0].analyzers.annual_return.get_analysis())
     print('drawdown: ', ret[0].analyzers.drawdown.get_analysis())
+    pipe_tester.cerebro.plot(style='candle')
