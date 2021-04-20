@@ -17,6 +17,8 @@ import backtrader as bt
 from backtrader import TimeFrame
 import pandas as pd
 
+import sma
+
 class BTPipeline:
     def __init__(self, config_dict):
         """完成初始化工作
@@ -45,10 +47,10 @@ class BTPipeline:
         """
 
         self.strategies = config_dict.get('strategy', None)
-        if self.strategy == None:
-            raise ValueError("The strategy is None")
-        if not isinstance(self.strategy, list):
-            raise ValueError("The strategy must be a list")
+        if self.strategies == None:
+            raise ValueError("The strategies is None")
+        if not isinstance(self.strategies, list):
+            raise ValueError("The strategies must be a list")
 
         self.suffix = config_dict.get('suffix', '.csv')
 
@@ -63,12 +65,12 @@ class BTPipeline:
         self.from_date = config_dict.get('frome_date', None)
         self.to_date = config_dict.get('to_date', None)
 
-        self.cash = config_dict.get('cash', 1000000)
-        self.commision = config_dict('commision', 0.001)
-        self.slip_style = config_dict('slip_style', 1)      #
-        self.slip_value = config_dict('slip_value', 0.001)
-        self.buy_percent = config_dict('percent', 100)
-        self.analyzers = config_dict('analyzer', {'sharp': bt.analyzers.SharpeRatio})
+        self.cash = config_dict.get('cash', 10000000)
+        self.commision = config_dict.get('commision', 0.001)
+        self.slip_style = config_dict.get('slip_style', 1)      #
+        self.slip_value = config_dict.get('slip_value', 0.001)
+        self.buy_percent = config_dict.get('percent', 90)
+        self.analyzers = config_dict.get('analyzer', {'sharp': bt.analyzers.SharpeRatio})
 
         self.cerebro = bt.Cerebro()
 
@@ -84,6 +86,7 @@ class BTPipeline:
         data_files = sorted(_dir.glob(f'*{self.suffix}'))
         for item in data_files:
             df = pd.read_csv(item)
+            df['date'] = pd.to_datetime(df['date'])
             data = bt.feeds.PandasData(
                 dataname=df,
                 timeframe=self.time_frame,
@@ -114,15 +117,25 @@ class BTPipeline:
         self.cerebro.addsizer(bt.sizers.PercentSizer, percents=self.buy_percent)
 
         # 加载回测指标
-        for name, ana_class in self.analyzers:
+        for name,ana_class in self.analyzers.items():
             self.cerebro.addanalyzer(ana_class, _name=name)
 
         back_rets = self.cerebro.run()
 
-        # self.cerebro.plot(style='candle')
+        self.cerebro.plot(style='candle')
 
         return back_rets
 
 
 if __name__ == "__main__":
-    pass
+    config = dict()
+    config['strategy'] = [sma.SMAStrategy ]
+    config['suffix'] = '.csv'
+    config['datetime'] = 'date'
+    config['analyzer'] = {'sharp': bt.analyzers.SharpeRatio, 'annual_return': bt.analyzers.AnnualReturn, 'drawdown': bt.analyzers.DrawDown}
+    pipe_tester = BTPipeline(config)
+    ret = pipe_tester.run('E:\\dataset\\day_stock_data\\')
+
+    print('Sharpe Ratio: ', ret[0].analyzers.sharp.get_analysis())
+    print('annual return: ', ret[0].analyzers.annual_return.get_analysis())
+    print('drawdown: ', ret[0].analyzers.drawdown.get_analysis())
