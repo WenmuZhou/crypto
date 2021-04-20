@@ -15,7 +15,7 @@ class TurnTrade(BasisTrading):
                  token="8392f247561974cf01f63efc77bfeb814c70a00453aee8eb26c405081af03dbe"):
         super(TurnTrade, self).__init__(exchange_name=exchange_name, title=title, token=token)
 
-    def strategy_trade(self, coin_list, momentum_days, user, time_periods):
+    def strategy_trade(self, coin_list, momentum_days, time_periods):
         coin_mom = {}
         for coin_name in coin_list:
             df = self.get_data(coin_name, time_periods, momentum_days * 2)

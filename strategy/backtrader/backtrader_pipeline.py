@@ -127,6 +127,7 @@ class BTPipeline:
         return back_rets
 
 
+
 if __name__ == "__main__":
     config = dict()
     config['strategy'] = [sma.SMAStrategy ]
