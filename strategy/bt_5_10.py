@@ -94,12 +94,12 @@ if __name__ == '__main__':
     # 初始化模型
     cerebro = bt.Cerebro()
     # 构建策略
-    strats = cerebro.addstrategy(TestStrategy)
+    cerebro.addstrategy(TestStrategy)
     # 每次买100股
     # cerebro.addsizer(bt.sizers.FixedSize, stake=1)
     cerebro.addsizer(bt.sizers.PercentSizer, percents=100)
 
-    df = pd.read_csv("dataset/day/BTC.csv")
+    df = pd.read_csv("dataset/1d/BTC.csv")
     df["time_stamp"] = pd.to_datetime(df["time_stamp"])
     # print(df)
     # exit()
