@@ -19,9 +19,11 @@ class BasisTrading:
     def __init__(self,
                  exchange_name="binance",
                  title="rich",
-                 token="8392f247561974cf01f63efc77bfeb814c70a00453aee8eb26c405081af03dbe"):
+                 token="8392f247561974cf01f63efc77bfeb814c70a00453aee8eb26c405081af03dbe",
+                 post_to_ding_talk=True):
         self.title = title
         self.token = token
+        self.post_to_ding_talk = post_to_ding_talk
 
         if exchange_name == "binance":
             self.exchange = ccxt.binance()
@@ -64,25 +66,27 @@ class BasisTrading:
 
         balance_my, max_value_coin, balance_my_value = self.get_balance_info()
 
-        now_style = self.strategy_trade(**kwargs)
+        now_style = self.strategy_trade(kwargs)
         if max_value_coin != now_style:
             if max_value_coin != "USDT":
                 self.sell(max_value_coin, balance_my)
             if now_style != "USDT":
                 self.buy(now_style, balance_my)
 
-            message = "调仓时间:{}\n\n账户所有人:{}\n\n原来持有的币种:{}\n\n买入的新币种为:{}\n\n账户余额:{:.2f}万元".format(
+            message = "调仓时间:{}\n\n账户所有人:{}\n\n原来持有的币种:{}\n\n买入的新币种为:{}\n\n账户余额:{:.2f}元".format(
                 datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 kwargs["user"],
                 max_value_coin, now_style, balance_my_value)
-            self.post_msg_to_dingtalk(
-                msg=message)
-            print(message)
-            print('---------')
+            if self.post_to_ding_talk:
+                self.post_msg_to_dingtalk(
+                    msg=message)
+                print(message)
+                print('---------')
         else:
-            print("账户所有人:", kwargs["user"])
-            print("本次操作没有调仓")
-            print('---------')
+            if self.post_to_ding_talk:
+                print("账户所有人:", kwargs["user"])
+                print("本次操作没有调仓")
+                print('---------')
 
     def post_msg_to_dingtalk(self, msg="", at=[], type="markdown"):
         url = "https://oapi.dingtalk.com/robot/send?access_token=" + self.token
