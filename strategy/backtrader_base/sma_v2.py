@@ -5,7 +5,7 @@
 # @Author   : Adolf
 # @File     : sma_v2.py
 # @Function  :
-from strategy.backtrader_base_v2.background_logic import BasisStrategy
+from strategy.backtrader_base.background_logic import BasisStrategy
 import backtrader as bt
 
 

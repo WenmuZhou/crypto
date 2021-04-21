@@ -13,7 +13,7 @@
 import numpy as np
 import backtrader as bt
 
-from strategy.backtrader_base_v2.background_logic import BasisStrategy
+from strategy.backtrader_base.background_logic import BasisStrategy
 
 
 class SSAIndicator(bt.Indicator):
