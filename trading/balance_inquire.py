@@ -41,6 +41,13 @@ def get_balance_inquire():
 
         balance_my, max_value_coin, balance_my_value = get_balance_info(exchange)
 
+        if api_name not in balance_dict:
+            with open("log/balance_value", "a") as f:
+                f.write(api_name)
+                f.write(":")
+                f.write(str(balance_my_value))
+                f.write("\n")
+
         today_rate_of_return = (balance_my_value - balance_dict[api_name]) / balance_dict[api_name]
 
         res_msg += "账户所有人:{}\n\n账户余额:{:.2f}万元\n\n目前持仓:{}\n\n今日收益率:{:.2f}%\n\n".format(

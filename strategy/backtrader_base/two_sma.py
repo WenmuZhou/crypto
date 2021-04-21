@@ -20,6 +20,8 @@ class TwoSmaStrategy(BasisStrategy):
         sma5: 短周期均值
         sma10: 长周期均值
     """
+    def __init__(self):
+        super(TwoSmaStrategy, self).__init__()
 
     @staticmethod
     def data_process(data_path):
