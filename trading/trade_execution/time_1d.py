@@ -11,4 +11,6 @@ from trading.trade_strategy.turtle_trade import turtle_trade_v2
 auto_trade = TurnTrade()
 auto_trade.trading_main(coin_list=["BTC", "ETH"], user="nan", time_periods="1d", momentum_days=10)
 
+auto_trade.trading_main(coin_list=["BTC", "ETH"], user="shuig", time_periods="1d", momentum_days=20)
+
 turtle_trade_v2(coin_list=["BTC"], user="yujl")
