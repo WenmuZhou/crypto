@@ -10,9 +10,6 @@ import backtrader as bt
 
 
 class TestStrategy(BasisStrategy):
-    # def __init__(self):
-        # super(TestStrategy, self).__init__()
-
     def cal_technical_index(self):
         self.sma5 = bt.indicators.MovingAverageSimple(self.datas[0], period=5)
         self.sma10 = bt.indicators.MovingAverageSimple(self.datas[0], period=10)
