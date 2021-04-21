@@ -19,6 +19,6 @@ from strategy.backtrader_base.pivot_point import PivotStrategy
 if __name__ == "__main__":
     # KetlerStrategy.run(data_path=r"F:\\stock_data\hs300_d\\sz.000001.csv")
     # SSAStrategy.run(data_path=r"F:\\stock_data\hs300_d\\sz.000001.csv")
-    TurtleStrategy.run(data_path=r"F:\\stock_data\hs300_d\\sz.000001.csv")
-    # PriceMomentumStrategy.run(data_path=r"F:\\stock_data\hs300_d\\sz.000001.csv")
+    # TurtleStrategy.run(data_path=r"dataset/hs300_d/sz.000001.csv")
+    PriceMomentumStrategy.run(data_path=r"dataset/hs300_d/sz.000001.csv")
     # PivotStrategy.run(data_path=r"F:\\stock_data\hs300_d\\sz.000001.csv")

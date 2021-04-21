@@ -14,7 +14,6 @@ import backtrader as bt
 
 from strategy.backtrader_base.background_logic import BasisStrategy
 
-
 class TurtleSizer(bt.Sizer):
     """交易量的大小
 
@@ -79,25 +78,25 @@ class TurtleStrategy(BasisStrategy):
     def next(self):
         if self.order:
             return
-        # 入场
+        #入场
         if self.crossover_hi > 0 and self.buy_time == 0:
             self.newstake = self.broker.getvalue() * 0.01 / self.ATR
             self.newstake = int(self.newstake / 100) * 100
             self.sizer.p.stake = self.newstake
             self.buy_time = 1
             self.order = self.buy()
-        # 加仓
+        #加仓
         elif self.datas[0].close > self.buy_price + 0.5 * self.ATR[0] and self.buy_time > 0 and self.buy_time < 5:
             self.newstake = self.broker.getvalue() * 0.01 / self.ATR
             self.newstake = int(self.newstake / 100) * 100
             self.sizer.p.stake = self.newstake
             self.order = self.buy()
             self.buy_time = self.buy_time + 1
-        # 出场
+        #出场
         elif self.crossover_lo < 0 and self.buy_time > 0:
             self.order = self.sell()
             self.buy_time = 0
-        # 止损
+        #止损
         elif self.datas[0].close < (self.buy_price - 2 * self.ATR[0]) and self.buy_time > 0:
             self.order = self.sell()
             self.buy_time = 0
