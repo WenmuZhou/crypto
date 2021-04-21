@@ -48,6 +48,8 @@ def get_balance_inquire():
                 f.write(str(balance_my_value))
                 f.write("\n")
 
+            balance_dict[api_name] = balance_my_value
+
         today_rate_of_return = (balance_my_value - balance_dict[api_name]) / balance_dict[api_name]
 
         res_msg += "账户所有人:{}\n\n账户余额:{:.2f}万元\n\n目前持仓:{}\n\n今日收益率:{:.2f}%\n\n".format(
