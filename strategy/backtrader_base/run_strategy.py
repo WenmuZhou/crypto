@@ -10,11 +10,11 @@
 @Time      :  2021/4/21 10:45
 """
 
-from strategy.backtrader_base.ketler_v2 import KetlerStrategy
-from strategy.backtrader_base.ssa import SSAStrategy
-from strategy.backtrader_base.turtle import TurtleStrategy
-from strategy.backtrader_base.price_rate_change import PriceMomentumStrategy
-from strategy.backtrader_base.pivot_point import PivotStrategy
+from strategy.backtrader_base_v2.ketler_v2 import KetlerStrategy
+from strategy.backtrader_base_v2.ssa import SSAStrategy
+from strategy.backtrader_base_v2.turtle import TurtleStrategy
+from strategy.backtrader_base_v2.price_rate_change import PriceMomentumStrategy
+from strategy.backtrader_base_v2.pivot_point import PivotStrategy
 
 if __name__ == "__main__":
     # KetlerStrategy.run(data_path=r"F:\\stock_data\hs300_d\\sz.000001.csv")

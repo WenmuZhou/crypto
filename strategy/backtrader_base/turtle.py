@@ -3,7 +3,7 @@
 # Copyright (c) 2021 Hundsun.com, Inc. All Rights Reserved
 #
 """
-这个模块提供了
+这个模块提供了简化海龟策略
 
 @FileName  :  turtle.py
 @Author    :  yujl
@@ -12,7 +12,7 @@
 
 import backtrader as bt
 
-from strategy.backtrader_base.background_logic import BasisStrategy
+from strategy.backtrader_base_v2.background_logic import BasisStrategy
 
 class TurtleSizer(bt.Sizer):
     """交易量的大小
@@ -37,6 +37,27 @@ class TurtleSizer(bt.Sizer):
 
 
 class TurtleStrategy(BasisStrategy):
+    """海龟交易策略
+    https://www.definedge.com/turtle-trading-system/
+    海龟交易策略最重要的是唐奇安通道
+    唐奇安通道由两条线组成：
+    上线：Max(最高价， n)
+    下线：Min(最低价， n)
+    穿越上线，买入；穿越下线，卖出
+
+    Attributes:
+        dataclose: 收盘价
+        datahigh: 最高价
+        datalow: 最低价
+        buy_time: 买入次数
+        buy_price: 买入价格
+        Donchian_hi: 唐奇安通道上线
+        Donchian_lo: 唐奇安通道下线
+        TR: 真实波动
+        ATR: 真实波动平均
+        crossover_hi: 是否穿过上线
+        crossover_lo: 是否穿过下线
+    """
     def cal_technical_index(self):
         self.dataclose = self.datas[0].close
         self.datahigh = self.datas[0].high

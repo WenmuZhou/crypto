@@ -3,7 +3,7 @@
 # Copyright (c) 2021 Hundsun.com, Inc. All Rights Reserved
 #
 """
-这个模块提供了
+这个模块提供了奇异值分解策略
 
 @FileName  :  ssa.py
 @Author    :  yujl
@@ -13,7 +13,7 @@
 import numpy as np
 import backtrader as bt
 
-from strategy.backtrader_base.background_logic import BasisStrategy
+from strategy.backtrader_base_v2.background_logic import BasisStrategy
 
 
 class SSAIndicator(bt.Indicator):
@@ -108,6 +108,13 @@ class SSAIndicator(bt.Indicator):
 
 
 class SSAStrategy(BasisStrategy):
+    """奇异值分解策略
+    https://uqer.datayes.com/v3/community/share/577cbae4228e5b8a02931e1a
+    收盘价大于重组后的值，买入；否则卖出
+    Attributes:
+        ssa: 奇异值分解指标对象
+        dataclose: 收盘价
+    """
     def cal_technical_index(self):
         self.ssa = SSAIndicator(ssa_window=15)
         self.dataclose = self.datas[0].close
