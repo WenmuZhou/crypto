@@ -24,8 +24,9 @@ class BasisStrategy(bt.Strategy):
         self.cal_technical_index()
 
     def cal_technical_index(self):
-        self.sma5 = bt.indicators.MovingAverageSimple(self.datas[0], period=5)
-        self.sma10 = bt.indicators.MovingAverageSimple(self.datas[0], period=10)
+        # self.sma5 = bt.indicators.MovingAverageSimple(self.datas[0], period=5)
+        # self.sma10 = bt.indicators.MovingAverageSimple(self.datas[0], period=10)
+        pass
 
     def notify_order(self, order):
         if order.status in [order.Submitted, order.Accepted]:
@@ -77,33 +78,32 @@ class BasisStrategy(bt.Strategy):
 
         cerebro.run()
 
-
-class BackTraderPipeline:
-    def __init__(self,
-                 data_path="",
-                 cash=10000,
-                 commission=0.0015,
-                 **kwargs):
-        self.data_path = data_path
-        self.cash = cash
-        self.commission = commission
-        self.cerebro = bt.Cerebro()
-
-    def data_process(self):
-        df = pd.read_csv(self.data_path)
-        df["time_stamp"] = pd.to_datetime(df["time_stamp"])
-        data = bt.feeds.PandasData(dataname=df,
-                                   datetime="time_stamp",
-                                   volume="vol")
-        return data
-
-    def __call__(self, MyStrategy):
-        self.cerebro.addstrategy(MyStrategy)
-
-        self.data_process()
-        self.cerebro.adddata(self.data_process())
-
-        self.cerebro.broker.setcash(self.cash)
-        self.cerebro.broker.setcommission(self.commission)
-
-        self.cerebro.run()
+# class BackTraderPipeline:
+#     def __init__(self,
+#                  data_path="",
+#                  cash=10000,
+#                  commission=0.0015,
+#                  **kwargs):
+#         self.data_path = data_path
+#         self.cash = cash
+#         self.commission = commission
+#         self.cerebro = bt.Cerebro()
+#
+#     def data_process(self):
+#         df = pd.read_csv(self.data_path)
+#         df["time_stamp"] = pd.to_datetime(df["time_stamp"])
+#         data = bt.feeds.PandasData(dataname=df,
+#                                    datetime="time_stamp",
+#                                    volume="vol")
+#         return data
+#
+#     def __call__(self, MyStrategy):
+#         self.cerebro.addstrategy(MyStrategy)
+#
+#         self.data_process()
+#         self.cerebro.adddata(self.data_process())
+#
+#         self.cerebro.broker.setcash(self.cash)
+#         self.cerebro.broker.setcommission(self.commission)
+#
+#         self.cerebro.run()
