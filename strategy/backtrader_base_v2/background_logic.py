@@ -56,6 +56,27 @@ class BasisStrategy(bt.Strategy):
         self.log(u'Ending Value %.2f' %
                  (self.broker.getvalue()), doprint=True)
 
+    @staticmethod
+    def data_process(data_path):
+        df = pd.read_csv(data_path)
+        df["time_stamp"] = pd.to_datetime(df["time_stamp"])
+        data = bt.feeds.PandasData(dataname=df,
+                                   datetime="time_stamp",
+                                   volume="vol")
+        return data
+
+    @classmethod
+    def run(cls, data_path="", cash=100000, commission=0.0015):
+        cerebro = bt.Cerebro()
+        cerebro.addstrategy(cls)
+
+        cerebro.adddata(cls.data_process(data_path))
+
+        cerebro.broker.setcash(cash)
+        cerebro.broker.setcommission(commission)
+
+        cerebro.run()
+
 
 class BackTraderPipeline:
     def __init__(self,

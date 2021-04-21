@@ -27,5 +27,6 @@ class TestStrategy(BasisStrategy):
 
 
 if __name__ == '__main__':
-    MyPipeline = BackTraderPipeline(data_path="dataset/1d/BTC.csv")
-    MyPipeline(TestStrategy)
+    # MyPipeline = BackTraderPipeline(data_path="dataset/1d/BTC.csv")
+    # MyPipeline(TestStrategy)
+    TestStrategy.run(data_path="dataset/1d/BTC.csv")
