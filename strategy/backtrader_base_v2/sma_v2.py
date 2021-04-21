@@ -22,11 +22,11 @@ class TestStrategy(BasisStrategy):
 
         if not self.position:
             if self.sma5[0] > self.sma10[0]:
-                self.order = self.buy(size=self.broker.getvalue() / self.data_close)
+                self.order = self.buy()
         else:
             if self.sma5[0] < self.sma10[0]:
                 self.order = self.sell()
 
 
 if __name__ == '__main__':
-    TestStrategy.run(data_path="dataset/1d/BTC.csv")
+    TestStrategy.run(data_path=r"F:\\stock_data\hs300_d\\sz.000001.csv")

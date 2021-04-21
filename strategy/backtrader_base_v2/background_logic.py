@@ -30,17 +30,23 @@ class BasisStrategy(bt.Strategy):
 
     def notify_order(self, order):
         if order.status in [order.Submitted, order.Accepted]:
+            # 如订单已被处理，则不用做任何事情
             return
 
+        # 检查订单是否完成
         if order.status in [order.Completed]:
             if order.isbuy():
                 self.buy_price = order.executed.price
                 self.buy_comm = order.executed.comm
             self.bar_executed = len(self)
 
+        # 订单因为缺少资金之类的原因被拒绝执行
         elif order.status in [order.Canceled, order.Margin, order.Rejected]:
-            self.log('Order Canceled/Margin/Rejected')
+            self.log(
+                'Order status: {}, Canceled-{}/Margin-{}/Rejected-{}'.format(order.status, order.Canceled, order.Margin,
+                                                                             order.Rejected), doprint=True)
 
+        # 订单状态处理完成，设为空
         self.order = None
 
     def next(self):
@@ -60,14 +66,14 @@ class BasisStrategy(bt.Strategy):
     @staticmethod
     def data_process(data_path):
         df = pd.read_csv(data_path)
-        df["time_stamp"] = pd.to_datetime(df["time_stamp"])
+        df["date"] = pd.to_datetime(df["date"])
         data = bt.feeds.PandasData(dataname=df,
-                                   datetime="time_stamp",
-                                   volume="vol")
+                                   datetime="date",
+                                   volume="volume")
         return data
 
     @classmethod
-    def run(cls, data_path="", cash=100000, commission=0.0015):
+    def run(cls, data_path="", cash=100000, commission=0.0015, **kwargs):
         cerebro = bt.Cerebro()
         cerebro.addstrategy(cls)
 
@@ -75,6 +81,7 @@ class BasisStrategy(bt.Strategy):
 
         cerebro.broker.setcash(cash)
         cerebro.broker.setcommission(commission)
+        # 滑点、投入资金百分比、回测指标
 
         cerebro.run()
 
