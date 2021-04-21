@@ -24,7 +24,7 @@ def get_balance_inquire():
             one_balance = line.strip().split(":")
             balance_dict[one_balance[0]] = float(one_balance[1])
     # print(now_time)
-    if now_time.split(" ")[1][:2] == "20":
+    if now_time.split(" ")[1][:2] == "00":
         write_file = True
     else:
         write_file = False
