@@ -52,7 +52,7 @@ def get_balance_inquire():
 
         today_rate_of_return = (balance_my_value - balance_dict[api_name]) / balance_dict[api_name]
 
-        res_msg += "账户所有人:{}\n\n账户余额:{:.2f}万元\n\n目前持仓:{}\n\n今日收益率:{:.2f}%\n\n".format(
+        res_msg += "账户所有人:{}\n\n账户余额:{:.2f}元\n\n目前持仓:{}\n\n今日收益率:{:.2f}%\n\n".format(
             api_name, balance_my_value, max_value_coin, today_rate_of_return * 100)
         if write_file:
             file.write(api_name)
