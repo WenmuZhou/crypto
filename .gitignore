@@ -12,3 +12,5 @@ dist/
 .idea/
 .vscode/
 .DS_Store
+
+UserInfo.py
