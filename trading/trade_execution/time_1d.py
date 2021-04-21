@@ -14,4 +14,4 @@ auto_trade.trading_main(coin_list=["BTC", "ETH"], user="nan", time_periods="1d",
 auto_trade.trading_main(coin_list=["BTC", "ETH"], user="shuig", time_periods="1d", momentum_days=20)
 
 auto_trade_v2 = TurtleTrade()
-auto_trade_v2.trading_main(coin_name="BTC", user="yujl", upper_band=30, lower_band=20)
+auto_trade_v2.trading_main(coin_name="BTC", user="yujl", upper_band=30, lower_band=20, time_periods="1d")
