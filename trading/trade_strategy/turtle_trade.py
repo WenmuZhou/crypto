@@ -18,7 +18,7 @@ def turtle_trade_v2(coin_list, user=""):
     exchange = ccxt.binance()
     exchange.apiKey = api_key_dict[user]
     exchange.secret = api_secret_dict[user]
-    balance_my, max_value_coin, balance_my_value = get_balance_info(coin_list, exchange)
+    balance_my, max_value_coin, balance_my_value = get_balance_info(exchange)
     for coin_name in coin_list:
         data = exchange.fetch_ohlcv(coin_name + "/USDT", timeframe="1d", limit=30)
         df = pd.DataFrame(data, columns=["time", "open", "high", "low", "close", "vol"])
