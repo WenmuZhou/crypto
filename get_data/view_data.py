@@ -15,7 +15,7 @@ exchange = ccxt.binance()
 
 data = exchange.fetch_ohlcv("ETH/USDT", timeframe="1d", limit=100)
 df = pd.DataFrame(data, columns=["time", "open", "high", "low", "close", "volume"])
-d
+
 df["ma_long"] = talib.SMA(df["close"], timeperiod=10)
 df["ma_short"] = talib.SMA(df["close"], timeperiod=7)
 # df.set_index(["time"],inplace=True)

@@ -6,15 +6,10 @@ import pandas as pd
 
 exchange = ccxt.binance()
 
-# exchange.apiKey = "e3cDWMh8N1uugwePjZK0OLZ73dMCl45kX7kIbniN9kjx42r5UtBAGs1S6JKvEXiu"
-# exchange.secret = "F6OShDNksFqTqCqD8mGbAEmi7sDubGWxHakra3nA8xVn3RWbw9qsDqNMi75OhNVG"
-#
 coin_list = ["BTC", "ETH", "EOS", "FIL", "LTC", "XRP", "DOT", "KSM", "CAKE", "BNB", "ADA", "UNI"]
 time_period = "4h"
 range_number = 10
 limit_number = 1000
-
-# coin_list = ["BTC"]
 
 
 def get_exchange_data(coin_name):
