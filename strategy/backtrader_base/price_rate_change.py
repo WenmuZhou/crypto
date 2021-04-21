@@ -9,7 +9,7 @@
 @Author    :  yujl
 @Time      :  2021/4/21 13:13
 """
-
+import pandas as pd
 import backtrader as bt
 
 from strategy.backtrader_base.background_logic import BasisStrategy
@@ -19,6 +19,13 @@ class PriceMomentumStrategy(BasisStrategy):
     def cal_technical_index(self):
 
         self.proc = bt.talib.ROCP(self.datas[0].close, timeperiod=14)
+
+    @staticmethod
+    def data_process(data_path):
+        df = pd.read_csv("dataset/1d/BTC.csv")
+        df["time_stamp"] = pd.to_datetime(df["time_stamp"])
+        data = bt.feeds.PandasData(dataname=df, datetime="time_stamp", volume="vol")
+        return data
 
     def next(self):
         if self.order:
@@ -34,4 +41,4 @@ class PriceMomentumStrategy(BasisStrategy):
 
 
 if __name__ == "__main__":
-    pass
+    PriceMomentumStrategy.run(data_path="dataset/1d/BTC.csv")

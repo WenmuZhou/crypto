@@ -65,12 +65,13 @@ class BasisStrategy(bt.Strategy):
 
     @staticmethod
     def data_process(data_path):
-        df = pd.read_csv(data_path)
-        df["date"] = pd.to_datetime(df["date"])
-        data = bt.feeds.PandasData(dataname=df,
-                                   datetime="date",
-                                   volume="volume")
-        return data
+        pass
+        # df = pd.read_csv(data_path)
+        # df["date"] = pd.to_datetime(df["date"])
+        # data = bt.feeds.PandasData(dataname=df,
+        #                            datetime="date",
+        #                            volume="volume")
+        # return data
 
     @classmethod
     def run(cls, data_path="", cash=100000, commission=0.0015, **kwargs):
