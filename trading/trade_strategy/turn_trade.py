@@ -29,7 +29,7 @@ class TurnTrade(BasisTrading):
                 now_style = keys
                 if max_value <= 0:
                     now_style = "USDT"
-
+        print("now style:", now_style)
         return now_style
 
 # if __name__ == '__main__':

@@ -54,8 +54,9 @@ class BasisTrading:
                                              amount=balance_my["USDT"] / trick['ask'])
 
     def strategy_trade(self, *args, **kwargs):
-        now_style = "USDT"
-        return now_style
+        # now_style = "USDT"
+        # return now_style
+        pass
 
     def trading_main(self, **kwargs):
         self.exchange.apiKey = api_key_dict[kwargs["user"]]
