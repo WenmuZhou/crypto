@@ -40,11 +40,11 @@ class BasisTrading:
 
         return df
 
-    @staticmethod
-    def cal_technical_index(df, momentum_days=5):
-        df["coin_pct"] = df["close"].pct_change(1)
-        df["coin_mom"] = df["close"].pct_change(periods=momentum_days)
-        return df
+    # @staticmethod
+    # def cal_technical_index(df, momentum_days=5):
+    #     df["coin_pct"] = df["close"].pct_change(1)
+    #     df["coin_mom"] = df["close"].pct_change(periods=momentum_days)
+    #     return df
 
     def sell(self, pos_coin, balance_my):
         self.exchange.create_market_sell_order(symbol=pos_coin + "/USDT",
@@ -66,7 +66,9 @@ class BasisTrading:
 
         balance_my, max_value_coin, balance_my_value = self.get_balance_info()
 
+        print("origin balance:", balance_my)
         now_style = self.strategy_trade(kwargs)
+        print("now_style",now_style)
         if max_value_coin != now_style:
             if max_value_coin != "USDT":
                 self.sell(max_value_coin, balance_my)
@@ -83,10 +85,9 @@ class BasisTrading:
                 print(message)
                 print('---------')
         else:
-            if self.post_to_ding_talk:
-                print("账户所有人:", kwargs["user"])
-                print("本次操作没有调仓")
-                print('---------')
+            print("账户所有人:", kwargs["user"])
+            print("本次操作没有调仓")
+            print('---------')
 
     def post_msg_to_dingtalk(self, msg="", at=[], type="markdown"):
         url = "https://oapi.dingtalk.com/robot/send?access_token=" + self.token

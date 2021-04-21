@@ -1,60 +1,37 @@
-# ！/usr/bin/env python
-# -*- coding:utf-8 -*-
-# @Project : crypto
-# @Date    : 2021/4/16 22:36
-# @Author  : Adolf
-# @File    : turtle_trade.py
-# @Function:
-import ccxt
-import numpy as np
-import pandas as pd
-import datetime
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Project  : crypto
+# @Time     : 2021/4/21 19:52
+# @Author   : Adolf
+# @File     : turtle_trade.py
+# @Function  :
 import talib
-from trading.utils import post_msg_to_dingtalk, get_balance_info
-from trading.UserInfo import api_key_dict, api_secret_dict
+from trading.trade_strategy.base_trading import BasisTrading
 
 
-def turtle_trade_v2(coin_list, user=""):
-    exchange = ccxt.binance()
-    exchange.apiKey = api_key_dict[user]
-    exchange.secret = api_secret_dict[user]
-    balance_my, max_value_coin, balance_my_value = get_balance_info(exchange)
-    for coin_name in coin_list:
-        data = exchange.fetch_ohlcv(coin_name + "/USDT", timeframe="1d", limit=30)
-        df = pd.DataFrame(data, columns=["time", "open", "high", "low", "close", "vol"])
-        df['upper_band'] = talib.MAX(df.high, timeperiod=30).shift(1)
-        df['lower_band'] = talib.MIN(df.low, timeperiod=20).shift(1)
+class TurtleTrade(BasisTrading):
+    def strategy_trade(self, params):
+        coin_name = params.get("coin_name", "BTC")
+        upper_band = params.get("upper_band", 20)
+        lower_band = params.get("lower_band", 10)
+        time_periods = params.get("time_periods", "4h")
 
-        now_style = "USDT"
-        df.loc[df["close"] > df["upper_band"], "pos"] = "BTC"
-        df.loc[df['close'] < df["lower_band"], "pos"] = "USDT"
+        df = self.get_data(coin_name, time_periods, max(upper_band, lower_band) * 2)
 
-        turtle_result = df.tail(1)["pos"].item()
-        if not np.isnan(turtle_result):
-            now_style = turtle_result
+        df['upper_band'] = talib.MAX(df.high, timeperiod=upper_band).shift(1)
+        df['lower_band'] = talib.MIN(df.low, timeperiod=lower_band).shift(1)
+        # print(df)
+        print(df.tail(1))
 
-        if now_style != max_value_coin:
-            trick = exchange.fetch_ticker(symbol="BTCUP/USDT")
-            if now_style == "BTC":
-                exchange.create_limit_buy_order(symbol="BTCUP/USDT", price=trick["bid"],
-                                                amount=balance_my["USDT"] / trick['bid'])
-                max_value_coin_new = "BTCUP"
-
-            else:
-                exchange.create_market_sell_order(symbol="BTCUP/USDT",
-                                                  amount=balance_my["BTCUP"])
-
-                max_value_coin_new = "USDT"
-
-            post_msg_to_dingtalk(msg="当前时间:{},账户所有人:{},原来持有的币种:{},买入的新币种为:{},账户余额:{}元".format(
-                datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                user,
-                max_value_coin, max_value_coin_new, balance_my_value))
-
+        if df.tail(1)["close"].item() > df.tail(1)["upper_band"].item():
+            now_style = coin_name + "UP"
+        elif df.tail(1)["close"].item() < df.tail(1)["lower_band"].item():
+            now_style = coin_name + "DOWN"
         else:
-            post_msg_to_dingtalk(msg="当前时间:{},账户所有人:{},本次没有调仓,账户余额:{}元".format(
-                datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                user, balance_my_value))
+            now_style = "USDT"
+        return now_style
 
 
-# turtle_trade_v2(coin_list, exchange, user="yujl")
+if __name__ == '__main__':
+    auto_trade = TurtleTrade(post_to_ding_talk=False)
+    auto_trade.trading_main(coin_name="BTC", user="yujl", upper_band=30, lower_band=20, time_periods="1d")
