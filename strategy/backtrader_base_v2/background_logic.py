@@ -43,17 +43,7 @@ class BasisStrategy(bt.Strategy):
         self.order = None
 
     def next(self):
-        self.log('Close, %.2f' % self.dataclose[0])
-
-        if self.order:
-            return
-
-        if not self.position:
-            if self.sma5[0] > self.sma10[0]:
-                self.order = self.buy(size=self.broker.getvalue() / self.dataclose)
-        else:
-            if self.sma5[0] < self.sma10[0]:
-                self.order = self.sell()
+        pass
 
     def notify_trade(self, trade):
         if not trade.isclosed:
@@ -69,9 +59,9 @@ class BasisStrategy(bt.Strategy):
 
 class BackTraderPipeline:
     def __init__(self,
-                 data_path,
-                 cash,
-                 commission,
+                 data_path="",
+                 cash=10000,
+                 commission=0.0015,
                  **kwargs):
         self.data_path = data_path
         self.cash = cash

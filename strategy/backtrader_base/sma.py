@@ -5,7 +5,7 @@
 """
 这个模块提供了
 
-@FileName  :  sma.py
+@FileName  :  sma_v2.py
 @Author    :  yujl
 @Time      :  2021/4/20 8:41
 """
