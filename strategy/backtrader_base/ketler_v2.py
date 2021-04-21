@@ -10,7 +10,7 @@
 @Time      :  2021/4/21 10:37
 """
 
-from strategy.backtrader_base_v2.background_logic import BasisStrategy
+from strategy.backtrader_base.background_logic import BasisStrategy
 import backtrader as bt
 
 class KetlerStrategy(BasisStrategy):
