@@ -5,7 +5,7 @@
 """
 这个模块提供了凯特勒通道策略
 
-@FileName  :  ketler_v2.py
+@FileName  :  ketler.py
 @Author    :  yujl
 @Time      :  2021/4/21 10:37
 """
