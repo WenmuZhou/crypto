@@ -23,6 +23,7 @@ class TurnTrade(BasisTrading):
             coin_mom[coin_name] = df.tail(1)["coin_mom"].item()
 
         max_value = max(coin_mom.values())
+        print("coin_mom:",coin_mom)
         for keys, values in coin_mom.items():
             if values == max_value:
                 # print(keys, values)
@@ -32,10 +33,10 @@ class TurnTrade(BasisTrading):
         print("now style:", now_style)
         return now_style
 
-# if __name__ == '__main__':
-#     auto_trade = TurnTrade()
-#     auto_trade.trading_main(coin_list=["BTC", "ETH", "ADA", "DOT", "ONT", "UNI", "BNB"], user="wxt", time_periods="4h",
-#                             data_limit=10, momentum_days=5)
+if __name__ == '__main__':
+    auto_trade = TurnTrade()
+    auto_trade.trading_main(coin_list=["BTC", "ETH", "ADA", "DOT", "ONT", "UNI", "BNB"], user="wxt", time_periods="4h",
+                            data_limit=10, momentum_days=5)
 #
 #     auto_trade.trading_main(
 #         coin_list=["EOS", "ANT", "DOT", "CHZ", "ADA", "UNI", "DOGE", "FIL", "CAKE", "ONT", "TLM", "BNB"], user="wenmu",
