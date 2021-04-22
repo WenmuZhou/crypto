@@ -72,6 +72,7 @@ class BasisTrading:
         now_style = self.strategy_trade(kwargs)
         print("now_style", now_style)
         sell_success = False
+        message = "发生了点意外"
         if max_value_coin != now_style:
             if max_value_coin != "USDT":
                 try:
