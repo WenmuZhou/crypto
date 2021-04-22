@@ -2,7 +2,6 @@
 # -*- coding:utf-8 -*-
 import time
 import pandas as pd
-from backtest.base_function import evaluate_investment
 import matplotlib.pyplot as plt
 
 pd.set_option("expand_frame_repr", False)

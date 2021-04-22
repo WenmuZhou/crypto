@@ -13,6 +13,7 @@ import requests
 import logging
 import datetime
 from trading.UserInfo import api_key_dict, api_secret_dict
+import time
 
 
 class BasisTrading:
@@ -40,15 +41,16 @@ class BasisTrading:
 
         return df
 
-    # @staticmethod
-    # def cal_technical_index(df, momentum_days=5):
-    #     df["coin_pct"] = df["close"].pct_change(1)
-    #     df["coin_mom"] = df["close"].pct_change(periods=momentum_days)
-    #     return df
+    @staticmethod
+    def cal_technical_index(df, momentum_days=5):
+        df["coin_pct"] = df["close"].pct_change(1)
+        df["coin_mom"] = df["close"].pct_change(periods=momentum_days)
+        return df
 
     def sell(self, pos_coin, balance_my):
         self.exchange.create_market_sell_order(symbol=pos_coin + "/USDT",
                                                amount=balance_my[pos_coin])
+        time.sleep(1)
 
     def buy(self, overweight_pos, balance_my):
         trick = self.exchange.fetch_ticker(symbol=overweight_pos + "/USDT")
@@ -68,7 +70,7 @@ class BasisTrading:
 
         print("origin balance:", balance_my)
         now_style = self.strategy_trade(kwargs)
-        print("now_style",now_style)
+        print("now_style", now_style)
         if max_value_coin != now_style:
             if max_value_coin != "USDT":
                 self.sell(max_value_coin, balance_my)
