@@ -115,8 +115,10 @@ class SSAStrategy(BasisStrategy):
         ssa: 奇异值分解指标对象
         dataclose: 收盘价
     """
+    params = (('ssa_window', 15), )
     def cal_technical_index(self):
-        self.ssa = SSAIndicator(ssa_window=15)
+        print("ssa_window: ", self.params.ssa_window)
+        self.ssa = SSAIndicator(ssa_window=self.params.ssa_window)
         self.dataclose = self.datas[0].close
 
     def next(self):

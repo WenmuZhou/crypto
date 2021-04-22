@@ -73,17 +73,27 @@ class BasisStrategy(bt.Strategy):
         return data
 
     @classmethod
-    def run(cls, data_path="", cash=100000, commission=0.0015, **kwargs):
+    def run(cls, data_path="", cash=100000, commission=1.5/1000, slip_type=-1, slip_value=0, params_dict={}):
+        strategy_params = params_dict.get("strategy_params",{})
+        analyzer_params = params_dict.get('analyzers', {})
+
         cerebro = bt.Cerebro()
-        cerebro.addstrategy(cls)
-
+        cerebro.addstrategy(cls, **strategy_params)
         cerebro.adddata(cls.data_process(data_path))
-
         cerebro.broker.setcash(cash)
         cerebro.broker.setcommission(commission)
         # 滑点、投入资金百分比、回测指标
+        if slip_type == 0:
+            cerebro.broker.set_slippage_fixed(slip_value)
+        elif slip_type == 1:
+            cerebro.broker.set_slippage_perc(slip_value)
 
-        cerebro.run()
+        for ana_name, ana_class in analyzer_params.items():
+            cerebro.addanalyzer(ana_class, _name=ana_name)
+
+        back_ret = cerebro.run()
+
+        return back_ret, cerebro
 
 # class BackTraderPipeline:
 #     def __init__(self,

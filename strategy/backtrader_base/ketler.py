@@ -28,11 +28,16 @@ class KetlerStrategy(BasisStrategy):
         upper: 通道上线
         lower: 通道下线
     """
+    params = (('ema_period', 20), ('atr_period', 17))
+
     def cal_technical_index(self):
-        self.expo = bt.talib.EMA(self.datas[0].close, timeperiod=20)
-        self.atr = bt.talib.ATR(self.data.high, self.data.low, self.data.close, timeperiod=17)
+        print("ema_period: ", self.params.ema_period)
+        print("atr_period: ", self.params.atr_period)
+        self.expo = bt.talib.EMA(self.datas[0].close, timeperiod=self.params.ema_period)
+        self.atr = bt.talib.ATR(self.data.high, self.data.low, self.data.close, timeperiod=self.params.atr_period)
         self.upper = self.expo + self.atr
         self.lower = self.expo - self.atr
+        self.close = self.data.close
 
     def next(self):
         # 如果已经下单，则返回
