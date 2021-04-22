@@ -71,16 +71,34 @@ class BasisTrading:
         print("origin balance:", balance_my)
         now_style = self.strategy_trade(kwargs)
         print("now_style", now_style)
+        sell_success = False
         if max_value_coin != now_style:
             if max_value_coin != "USDT":
-                self.sell(max_value_coin, balance_my)
-            if now_style != "USDT":
-                self.buy(now_style, balance_my)
+                try:
+                    self.sell(max_value_coin, balance_my)
+                    sell_success = True
+                except Exception as e:
+                    print(e)
+                    sell_success = False
+                    message = "调仓时间:{}\n\n账户所有人:{}\n\n原来持有的币种:{}\n\n本次出现卖出出现bug:{}\n\n".format(
+                        datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                        kwargs["user"],
+                        max_value_coin, e)
 
-            message = "调仓时间:{}\n\n账户所有人:{}\n\n原来持有的币种:{}\n\n买入的新币种为:{}\n\n账户余额:{:.2f}元".format(
-                datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                kwargs["user"],
-                max_value_coin, now_style, balance_my_value)
+            if now_style != "USDT" and sell_success:
+                try:
+                    self.buy(now_style, balance_my)
+                    message = "调仓时间:{}\n\n账户所有人:{}\n\n原来持有的币种:{}\n\n买入的新币种为:{}\n\n账户余额:{:.2f}元".format(
+                        datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                        kwargs["user"],
+                        max_value_coin, now_style, balance_my_value)
+                except Exception as e:
+                    print(e)
+                    message = "调仓时间:{}\n\n账户所有人:{}\n\n本次希望买入币种:{}\n\n本次买入出现bug:{}\n\n".format(
+                        datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                        kwargs["user"],
+                        now_style, e)
+
             if self.post_to_ding_talk:
                 self.post_msg_to_dingtalk(
                     msg=message)
