@@ -50,4 +50,18 @@ source /etc/profile
 
 ## 2、回测部分
 
-## 3、线上交易部分
+## 3、线上交易部分(trading)
+
+### 3.1 trade_execution
+
+本部分代码主要用于策略的线上自动执行部分代码。<br>
+根据不同的执行时间周期进行策略的划分。
+
+### 3.2 trade_strategy
+
+本部分代码主要用于策略算法的编写。<br>
+策略执行的基本逻辑在`base_trading.py`中定义好了基本策略执行逻辑。<br>
+定义新的策略只需要继承`BasisTrading`类，重写`strategy_trade`方法即可。<br>
+示例代码：`two_ma.py`
+
+

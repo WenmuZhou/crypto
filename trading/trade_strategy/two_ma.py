@@ -10,7 +10,18 @@ from trading.trade_strategy.base_trading import BasisTrading
 
 
 class TwoMATrade(BasisTrading):
+    # 构建自己的线上交易策略
     def strategy_trade(self, params):
+        """
+
+        :param params: 输入一些需要的参数
+            coin_name: 操作的币种
+            long_ma: 长期均线的时间周期
+            short_ma: 短期均线的时间周期
+            time_periods: 查看多少时间的
+        :return:
+            返回策略选定的需要买入的币种
+        """
         coin_name = params.get("coin_name", "BTC")
         long_ma = params.get("long_ma", 10)
         short_ma = params.get("short_ma", 5)
