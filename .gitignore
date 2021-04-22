@@ -9,6 +9,7 @@ _build
 build/
 dist/
 
+study/
 .idea/
 .vscode/
 .DS_Store
