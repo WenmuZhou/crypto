@@ -78,7 +78,7 @@ class BasisStrategy(bt.Strategy):
         strategy_params = params_dict.get("strategy_params",{})
         analyzer_params = params_dict.get('analyzers', {})
 
-        cerebro = bt.Cerebro(writer=True)
+        cerebro = bt.Cerebro()
         cerebro.addstrategy(cls, **strategy_params)
         cerebro.adddata(cls.data_process(data_path))
         cerebro.broker.setcash(cash)
