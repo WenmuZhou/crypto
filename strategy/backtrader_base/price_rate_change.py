@@ -23,8 +23,10 @@ class PriceMomentumStrategy(BasisStrategy):
     Attributes:
         proc: 价格动量
     """
+    params = (('timeperiod', 14), )
     def cal_technical_index(self):
-        self.proc = bt.talib.ROCP(self.datas[0].close, timeperiod=14)
+        print('timeperiod= ', self.params.timeperiod)
+        self.proc = bt.talib.ROCP(self.datas[0].close, timeperiod=self.params.timeperiod)
 
     def next(self):
         if self.order:

@@ -58,7 +58,13 @@ class TurtleStrategy(BasisStrategy):
         crossover_hi: 是否穿过上线
         crossover_lo: 是否穿过下线
     """
+
+    params = (('hi_period', 20), ('lo_period', 10), ('atr_period', 14))
+
     def cal_technical_index(self):
+        print('hi_period: ', self.params.hi_period)
+        print('lo_period: ', self.params.lo_period)
+        print('atr_period: ', self.params.atr_period)
         self.dataclose = self.datas[0].close
         self.datahigh = self.datas[0].high
         self.datalow = self.datas[0].low
@@ -66,11 +72,11 @@ class TurtleStrategy(BasisStrategy):
         self.buy_time = 0
         self.buy_price = 0
 
-        self.Donchian_hi = bt.indicators.Highest(self.datahigh(-1), period=20, subplot=False)
-        self.Donchian_lo = bt.indicators.Lowest(self.datalow(-1), period=10, subplot=False)
+        self.Donchian_hi = bt.indicators.Highest(self.datahigh(-1), period=self.params.hi_period, subplot=False)
+        self.Donchian_lo = bt.indicators.Lowest(self.datalow(-1), period=self.params.lo_period, subplot=False)
         self.TR = bt.indicators.Max((self.datahigh(0) - self.datalow(0)), abs(self.dataclose(-1) - self.datahigh(0)),
                                     abs(self.dataclose(-1) - self.datalow(0)))
-        self.ATR = bt.indicators.SimpleMovingAverage(self.TR, period=14, subplot=True)
+        self.ATR = bt.indicators.SimpleMovingAverage(self.TR, period=self.params.atr_period, subplot=True)
 
         self.crossover_hi = bt.ind.CrossOver(self.dataclose(0), self.Donchian_hi)
         self.crossover_lo = bt.ind.CrossOver(self.dataclose(0), self.Donchian_lo)
