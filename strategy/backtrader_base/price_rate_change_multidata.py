@@ -15,12 +15,12 @@ import backtrader as bt
 
 from strategy.backtrader_base.background_logic import BasisStrategy
 
+
 class PriceMomentumStrategyMultiData(BasisStrategy):
-    params = (('timeperiod', 14), )
+    params = (('timeperiod', 20),)
 
     def __init__(self):
         self.data_num = len(self.datas)
-        print(self.data_num)
         super(PriceMomentumStrategyMultiData, self).__init__()
 
     def cal_technical_index(self):
@@ -33,8 +33,8 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
         ret_datas = []
         for item in data_paths:
             df = pd.read_csv(item)
-            df["date"] = pd.to_datetime(df["date"])
-            data = bt.feeds.PandasData(dataname=df, datetime="date", volume="volume")
+            df["time_stamp"] = pd.to_datetime(df["time_stamp"])
+            data = bt.feeds.PandasData(dataname=df, datetime="time_stamp", volume="vol")
             ret_datas.append(data)
         return ret_datas
 
@@ -44,20 +44,42 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
         if self.order:
             return
 
-        tmp_max = 0
-        tmp_idx = -1
-        for i in range(self.data_num):
-            # print("i = {}, value = {}".format(i, self.proc[i][0]))
-            if self.proc[i][0] < 0:
-                self.order = self.sell(data=self.datas[i])
-            else:
-                if tmp_max < self.proc[i][0]:
-                    tmp_max = self.proc[i][0]
-                    tmp_idx = i
-        if tmp_idx >= 0:
-            self.order = self.buy(data=self.datas[i])
+        max_proc = -100
+        max_index = -1
+        for i in range(len(self.proc)):
+            if self.proc[i][0] > max_proc:
+                max_proc = self.proc[i][0]
+                max_index = i
+        print('==============')
+        print(self.datas[0].datetime.date(0))
+        print(max_index, max_proc)
+        if not self.getposition(self.datas[max_index]) or max_index < 0:
+            print(111111111111)
+            for i in range(len(self.proc)):
+                if self.getposition(self.datas[i]):
+                    self.sell()
 
+        if max_proc > 0:
+            print(2222222222222)
+            print(self.broker.getcash())
+            print(self.datas[max_index].close[0])
+            self.buy(data=self.datas[max_index], size=int(self.broker.getcash() / self.datas[max_index].close[0]))
+            # self.buy(data=self.datas[max_index],size=10.3)
+
+        # elif max_index != self.position:
+
+        # for i in range(self.data_num):
+        #     # print("i = {}, value = {}".format(i, self.proc[i][0]))
+        #     if self.proc[i][0] < 0:
+        #         self.order = self.sell(data=self.datas[i])
+        #     else:
+        #         if tmp_max < self.proc[i][0]:
+        #             tmp_max = self.proc[i][0]
+        #             tmp_idx = i
+        # if tmp_idx >= 0:
+        #     self.order = self.buy(data=self.datas[i])
 
 
 if __name__ == "__main__":
-    pass
+    PriceMomentumStrategyMultiData.run(data_path=["dataset/1d/BTC.csv", "dataset/1d/ETH.csv"],
+                                       cash=10000)

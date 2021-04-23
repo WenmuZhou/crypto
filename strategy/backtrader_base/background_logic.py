@@ -80,7 +80,6 @@ class BasisStrategy(bt.Strategy):
 
         cerebro = bt.Cerebro()
         cerebro.addstrategy(cls, **strategy_params)
-        # cerebro.adddata(cls.data_process(data_path))
         datas = cls.data_process(data_path)
         if isinstance(datas, list):
             for item in datas:
