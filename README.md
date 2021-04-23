@@ -202,4 +202,53 @@ if __name__ == '__main__':
 定义新的策略只需要继承`BasisTrading`类，重写`strategy_trade`方法即可。<br>
 示例代码：`two_ma.py`
 
+```python
+import talib
+from trading.trade_strategy.base_trading import BasisTrading
 
+class TwoMATrade(BasisTrading):
+    # 构建自己的线上交易策略
+    def strategy_trade(self, params):
+        """
+
+        :param params: 输入一些需要的参数
+            coin_name: 操作的币种
+            long_ma: 长期均线的时间周期
+            short_ma: 短期均线的时间周期
+            time_periods: 查看多少时间的
+        :return:
+            返回策略选定的需要买入的币种
+        """
+        coin_name = params.get("coin_name", "BTC")
+        long_ma = params.get("long_ma", 10)
+        short_ma = params.get("short_ma", 5)
+        time_periods = params.get("time_periods", "4h")
+
+        df = self.get_data(coin_name, time_periods, long_ma * 2)
+        df["short_ma"] = talib.SMA(df["close"], timeperiod=short_ma)
+        df["long_ma"] = talib.SMA(df["close"], timeperiod=long_ma)
+        # print(df)
+        print(df.tail(1))
+
+        if df.tail(1)["short_ma"].item() > df.tail(1)["long_ma"].item():
+            now_style = "REEF"
+        else:
+            now_style = "USDT"
+        return now_style
+```
+
+## 4.数据获取
+
+使用`get_data`里面的`get_kdata`可以获取历史数据<br>
+参数选择
+
+````
+# 需要获取列表
+coin_list = ["BTC", "ETH", "EOS", "FIL", "LTC", "XRP", "DOT", "KSM", "CAKE", "BNB", "ADA", "UNI"]
+# 获取的K线的时间周期
+time_period = "4h"
+# 进行多少轮的数据获取
+range_number = 10
+# 每一轮获取到的数据(有些交易所的接口限制每次最多获取1000条数据）
+limit_number = 1000
+```

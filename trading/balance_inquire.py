@@ -13,7 +13,7 @@ from trading.UserInfo import api_key_dict, api_secret_dict
 exchange = ccxt.binance()
 
 
-def get_balance_inquire():
+def get_balance_inquire(post_msg_to_ding_talk=True):
     res_msg = "======定时账户余额查询======"
     res_msg += "\n\n"
     now_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -40,6 +40,7 @@ def get_balance_inquire():
         exchange.secret = api_secret
 
         balance_my, max_value_coin, balance_my_value = get_balance_info(exchange)
+        print(balance_my)
 
         if api_name not in balance_dict:
             with open("log/balance_value", "a") as f:
@@ -61,12 +62,12 @@ def get_balance_inquire():
             file.write("\n")
         res_msg += "-------------------"
         res_msg += "\n\n"
-
-    post_msg_to_dingtalk(msg=res_msg)
+    if post_msg_to_ding_talk:
+        post_msg_to_dingtalk(msg=res_msg)
     if write_file:
         file.close()
     print(res_msg)
 
 
 if __name__ == '__main__':
-    get_balance_inquire()
+    get_balance_inquire(post_msg_to_ding_talk=False)

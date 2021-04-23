@@ -6,9 +6,13 @@ import pandas as pd
 
 exchange = ccxt.binance()
 
+# 需要获取列表
 coin_list = ["BTC", "ETH", "EOS", "FIL", "LTC", "XRP", "DOT", "KSM", "CAKE", "BNB", "ADA", "UNI"]
+# 获取的K线的时间周期
 time_period = "4h"
+# 进行多少轮的数据获取
 range_number = 10
+# 每一轮获取到的数据(有些交易所的接口限制每次最多获取1000条数据）
 limit_number = 1000
 
 

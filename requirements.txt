@@ -8,3 +8,4 @@ tqdm
 ray
 scikit-opt
 requests
+gym

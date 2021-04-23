@@ -9,9 +9,21 @@ from trading.trade_strategy.turn_trade import TurnTrade
 from trading.trade_strategy.turtle_trade import TurtleTrade
 
 auto_trade = TurnTrade()
-auto_trade.trading_main(coin_list=["BTC", "ETH"], user="nan", time_periods="1d", momentum_days=10)
+try:
+    auto_trade.trading_main(coin_list=["BTC", "ETH"], user="nan", time_periods="1d", momentum_days=10)
+except Exception as e:
+    print(e)
+    print('nan bug')
 
-auto_trade.trading_main(coin_list=["BTC", "ETH"], user="shuig", time_periods="1d", momentum_days=20)
+try:
+    auto_trade.trading_main(coin_list=["BTC", "ETH"], user="shuig", time_periods="1d", momentum_days=20)
+except Exception as e:
+    print(e)
+    print('shug bug')
 
 auto_trade_v2 = TurtleTrade()
-auto_trade_v2.trading_main(coin_name="BTC", user="yujl", upper_band=30, lower_band=20, time_periods="1d")
+try:
+    auto_trade_v2.trading_main(coin_name="BTC", user="yujl", upper_band=30, lower_band=20, time_periods="1d")
+except Exception as e:
+    print(e)
+    print('yujl bug')
