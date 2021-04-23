@@ -80,7 +80,14 @@ class BasisStrategy(bt.Strategy):
 
         cerebro = bt.Cerebro()
         cerebro.addstrategy(cls, **strategy_params)
-        cerebro.adddata(cls.data_process(data_path))
+        # cerebro.adddata(cls.data_process(data_path))
+        datas = cls.data_process(data_path)
+        if isinstance(datas, list):
+            for item in datas:
+                cerebro.adddata(item)
+        else:
+            cerebro.adddata(datas)
+
         cerebro.broker.setcash(cash)
         cerebro.broker.setcommission(commission)
         # 滑点、投入资金百分比、回测指标

@@ -1,57 +1,9 @@
-# crypto
-
-crypto旨在打造一套丰富、领先、且实用的量化工具库，助力使用者开发出更好的策略，并早日实现财富自由。
-
-## 1、安装
-
-```
-    git clone https://github.com/PKQ1688/crypto.git
-    pip install -r requirements.txt
-```
-
-### 1.1 linux install ta_lib
-
-### 1.1.1 安装ta-lib源码
-
-```
-    wget http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz #下载
-    tar -xvf ta-lib-0.4.0-src.tar.gz  # 解压
-    cd ta-lib # 进入目录
-    ./configure --prefix=/usr
-    make
-    make install
-```
-
-### 1.1.2 安装python版本的ta_lib
-
-```
-    git clone https://github.com/mrjbq7/ta-lib.git
-    cd ta-lib
-    python setup.py install
-```
-
-### 1.1.3 解决bug
-
-错误：`ImportError: libta_lib.so.0: cannot open shared object file: No such file or directory`
-
-解决方案:
-
-```
-sudo find / -name libta_lib.so.0
-/usr/lib/libta_lib.so.0
-/root/ta-lib/src/.libs/libta_lib.so.0
-
-vi /etc/profile
-add
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib
-
-source /etc/profile
-```
-
-## 2、回测部分
-### 2.1 backtrader_base
-&emsp;&emsp;本模块是基于backtrader进行开发的。我们对其进行了封装，以使开发者聚焦于策略的开发，而不用关心无关的事情。backtrader的官方文档：https://www.backtrader.com/docu/  
-&emsp;&emsp;***封装说明：***  
+&emsp;&emsp;本文档是对基于backtrader开发的说明，目录为strategy/backtrader_base。
+## 一、概况
+&emsp;&emsp;为了简化基于backtrader开源库进行策略的开发，我们对backtrader进行了封装，使开发者聚焦于策略的实现，而不用关心无关的功能。  
+&emsp;&emsp;backtrader的官方文档：https://www.backtrader.com/docu/
+## 二、详细介绍
+### 1、封装说明
 &emsp;&emsp;background_logic.py模块中的类BasisStrategy()实现了对bt.strategy的封装，包含诸如日志打印等方法：
 - log(txt, dt=None, doprint=False)：日志打印
     - txt: 打印的内容
@@ -83,57 +35,14 @@ source /etc/profile
     - slip_value：滑点值
     - params_dict：设置策略参数、回测指标
         - 策略参数的键名：strategy_params，对应的值的类型是字典，比如双均线的参数：{"strategy_params": {"short_period": 5, "long_period": 10}}
-        - 回测指标的键名：analyzers，对应的值的类型是字典，比如夏普值和回撤：{'analyzers':{'sharp': bt.analyzers.SharpeRatio, 'drawdown': bt.analyzers.DrawDown}}   
-    
-
-&emsp;&emsp;***开发说明：***  
-1）必须重写的方法  
-&emsp;&emsp;必须重写cal_technical_index()和next()方法  
-2）视情况决定是否重写  
-&emsp;&emsp;data_process()在数据格式不满足要求时候重写  
-3）数据和策略可加载的数量
-&emsp;&emsp;可加载多个股票数据和多个策略，只要计算机资源够。用多个股票数据，需要重写data_process()和run()方法。  
-```python
-@staticmethod
-def data_process(data_paths):  # data_paths里包含多个股票的数据，假设类型为列表
-    ret_datas = []
-    for item in data_paths:
-        df = pd.read_csv(item)
-        """必要的数据处理"""
-        data = bt.feeds.PandasData(dtaname=df,
-                                   datetime='date',)
-        ret_datas.append(data)
-    return ret_datas
-
-@classmethod
-def run(cls, data_path="", cash=100000, commission=1.5/1000, slip_type=-1, slip_value=0, params_dict={}):
-    strategy_params = params_dict.get("strategy_params",{})
-    analyzer_params = params_dict.get('analyzers', {})
-    strategies = params_dict.get('strategies', {})
-
-    cerebro = bt.Cerebro()
-    cerebro.addstrategy(cls, **strategy_params)
-    
-    datas = cls.data_process(data_path)
-    for item in datas:
-        cerebro.adddata(item)
-    cerebro.broker.setcash(cash)
-    cerebro.broker.setcommission(commission)
-    # 滑点、投入资金百分比、回测指标
-    if slip_type == 0:
-        cerebro.broker.set_slippage_fixed(slip_value)
-    elif slip_type == 1:
-        cerebro.broker.set_slippage_perc(slip_value)
-
-    for ana_name, ana_class in analyzer_params.items():
-        cerebro.addanalyzer(ana_class, _name=ana_name)
-
-    back_ret = cerebro.run()
-
-```
-&emsp;&emsp;***例子：***  
-&emsp;&emsp;以双均线作为例子来说明如何在BasisStrategy()上开发策略。  
-
+        - 回测指标的键名：analyzers，对应的值的类型是字典，比如夏普值和回撤：{'analyzers':{'sharp': bt.analyzers.SharpeRatio, 'drawdown': bt.analyzers.DrawDown}}
+### 2、开发说明
+#### 1）必须重写的方法
+&emsp;&emsp;必须重写cal_technical_index()和next()方法
+#### 2）视情况决定是否重写
+&emsp;&emsp;data_process()在数据格式不满足要求时候重写
+## 三、例子
+&emsp;&emsp;以双均线作为例子来说明如何在BasisStrategy()上开发策略。
 ```python
 import backtrader as bt
 import pandas as pd
@@ -185,21 +94,5 @@ if __name__ == '__main__':
 ```
 &emsp;&emsp;上面策略有两个参数：短周期和长周期，可通过传参修改，传入参数的键名和类参数中的字符串一致。  
 &emsp;&emsp;回测指标的获取时，第三个属性和传参的键名一致。
-
-
-
-## 3、线上交易部分(trading)
-
-### 3.1 trade_execution
-
-本部分代码主要用于策略的线上自动执行部分代码。<br>
-根据不同的执行时间周期进行策略的划分。
-
-### 3.2 trade_strategy
-
-本部分代码主要用于策略算法的编写。<br>
-策略执行的基本逻辑在`base_trading.py`中定义好了基本策略执行逻辑。<br>
-定义新的策略只需要继承`BasisTrading`类，重写`strategy_trade`方法即可。<br>
-示例代码：`two_ma.py`
 
 
