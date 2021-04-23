@@ -78,7 +78,7 @@ class BasisStrategy(bt.Strategy):
         strategy_params = params_dict.get("strategy_params",{})
         analyzer_params = params_dict.get('analyzers', {})
 
-        cerebro = bt.Cerebro()
+        cerebro = bt.Cerebro(cheat_on_open=True)
         cerebro.addstrategy(cls, **strategy_params)
         datas = cls.data_process(data_path)
         if isinstance(datas, list):

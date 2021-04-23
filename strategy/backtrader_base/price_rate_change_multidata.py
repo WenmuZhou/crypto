@@ -49,9 +49,6 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
         return ret_datas
 
     def next(self):
-        print("next")
-        dt = self.datas[0].datetime.date(0)
-        print('%s' % (dt.isoformat()))
         if self.order:
             return
 
@@ -68,13 +65,15 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
             print(111111111111)
             for i in range(len(self.proc)):
                 if self.getposition(self.datas[i]):
-                    self.sell()
+                    self.order = self.sell()
 
         if max_proc > 0:
             print(2222222222222)
             print(self.broker.getcash())
             print(self.datas[max_index].close[0])
-            self.buy(data=self.datas[max_index], size=int(self.broker.getcash() / self.datas[max_index].close[0]))
+            self.order = self.buy(data=self.datas[max_index],
+                                  size=int(self.broker.getcash() / self.datas[max_index].close[0]),
+                                  price=self.datas[max_index].close[0])
             # self.buy(data=self.datas[max_index],size=10.3)
 
         # elif max_index != self.position:
@@ -92,5 +91,6 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
 
 
 if __name__ == "__main__":
-    PriceMomentumStrategyMultiData.run(data_path=["dataset/1d/BTC.csv", "dataset/1d/ETH.csv"],
-                                       cash=10000)
+    res, _ = PriceMomentumStrategyMultiData.run(data_path=["dataset/1d/BTC.csv", "dataset/1d/ETH.csv"],
+                                                cash=100000)
+    print(res)
