@@ -95,7 +95,13 @@ source /etc/profile
 &emsp;&emsp;可加载多个股票数据和多个策略，只要计算机资源够。用多个股票数据，需要重写data_process()和run()方法。  
 ```python
 @staticmethod
-def data_process(data_paths):  # data_paths里包含多个股票的数据，假设类型为列表
+def data_process(data_paths):  
+    """ data_paths里包含多个股票数据的路径，假设类型为列表
+    每读取一只股票数据，进行一次数据处理，然后放入列表中
+    
+    Returns:
+        返回数据列表
+    """
     ret_datas = []
     for item in data_paths:
         df = pd.read_csv(item)
@@ -109,17 +115,23 @@ def data_process(data_paths):  # data_paths里包含多个股票的数据，假�
 def run(cls, data_path="", cash=100000, commission=1.5/1000, slip_type=-1, slip_value=0, params_dict={}):
     strategy_params = params_dict.get("strategy_params",{})
     analyzer_params = params_dict.get('analyzers', {})
-    strategies = params_dict.get('strategies', {})
+    strategies = params_dict.get('strategies', {})#获取其他的策略
 
     cerebro = bt.Cerebro()
     cerebro.addstrategy(cls, **strategy_params)
+    for strategy_name, strategy_class in analyzer_params.items():#加载策略
+        cerebro.addstrategy(strategy_class)
     
     datas = cls.data_process(data_path)
-    for item in datas:
-        cerebro.adddata(item)
+    if isinstance(datas, list):   #加载数据
+        for item in datas:
+              cerebro.adddata(item)
+    else:
+        cerebro.adddata(datas)
+        
     cerebro.broker.setcash(cash)
     cerebro.broker.setcommission(commission)
-    # 滑点、投入资金百分比、回测指标
+    
     if slip_type == 0:
         cerebro.broker.set_slippage_fixed(slip_value)
     elif slip_type == 1:
