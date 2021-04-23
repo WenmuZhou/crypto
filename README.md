@@ -159,6 +159,7 @@ if __name__ == '__main__':
 策略执行的基本逻辑在`base_trading.py`中定义好了基本策略执行逻辑。<br>
 定义新的策略只需要继承`BasisTrading`类，重写`strategy_trade`方法即可。<br>
 示例代码：`two_ma.py`
+
 ```python
 import talib
 from trading.trade_strategy.base_trading import BasisTrading
@@ -196,4 +197,16 @@ class TwoMATrade(BasisTrading):
 
 ## 4.数据获取
 
+使用`get_data`里面的`get_kdata`可以获取历史数据<br>
+参数选择
 
+````
+# 需要获取列表
+coin_list = ["BTC", "ETH", "EOS", "FIL", "LTC", "XRP", "DOT", "KSM", "CAKE", "BNB", "ADA", "UNI"]
+# 获取的K线的时间周期
+time_period = "4h"
+# 进行多少轮的数据获取
+range_number = 10
+# 每一轮获取到的数据(有些交易所的接口限制每次最多获取1000条数据）
+limit_number = 1000
+```
