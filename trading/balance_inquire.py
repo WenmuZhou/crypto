@@ -40,6 +40,7 @@ def get_balance_inquire(post_msg_to_ding_talk=True):
         exchange.secret = api_secret
 
         balance_my, max_value_coin, balance_my_value = get_balance_info(exchange)
+        print(balance_my)
 
         if api_name not in balance_dict:
             with open("log/balance_value", "a") as f:
