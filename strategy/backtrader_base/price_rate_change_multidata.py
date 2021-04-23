@@ -28,6 +28,16 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
         for i in range(self.data_num):
             self.proc[i] = bt.talib.ROCP(self.datas[i].close, timeperiod=self.params.timeperiod)
 
+    def prenext(self):
+        print("prenext")
+        dt = self.datas[0].datetime.date(-1)
+        print('%s' % (dt.isoformat()))
+
+    def nextstart(self):
+        print("nextstart")
+        dt = self.datas[0].datetime.date(-1)
+        print('%s' % (dt.isoformat()))
+
     @staticmethod
     def data_process(data_paths):
         ret_datas = []
