@@ -49,8 +49,9 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
         return ret_datas
 
     def next(self):
-        # dt = self.datas[0].datetime.date(0)
-        # print('%s' % (dt.isoformat()))
+        print("next")
+        dt = self.datas[0].datetime.date(0)
+        print('%s' % (dt.isoformat()))
         if self.order:
             return
 
