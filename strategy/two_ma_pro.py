@@ -19,7 +19,7 @@ trade_rate = 1.5 / 1000
 
 
 def main_two_ma_strategy(coin_name_, short_period_, long_period_):
-    df = pd.read_csv("dataset/4h/" + coin_name_ + ".csv")
+    df = pd.read_csv("dataset/1d/" + coin_name_ + ".csv")
     df["ma_short"] = talib.SMA(df["close"], timeperiod=short_period_)
     df["ma_long"] = talib.SMA(df["close"], timeperiod=long_period_)
     df.rename(columns={"vol": "volume"}, inplace=True)
@@ -60,7 +60,7 @@ def main_two_ma_strategy(coin_name_, short_period_, long_period_):
     strategy_net_ = df.tail(1)["strategy_net"].item()
     # print("coin_net:", coin_net_)
     # print("strategy_net:", strategy_net_)
-    df.to_csv("result/reef_4h_6_45.csv")
+    # df.to_csv("result/reef_4h_6_45.csv")
     return coin_net_, strategy_net_
 
 
@@ -76,7 +76,7 @@ def plot_image(df_):
 
 
 # coin_list = ["BTC", "ETH", "EOS", "LTC", "XRP", "BNB", "DOT", "FIL"]
-coin_list = ["REEF"]
+coin_list = ["BTC"]
 
 
 # for coin_name in coin_list:
@@ -118,12 +118,14 @@ def simple_test(coin_list):
     print("strategy_net:", strategy_net)
     print("=============================")
 
-    res_df = pd.DataFrame(res, columns=["coin", "short_period", "long_period", "coin_net", "strategy_net", "is_win"])
-    res_df.to_csv("result/two_ma_pro_reef_4h.csv", index=False)
+    # res_df = pd.DataFrame(res, columns=["coin", "short_period", "long_period", "coin_net", "strategy_net", "is_win"])
+    # res_df.to_csv("result/two_ma_pro_reef_4h.csv", index=False)
 
 
 # simple_test(coin_list)
-main_two_ma_strategy("REEF", 6, 45)
+coin_net, strategy_net = main_two_ma_strategy("BTC", 5, 10)
+print("coin_net", coin_net)
+print("strategy_net", strategy_net)
 
 
 def ray_use(coin_list):

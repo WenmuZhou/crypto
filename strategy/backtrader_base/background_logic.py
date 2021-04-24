@@ -10,7 +10,7 @@ import pandas as pd
 
 
 class BasisStrategy(bt.Strategy):
-    def log(self, txt, dt=None, doprint=False):
+    def log(self, txt, dt=None, doprint=True):
         if doprint:
             dt = dt or self.datas[0].datetime.date(0)
             print('%s, %s' % (dt.isoformat(), txt))
@@ -57,11 +57,13 @@ class BasisStrategy(bt.Strategy):
             return
 
         self.log('OPERATION PROFIT, GROSS %.2f, NET %.2f' %
-                 (trade.pnl, trade.pnlcomm), doprint=True)
+                 (trade.pnl, trade.pnlcomm), doprint=False)
 
     def stop(self):
         self.log(u'Ending Value %.2f' %
-                 (self.broker.getvalue()), doprint=True)
+                 (self.broker.getvalue()))
+        self.log('coin yield:{:.2f}'.format(self.data_close[0] / self.data_close[-len(self.data_close) + 1]))
+        self.log('strategy yield:{:.2f}'.format(self.broker.getvalue() / self.origin_cash))
 
     @staticmethod
     def data_process(data_path):
@@ -73,12 +75,13 @@ class BasisStrategy(bt.Strategy):
         return data
 
     @classmethod
-    def run(cls, data_path="", cash=100000, commission=1.5 / 1000, slip_type=-1, slip_value=0, IS_All_IN=False,
+    def run(cls, data_path="", cash=100000, commission=1.5 / 1000, slip_type=-1, slip_value=0, cheat_on_open=False,
             params_dict={}):
+        cls.origin_cash = cash
         strategy_params = params_dict.get("strategy_params", {})
         analyzer_params = params_dict.get('analyzers', {})
 
-        cerebro = bt.Cerebro(cheat_on_open=IS_All_IN)
+        cerebro = bt.Cerebro(cheat_on_open=cheat_on_open)
         cerebro.addstrategy(cls, **strategy_params)
         datas = cls.data_process(data_path)
         if isinstance(datas, list):
