@@ -52,7 +52,6 @@ class BasisStrategy(bt.Strategy):
         # 订单状态处理完成，设为空
         self.order = None
 
-
     def notify_trade(self, trade):
         if not trade.isclosed:
             return
@@ -74,11 +73,12 @@ class BasisStrategy(bt.Strategy):
         return data
 
     @classmethod
-    def run(cls, data_path="", cash=100000, commission=1.5/1000, slip_type=-1, slip_value=0, params_dict={}):
-        strategy_params = params_dict.get("strategy_params",{})
+    def run(cls, data_path="", cash=100000, commission=1.5 / 1000, slip_type=-1, slip_value=0, IS_All_IN=False,
+            params_dict={}):
+        strategy_params = params_dict.get("strategy_params", {})
         analyzer_params = params_dict.get('analyzers', {})
 
-        cerebro = bt.Cerebro(cheat_on_open=True)
+        cerebro = bt.Cerebro(cheat_on_open=IS_All_IN)
         cerebro.addstrategy(cls, **strategy_params)
         datas = cls.data_process(data_path)
         if isinstance(datas, list):
@@ -101,4 +101,3 @@ class BasisStrategy(bt.Strategy):
         back_ret = cerebro.run()
 
         return back_ret, cerebro
-

@@ -92,5 +92,4 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
 
 if __name__ == "__main__":
     res, _ = PriceMomentumStrategyMultiData.run(data_path=["dataset/1d/BTC.csv", "dataset/1d/ETH.csv"],
-                                                cash=100000)
-    print(res)
+                                                IS_All_IN=True, cash=100000000)

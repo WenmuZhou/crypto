@@ -20,22 +20,21 @@ class TwoSmaStrategy(BasisStrategy):
         sma5: 短周期均值
         sma10: 长周期均值
     """
-    params = (('short_period', 5), ('long_period', 5))
+    params = (('short_period', 5), ('long_period', 10))
+
     def __init__(self):
         super(TwoSmaStrategy, self).__init__()
 
     @staticmethod
     def data_process(data_path):
         df = pd.read_csv(data_path)
-        df["date"] = pd.to_datetime(df["date"])
-        data = bt.feeds.PandasData(dataname=df, datetime="date", volume="volume")
+        df["time_stamp"] = pd.to_datetime(df["time_stamp"])
+        data = bt.feeds.PandasData(dataname=df, datetime="time_stamp", volume="vol")
         return data
 
     def cal_technical_index(self):
-        print("short_period: ", self.params.short_period)
-        print('long_period: ', self.params.long_period)
-        self.sma5 = bt.indicators.MovingAverageSimple(self.datas[0], period=self.params.short_period)
-        self.sma10 = bt.indicators.MovingAverageSimple(self.datas[0], period=self.params.long_period)
+        self.sma_short = bt.indicators.MovingAverageSimple(self.datas[0], period=self.params.short_period)
+        self.sma_long = bt.indicators.MovingAverageSimple(self.datas[0], period=self.params.long_period)
 
     def next(self):
         self.log('Close, %.2f' % self.data_close[0])
@@ -44,12 +43,16 @@ class TwoSmaStrategy(BasisStrategy):
             return
 
         if not self.position:
-            if self.sma5[0] > self.sma10[0]:
+            if self.sma_short[0] > self.sma_long[0]:
                 self.order = self.buy()
         else:
-            if self.sma5[0] < self.sma10[0]:
+            if self.sma_short[0] < self.sma_long[0]:
                 self.order = self.sell()
 
 
 if __name__ == '__main__':
-    TwoSmaStrategy.run(data_path="dataset/1d/BTC.csv")
+    TwoSmaStrategy.run(data_path="dataset/1d/BTC.csv", IS_All_IN=True, cash=10000000)
+
+    '''
+    cd /root/crypto && /root/anaconda3/envs/quant/bin/python -m trading.trade_execution.time_4h
+    '''
