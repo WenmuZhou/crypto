@@ -117,7 +117,7 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
 
 if __name__ == "__main__":
     ret, cerebro = PriceMomentumStrategyMultiData.run(data_path=["dataset/1d/BTC.csv", "dataset/1d/ETH.csv"],
-                                                cheat_on_open=True,
+                                                IS_ALL_IN=True,
                                                 cash=10000000,
                                                 params_dict={'analyzers': {'sharp': bt.analyzers.SharpeRatio,
                                                                            'annual_return': bt.analyzers.AnnualReturn,
