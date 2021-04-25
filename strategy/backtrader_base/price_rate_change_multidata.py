@@ -17,7 +17,7 @@ from strategy.backtrader_base.background_logic import BasisStrategy
 
 
 class PriceMomentumStrategyMultiData(BasisStrategy):
-    params = (('timeperiod', 20),)
+    params = (('time_period', 20),)
 
     def __init__(self):
         self.data_num = len(self.datas)
@@ -26,17 +26,13 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
     def cal_technical_index(self):
         self.proc = {}
         for i in range(self.data_num):
-            self.proc[i] = bt.talib.ROCP(self.datas[i].close, timeperiod=self.params.timeperiod)
+            self.proc[i] = bt.talib.ROCP(self.datas[i].close, timeperiod=self.params.time_period)
 
     def prenext(self):
-        # print("prenext")
         dt = self.datas[0].datetime.date(-1)
-        # print('%s' % (dt.isoformat()))
 
     def nextstart(self):
-        # print("nextstart")
         dt = self.datas[0].datetime.date(-1)
-        # print('%s' % (dt.isoformat()))
 
     @staticmethod
     def data_process(data_paths):
@@ -91,19 +87,22 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
             if self.proc[i][0] > max_proc:
                 max_proc = self.proc[i][0]
                 max_index = i
+        print('111111', self.position)
         if not self.getposition(self.datas[max_index]) or max_index < 0:
             for i in range(len(self.proc)):
                 if self.getposition(self.datas[i]):
+                    print("xxxxxxxxxxxx")
                     self.order = self.sell(
                         size=self.position.size,
+                        data=self.datas[i],
                     )
-
+        print('222222', self.position)
         if max_proc > 0:
-            print('{} Send Buy, from data {}, open {}'.format(
-                self.datas[max_index].datetime.date(),
-                max_index,
-                self.datas[max_index].open[0]
-            ))
+            # print('{} Send Buy, from data {}, open {}'.format(
+            #     self.datas[max_index].datetime.date(),
+            #     max_index,
+            #     self.datas[max_index].open[0]
+            # ))
             self.order = self.buy(
                 data=self.datas[max_index],
                 size=(self.broker.getcash() / self.datas[max_index].open[0]),
@@ -114,15 +113,23 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
 
 
 if __name__ == "__main__":
-    ret, cerebro = PriceMomentumStrategyMultiData.run(data_path=["dataset/1d/BTC.csv", "dataset/1d/ETH.csv"],
-                                                      IS_ALL_IN=True,
-                                                      cash=10000000,
-                                                      params_dict={'analyzers': {'sharp': bt.analyzers.SharpeRatio,
-                                                                                 'annual_return': bt.analyzers.AnnualReturn,
-                                                                                 'drawdown': bt.analyzers.DrawDown}}
-                                                      )
+    for i in range(3, 100):
+        print("time_period:", i)
+        ret, cerebro = PriceMomentumStrategyMultiData.run(
+            data_path=["dataset/1d/BTC.csv", "dataset/1d/ETH.csv"],
+            IS_ALL_IN=True,
+            cash=10000000,
+            params_dict={"strategy_params":
+                             {"time_period": i, },
+                         'analyzers': {
+                             'sharp': bt.analyzers.SharpeRatio,
+                             'annual_return': bt.analyzers.AnnualReturn,
+                             'drawdown': bt.analyzers.DrawDown}}
+        )
 
-    print('Sharpe Ratio: ', ret[0].analyzers.sharp.get_analysis())
-    print('annual return: ', ret[0].analyzers.annual_return.get_analysis())
-    print('drawdown: ', ret[0].analyzers.drawdown.get_analysis())
-    cerebro.plot(style='candle')
+        print('Sharpe Ratio: ', ret[0].analyzers.sharp.get_analysis()["sharperatio"])
+        print('annual return: ', ret[0].analyzers.annual_return.get_analysis())
+        print('drawdown: ', ret[0].analyzers.drawdown.get_analysis()["max"]["drawdown"])
+        print('-' * 200)
+        break
+    # cerebro.plot(style='candle')

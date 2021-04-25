@@ -13,6 +13,7 @@ class CommInforFractional(bt.CommissionInfo):
     def getsize(self, price, cash):
         return self.p.leverage * (cash / price)
 
+
 class BasisStrategy(bt.Strategy):
     def log(self, txt, dt=None, doprint=True):
         if doprint:
@@ -53,7 +54,7 @@ class BasisStrategy(bt.Strategy):
                 'Order status: {}, Canceled-{}/Margin-{}/Rejected-{}'.format(order.status, order.Canceled, order.Margin,
                                                                              order.Rejected), doprint=True)
         self.log('Value: {:.6f}, price: {:.6f}, size: {:6f}'.format(order.executed.value, order.executed.price,
-                                                                  order.executed.size))
+                                                                    order.executed.size), doprint=False)
         # 订单状态处理完成，设为空
         self.order = None
 
@@ -66,8 +67,10 @@ class BasisStrategy(bt.Strategy):
 
     def stop(self):
         self.log(u'Ending Value %.2f' %
-                 (self.broker.getvalue()))
-        self.log('coin yield:{:.2f}'.format(self.data_close[0] / self.data_close[-len(self.data_close) + 1]))
+                 (self.broker.getvalue()), doprint=False)
+        for i in range(len(self.datas)):
+            self.log('coin name:{},coin yield:{:.2f}'.
+                     format(i, self.datas[i].close[0] / self.datas[i].close[-len(self.data_close) + 1]),doprint=False)
         self.log('strategy yield:{:.2f}'.format(self.broker.getvalue() / self.origin_cash))
 
     @staticmethod
