@@ -75,13 +75,13 @@ class BasisStrategy(bt.Strategy):
         return data
 
     @classmethod
-    def run(cls, data_path="", cash=100000, commission=1.5 / 1000, slip_type=-1, slip_value=0, cheat_on_open=False,
+    def run(cls, data_path="", cash=100000, commission=1.5 / 1000, slip_type=-1, slip_value=0, IS_ALL_IN=False,
             params_dict={}):
         cls.origin_cash = cash
         strategy_params = params_dict.get("strategy_params", {})
         analyzer_params = params_dict.get('analyzers', {})
 
-        cerebro = bt.Cerebro(cheat_on_open=cheat_on_open)
+        cerebro = bt.Cerebro(cheat_on_open=IS_ALL_IN)
         cerebro.addstrategy(cls, **strategy_params)
         datas = cls.data_process(data_path)
         if isinstance(datas, list):

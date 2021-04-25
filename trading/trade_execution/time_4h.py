@@ -10,7 +10,7 @@ from trading.trade_strategy.two_ma import TwoMATrade
 
 auto_trade = TurnTrade()
 try:
-    auto_trade.trading_main(coin_list=["BTC", "ETH", "ADA", "DOT", "ONT", "UNI", "BNB"], user="wxt", time_periods="4h",
+    auto_trade.trading_main(coin_list=["BTC", "ETH", "ADA", "DOT", "UNI", "BNB"], user="wxt", time_periods="4h",
                             momentum_days=5)
 except Exception as e:
     print(e)

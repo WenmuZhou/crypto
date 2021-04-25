@@ -38,8 +38,8 @@ class TwoSmaStrategy(BasisStrategy):
         self.sma_long = bt.indicators.MovingAverageSimple(self.datas[0], period=self.params.long_period)
 
     def next(self):
-        # self.log('Open,%.2f' % self.datas[0].open[0])
-        # self.log('Close, %.2f' % self.data_close[0])
+        self.log('Open,%.2f' % self.datas[0].open[0])
+        self.log('Close, %.2f' % self.data_close[0])
         # self.log(self.position.size, doprint=True)
 
         if self.order:
@@ -56,6 +56,7 @@ class TwoSmaStrategy(BasisStrategy):
                 #                                                              buy_size,
                 #                                                              self.buy_comm),
                 #          doprint=True)
+                self.log("购买时的价格：{}".format(self.datas[0].open[1]))
                 self.order = self.buy(price=now_price,
                                       size=buy_size)
                 # print(self.order)
@@ -66,4 +67,4 @@ class TwoSmaStrategy(BasisStrategy):
 
 
 if __name__ == '__main__':
-    TwoSmaStrategy.run(data_path="dataset/1d/BTC.csv", commission=0)
+    TwoSmaStrategy.run(data_path="dataset/1d/BTC.csv", cash=100000000, commission=0, IS_ALL_IN=True)
