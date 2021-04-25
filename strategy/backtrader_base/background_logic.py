@@ -68,9 +68,9 @@ class BasisStrategy(bt.Strategy):
     def stop(self):
         self.log(u'Ending Value %.2f' %
                  (self.broker.getvalue()), doprint=False)
-        for i in range(len(self.datas)):
-            self.log('coin name:{},coin yield:{:.2f}'.
-                     format(i, self.datas[i].close[0] / self.datas[i].close[-len(self.data_close) + 1]),doprint=False)
+        # for i in range(len(self.datas)):
+        #     self.log('coin name:{},coin yield:{:.2f}'.
+        #              format(i, self.datas[i].close[0] / self.datas[i].close[-len(self.data_close) + 1]), doprint=False)
         self.log('strategy yield:{:.2f}'.format(self.broker.getvalue() / self.origin_cash))
 
     @staticmethod

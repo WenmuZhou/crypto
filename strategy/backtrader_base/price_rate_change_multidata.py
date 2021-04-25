@@ -116,7 +116,8 @@ if __name__ == "__main__":
     for i in range(3, 200):
         print("time_period:", i)
         ret, cerebro = PriceMomentumStrategyMultiData.run(
-            data_path=["dataset/1d/BTC.csv", "dataset/1d/ETH.csv"],
+            data_path=["dataset/4h/BTC.csv", "dataset/4h/ETH.csv", "dataset/4h/ADA.csv", "dataset/4h/BNB.csv",
+                       "dataset/4h/DOT.csv", "dataset/4h/UNI.csv", "dataset/4h/FIL.csv", ],
             IS_ALL_IN=True,
             cash=10000000,
             params_dict={"strategy_params":
