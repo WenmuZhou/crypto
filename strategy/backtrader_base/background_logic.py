@@ -9,6 +9,10 @@ import backtrader as bt
 import pandas as pd
 
 
+class CommInforFractional(bt.CommissionInfo):
+    def getsize(self, price, cash):
+        return self.p.leverage * (cash / price)
+
 class BasisStrategy(bt.Strategy):
     def log(self, txt, dt=None, doprint=True):
         if doprint:
@@ -48,7 +52,8 @@ class BasisStrategy(bt.Strategy):
             self.log(
                 'Order status: {}, Canceled-{}/Margin-{}/Rejected-{}'.format(order.status, order.Canceled, order.Margin,
                                                                              order.Rejected), doprint=True)
-
+        self.log('Value: {:.6f}, price: {:.6f}, size: {:6f}'.format(order.executed.value, order.executed.price,
+                                                                  order.executed.size))
         # 订单状态处理完成，设为空
         self.order = None
 
@@ -92,6 +97,8 @@ class BasisStrategy(bt.Strategy):
 
         cerebro.broker.setcash(cash)
         cerebro.broker.setcommission(commission)
+
+        cerebro.broker.addcommissioninfo(CommInforFractional())
         # 滑点、投入资金百分比、回测指标
         if slip_type == 0:
             cerebro.broker.set_slippage_fixed(slip_value)
