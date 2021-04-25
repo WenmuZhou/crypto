@@ -93,7 +93,7 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
                 if self.getposition(self.datas[i]):
                     # print("xxxxxxxxxxxx")
                     self.order = self.sell(
-                        size=self.position.size,
+                        size=-self.position.size,
                         data=self.datas[i],
                     )
         # print('222222', self.position)
@@ -116,8 +116,8 @@ if __name__ == "__main__":
     for i in range(3, 200):
         print("time_period:", i)
         ret, cerebro = PriceMomentumStrategyMultiData.run(
-            data_path=["dataset/4h/BTC.csv", "dataset/4h/ETH.csv", "dataset/4h/ADA.csv", "dataset/4h/BNB.csv",
-                       "dataset/4h/DOT.csv", "dataset/4h/UNI.csv", "dataset/4h/FIL.csv", ],
+            data_path=["dataset/1d/BTC.csv", "dataset/1d/ETH.csv", "dataset/1d/ADA.csv", "dataset/1d/BNB.csv",
+                       "dataset/1d/DOT.csv", "dataset/1d/UNI.csv", ],
             IS_ALL_IN=True,
             cash=10000000,
             params_dict={"strategy_params":
