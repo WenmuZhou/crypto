@@ -87,16 +87,16 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
             if self.proc[i][0] > max_proc:
                 max_proc = self.proc[i][0]
                 max_index = i
-        print('111111', self.position)
+        # print('111111', self.position)
         if not self.getposition(self.datas[max_index]) or max_index < 0:
             for i in range(len(self.proc)):
                 if self.getposition(self.datas[i]):
-                    print("xxxxxxxxxxxx")
+                    # print("xxxxxxxxxxxx")
                     self.order = self.sell(
                         size=self.position.size,
                         data=self.datas[i],
                     )
-        print('222222', self.position)
+        # print('222222', self.position)
         if max_proc > 0:
             # print('{} Send Buy, from data {}, open {}'.format(
             #     self.datas[max_index].datetime.date(),
@@ -113,7 +113,7 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
 
 
 if __name__ == "__main__":
-    for i in range(3, 100):
+    for i in range(3, 200):
         print("time_period:", i)
         ret, cerebro = PriceMomentumStrategyMultiData.run(
             data_path=["dataset/1d/BTC.csv", "dataset/1d/ETH.csv"],
@@ -127,9 +127,9 @@ if __name__ == "__main__":
                              'drawdown': bt.analyzers.DrawDown}}
         )
 
-        print('Sharpe Ratio: ', ret[0].analyzers.sharp.get_analysis()["sharperatio"])
-        print('annual return: ', ret[0].analyzers.annual_return.get_analysis())
+        # print('Sharpe Ratio: ', ret[0].analyzers.sharp.get_analysis()["sharperatio"])
+        # print('annual return: ', ret[0].analyzers.annual_return.get_analysis())
         print('drawdown: ', ret[0].analyzers.drawdown.get_analysis()["max"]["drawdown"])
         print('-' * 200)
-        break
+        # break
     # cerebro.plot(style='candle')
