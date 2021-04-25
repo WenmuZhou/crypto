@@ -1,7 +1,7 @@
 ccxt
 pandas
 numpy
-matplotlib
+matplotlib==3.2.2
 mplfinance
 backtrader
 tqdm

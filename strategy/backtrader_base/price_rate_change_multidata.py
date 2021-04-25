@@ -16,7 +16,6 @@ import backtrader as bt
 from strategy.backtrader_base.background_logic import BasisStrategy
 
 
-
 class PriceMomentumStrategyMultiData(BasisStrategy):
     params = (('timeperiod', 20),)
 
@@ -49,40 +48,38 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
             ret_datas.append(data)
         return ret_datas
 
-    def next(self):
-        pass
-        # if self.order:
-        #     return
-        #
-        # max_proc = -100
-        # max_index = -1
-        # for i in range(len(self.proc)):
-        #     if self.proc[i][0] > max_proc:
-        #         max_proc = self.proc[i][0]
-        #         max_index = i
-        # if not self.getposition(self.datas[max_index]) or max_index < 0:
-        #     for i in range(len(self.proc)):
-        #         if self.getposition(self.datas[i]):
-        #             self.order = self.sell()
-        #
-        # if max_proc > 0:
-        #     print('{} Send Buy, from data {}, open {}'.format(
-        #         self.datas[max_index].datetime.date(),
-        #         max_index,
-        #         self.datas[max_index].open[0]
-        #     ))
-        #     self.order = self.buy()
-        #
-            # print('Value: {:.2f}, price: {:.2f}, size: {:.2f}'.format(self.order.executed.value, self.order.executed.price, self.order.executed.size))
-            # dt = self.datas[max_index].datetime.date(-1)
-            # print('%s' % (dt.isoformat()))
-            # self.order = self.buy(data=self.datas[max_index],
-            #                       size=(self.broker.getcash() / self.datas[max_index].open[0]))
+    # def next(self):
+    # if self.order:
+    #     return
+    #
+    # max_proc = -100
+    # max_index = -1
+    # for i in range(len(self.proc)):
+    #     if self.proc[i][0] > max_proc:
+    #         max_proc = self.proc[i][0]
+    #         max_index = i
+    # if not self.getposition(self.datas[max_index]) or max_index < 0:
+    #     for i in range(len(self.proc)):
+    #         if self.getposition(self.datas[i]):
+    #             self.order = self.sell()
+    #
+    # if max_proc > 0:
+    #     print('{} Send Buy, from data {}, open {}'.format(
+    #         self.datas[max_index].datetime.date(),
+    #         max_index,
+    #         self.datas[max_index].open[0]
+    #     ))
+    #     self.order = self.buy()
+    #
+    # print('Value: {:.2f}, price: {:.2f}, size: {:.2f}'.format(self.order.executed.value, self.order.executed.price, self.order.executed.size))
+    # dt = self.datas[max_index].datetime.date(-1)
+    # print('%s' % (dt.isoformat()))
+    # self.order = self.buy(data=self.datas[max_index],
+    #                       size=(self.broker.getcash() / self.datas[max_index].open[0]))
 
-            # self.order = self.buy(data=self.datas[max_index],
-            #                       size=int(self.broker.getcash() / self.datas[max_index].close[0]),
-            #                       price=self.datas[max_index].close[0])
-
+    # self.order = self.buy(data=self.datas[max_index],
+    #                       size=int(self.broker.getcash() / self.datas[max_index].close[0]),
+    #                       price=self.datas[max_index].close[0])
 
     def next_open(self):
         if self.order:
@@ -115,17 +112,17 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
             # self.order = self.buy(data=self.datas[max_index],
             #                       size=(self.broker.getcash() / self.datas[max_index].open[0]))
 
+
 if __name__ == "__main__":
     ret, cerebro = PriceMomentumStrategyMultiData.run(data_path=["dataset/1d/BTC.csv", "dataset/1d/ETH.csv"],
-                                                IS_ALL_IN=True,
-                                                cash=10000000,
-                                                params_dict={'analyzers': {'sharp': bt.analyzers.SharpeRatio,
-                                                                           'annual_return': bt.analyzers.AnnualReturn,
-                                                                           'drawdown': bt.analyzers.DrawDown}}
-                                                )
+                                                      IS_ALL_IN=True,
+                                                      cash=10000000,
+                                                      params_dict={'analyzers': {'sharp': bt.analyzers.SharpeRatio,
+                                                                                 'annual_return': bt.analyzers.AnnualReturn,
+                                                                                 'drawdown': bt.analyzers.DrawDown}}
+                                                      )
 
     print('Sharpe Ratio: ', ret[0].analyzers.sharp.get_analysis())
     print('annual return: ', ret[0].analyzers.annual_return.get_analysis())
     print('drawdown: ', ret[0].analyzers.drawdown.get_analysis())
     cerebro.plot(style='candle')
-
