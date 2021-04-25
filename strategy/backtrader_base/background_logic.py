@@ -15,6 +15,7 @@ class CommInforFractional(bt.CommissionInfo):
 
 
 class BasisStrategy(bt.Strategy):
+    cls_ret = {}
     def log(self, txt, dt=None, doprint=True):
         if doprint:
             dt = dt or self.datas[0].datetime.date(0)
@@ -67,11 +68,18 @@ class BasisStrategy(bt.Strategy):
 
     def stop(self):
         self.log(u'Ending Value %.2f' %
-                 (self.broker.getvalue()), doprint=False)
+                 (self.broker.getvalue()), doprint=True)
         for i in range(len(self.datas)):
             self.log('coin name:{},coin yield:{:.2f}'.
-                     format(i, self.datas[i].close[0] / self.datas[i].close[-len(self.data_close) + 1]),doprint=False)
+                     format(i, self.datas[i].close[0] / self.datas[i].close[-len(self.data_close) + 1]),doprint=True)
         self.log('strategy yield:{:.2f}'.format(self.broker.getvalue() / self.origin_cash))
+        BasisStrategy.cls_ret = {}
+        for i in range(len(self.datas)):
+            BasisStrategy.cls_ret['coin_yield_{}'.format(i)] = self.datas[i].close[0] / self.datas[i].close[
+                -len(self.data_close) + 1]
+
+        BasisStrategy.cls_ret['strategy_yield'] = self.broker.getvalue() / self.origin_cash
+        BasisStrategy.cls_ret['end_value'] = self.broker.getvalue()
 
     @staticmethod
     def data_process(data_path):
@@ -113,4 +121,4 @@ class BasisStrategy(bt.Strategy):
 
         back_ret = cerebro.run()
 
-        return back_ret, cerebro
+        return back_ret, cerebro, BasisStrategy.cls_ret

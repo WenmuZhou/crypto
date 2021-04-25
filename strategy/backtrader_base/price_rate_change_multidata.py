@@ -115,7 +115,7 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
 if __name__ == "__main__":
     for i in range(3, 100):
         print("time_period:", i)
-        ret, cerebro = PriceMomentumStrategyMultiData.run(
+        ret, cerebro, ret_dict = PriceMomentumStrategyMultiData.run(
             data_path=["dataset/1d/BTC.csv", "dataset/1d/ETH.csv"],
             IS_ALL_IN=True,
             cash=10000000,
@@ -131,5 +131,6 @@ if __name__ == "__main__":
         print('annual return: ', ret[0].analyzers.annual_return.get_analysis())
         print('drawdown: ', ret[0].analyzers.drawdown.get_analysis()["max"]["drawdown"])
         print('-' * 200)
+        print(ret_dict)
         break
     # cerebro.plot(style='candle')
