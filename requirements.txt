@@ -9,3 +9,5 @@ ray
 scikit-opt
 requests
 gym
+torch
+stable-baselines3
