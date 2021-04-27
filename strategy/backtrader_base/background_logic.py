@@ -121,4 +121,4 @@ class BasisStrategy(bt.Strategy):
 
         back_ret = cerebro.run()
 
-        return back_ret, cerebro, BasisStrategy.cls_ret
+        return back_ret, cerebro, cls.cls_ret
