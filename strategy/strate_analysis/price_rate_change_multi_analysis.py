@@ -6,12 +6,20 @@
 # @File     :
 # price_rate_change_multi_analysis.py
 # @Function  :
+import os
+
 import backtrader as bt
+import pandas as pd
+
 from strategy.backtrader_base.price_rate_change_multidata import PriceMomentumStrategyMultiData
 
+from itertools import combinations
 import ray
 
+pd.set_option('expand_frame_repr', False)
 
+
+# @ray.remote
 def one_strategy(data_path_, time_period_):
     ret, cerebro, ret_dict = PriceMomentumStrategyMultiData.run(
         data_path=data_path_,
@@ -25,14 +33,50 @@ def one_strategy(data_path_, time_period_):
                          'drawdown': bt.analyzers.DrawDown}}
     )
 
-    print('Sharpe Ratio: ', ret[0].analyzers.sharp.get_analysis()["sharperatio"])
-    print('annual return: ', ret[0].analyzers.annual_return.get_analysis())
-    print('drawdown: ', ret[0].analyzers.drawdown.get_analysis()["max"]["drawdown"])
-    print('-' * 200)
-    print(ret_dict)
+    # print('Sharpe Ratio: ', ret[0].analyzers.sharp.get_analysis()["sharperatio"])
+    # print('annual return: ', ret[0].analyzers.annual_return.get_analysis())
+    # print('drawdown: ', ret[0].analyzers.drawdown.get_analysis()["max"]["drawdown"])
+    # print('-' * 200)
+    # print(ret_dict)
+    ret_dict["drawdown"] = ret[0].analyzers.drawdown.get_analysis()["max"]["drawdown"]
+    return ret_dict
 
 
-data_path = ["dataset/1d/BTC.csv", "dataset/1d/ETH.csv"]
-time_period = 5
-
-one_strategy(data_path, time_period)
+data_dir_path = "dataset/1d/"
+data_list = os.listdir(data_dir_path)
+# print(data_list)
+combinations_list = []
+for i in range(2, len(data_list) + 1):
+    combinations_list.append(list(combinations(data_list, i)))
+# print(combinations_list)
+res_list = []
+for combinations_one_list in combinations_list:
+    for one in combinations_one_list:
+        # print(one)
+        data_path = [os.path.join(data_dir_path, name) for name in one]
+        # print(data_path)
+        time_period = 10
+        result = one_strategy(data_path, time_period)
+        # print(result)
+        coin_yield = []
+        coin_yield_max = max(result.values())
+        for key, value in result.items():
+            if "coin_yield" in key:
+                coin_yield.append(str(round(value, 3)))
+        tmp_list = [','.join([i.replace(".csv", "") for i in one]),
+                    time_period, ",".join(coin_yield),
+                    round(result["strategy_yield"], 3),
+                    round(result["drawdown"], 3),
+                    result["strategy_yield"] > coin_yield_max]
+        res_list.append(tmp_list)
+        # break
+    break
+# print(res_list)
+df = pd.DataFrame(res_list, columns=["coin", "time_period", "coin_yield", "strategy_yield", "drawdown", "is_win"])
+print(df)
+# print(res_df))
+# data_path = ["dataset/1d/BTC.csv", "dataset/1d/ETH.csv"]
+# time_period = 5
+#
+# result = one_strategy(data_path, time_period)
+# print(result)
