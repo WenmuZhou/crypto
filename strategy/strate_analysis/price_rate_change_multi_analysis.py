@@ -70,10 +70,11 @@ for combinations_one_list in combinations_list:
                     result["strategy_yield"] > coin_yield_max]
         res_list.append(tmp_list)
         # break
-    break
+    # break
 # print(res_list)
 df = pd.DataFrame(res_list, columns=["coin", "time_period", "coin_yield", "strategy_yield", "drawdown", "is_win"])
 print(df)
+df.to_csv("result/all_PRC_mul.csv", index=False)
 # print(res_df))
 # data_path = ["dataset/1d/BTC.csv", "dataset/1d/ETH.csv"]
 # time_period = 5

@@ -29,8 +29,8 @@ class TwoSmaStrategy(BasisStrategy):
     @staticmethod
     def data_process(data_path):
         df = pd.read_csv(data_path)
-        df["time_stamp"] = pd.to_datetime(df["time_stamp"])
-        data = bt.feeds.PandasData(dataname=df, datetime="time_stamp", volume="vol")
+        df["date"] = pd.to_datetime(df["date"])
+        data = bt.feeds.PandasData(dataname=df, datetime="date", volume="volume")
         return data
 
     def cal_technical_index(self):
@@ -38,27 +38,26 @@ class TwoSmaStrategy(BasisStrategy):
         self.sma_long = bt.indicators.MovingAverageSimple(self.datas[0], period=self.params.long_period)
 
     def next(self):
-        self.log('Open,%.2f' % self.datas[0].open[0])
-        self.log('Close, %.2f' % self.data_close[0])
+        # self.log('Open,%.2f' % self.datas[0].open[0])
+        # self.log('Close, %.2f' % self.data_close[0])
         # self.log(self.position.size, doprint=True)
 
         if self.order:
             return
 
         if not self.position:
-            if self.sma_short[0] > self.sma_long[0]:
-                buy_size = int(self.broker.getcash() / self.data_close[0]) - 1
-                now_cash = self.broker.getcash()
-                now_price = self.data_close[0]
+            if self.sma_short[0] > self.sma_long[0] and self.sma_short[-1] > self.sma_long[-1]:
+                # buy_size = int(self.broker.getcash() / self.data_close[0]) - 1
+                # now_cash = self.broker.getcash()
+                # now_price = self.data_close[0]
 
                 # self.log("应该所剩余额:{}".format(now_cash - now_price * buy_size), doprint=True)
                 # self.log("目前是买点,目前拥有的现金:{},目前的收盘价是:{},买入份额:{},手续费:{}".format(now_cash, now_price,
                 #                                                              buy_size,
                 #                                                              self.buy_comm),
                 #          doprint=True)
-                self.log("购买时的价格：{}".format(self.datas[0].open[1]))
-                self.order = self.buy(price=now_price,
-                                      size=buy_size)
+                # self.log("购买时的价格：{}".format(self.datas[0].open[1]))
+                self.order = self.buy(size=(self.broker.getcash() / self.datas[0].open[0]))
                 # print(self.order)
         else:
             if self.sma_short[0] < self.sma_long[0]:
