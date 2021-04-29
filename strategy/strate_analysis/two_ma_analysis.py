@@ -43,9 +43,9 @@ for data_name in data_list:
     tmp_list = [data_name.replace(".csv", ""), ret_dict['coin_yield_0'], ret_dict["strategy_yield"],
                 ret[0].analyzers.drawdown.get_analysis()["max"]["drawdown"],
                 ret_dict['strategy_yield'] > ret_dict['coin_yield_0']]
-    # print(tmp_list)
+    print(tmp_list)
     res_list.append(tmp_list)
-    break
+    # break
 
 df = pd.DataFrame(res_list, columns=["stock_code", "stock_yield", "strategy_yield", "drawdown", "is_win"])
 print(df)

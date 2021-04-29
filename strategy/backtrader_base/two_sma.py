@@ -37,7 +37,7 @@ class TwoSmaStrategy(BasisStrategy):
         self.sma_short = bt.indicators.MovingAverageSimple(self.datas[0], period=self.params.short_period)
         self.sma_long = bt.indicators.MovingAverageSimple(self.datas[0], period=self.params.long_period)
 
-    def next(self):
+    def next_open(self):
         # self.log('Open,%.2f' % self.datas[0].open[0])
         # self.log('Close, %.2f' % self.data_close[0])
         # self.log(self.position.size, doprint=True)

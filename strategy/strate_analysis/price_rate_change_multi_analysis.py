@@ -68,6 +68,7 @@ for combinations_one_list in combinations_list:
                     round(result["strategy_yield"], 3),
                     round(result["drawdown"], 3),
                     result["strategy_yield"] > coin_yield_max]
+        print(tmp_list)
         res_list.append(tmp_list)
         # break
     # break
