@@ -57,7 +57,7 @@ class TwoSmaStrategy(BasisStrategy):
                 #                                                              self.buy_comm),
                 #          doprint=True)
                 # self.log("购买时的价格：{}".format(self.datas[0].open[1]))
-                self.order = self.buy(size=(self.broker.getcash() / self.datas[0].open[0]))
+                self.order = self.buy(size=(int(self.broker.getcash() / self.datas[0].open[0])))
                 # print(self.order)
         else:
             if self.sma_short[0] < self.sma_long[0]:
@@ -66,4 +66,14 @@ class TwoSmaStrategy(BasisStrategy):
 
 
 if __name__ == '__main__':
-    TwoSmaStrategy.run(data_path="dataset/1d/BTC.csv", cash=100000000, commission=0, IS_ALL_IN=True)
+    ret, cerebro, ret_dict = TwoSmaStrategy.run(data_path="/root/adolf/dataset/d_pre/sh.600570.csv", cash=100000000,
+                                                IS_ALL_IN=True, params_dict={"strategy_params":
+                                                                                 {"short_period": 5,
+                                                                                  "long_period": 10},
+                                                                             'analyzers': {
+                                                                                 'sharp': bt.analyzers.SharpeRatio,
+                                                                                 'annual_return': bt.analyzers.AnnualReturn,
+                                                                                 'drawdown': bt.analyzers.DrawDown}})
+    print("stock yield:", ret_dict['coin_yield_0'])
+    print("strategy yield:", ret_dict["strategy_yield"])
+    print('drawdown: ', ret[0].analyzers.drawdown.get_analysis()["max"]["drawdown"])
