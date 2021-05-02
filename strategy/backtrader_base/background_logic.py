@@ -52,6 +52,7 @@ class BasisStrategy(bt.Strategy):
 
         # 订单因为缺少资金之类的原因被拒绝执行
         elif order.status in [order.Canceled, order.Margin, order.Rejected]:
+            # print(self.datas)
             self.log(
                 'Order status: {}, Canceled-{}/Margin-{}/Rejected-{}'.format(order.status, order.Canceled, order.Margin,
                                                                              order.Rejected), doprint=True)

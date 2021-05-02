@@ -28,11 +28,17 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
         for i in range(self.data_num):
             self.proc[i] = bt.talib.ROCP(self.datas[i].close, timeperiod=self.params.time_period)
 
-    def prenext(self):
-        dt = self.datas[0].datetime.date(-1)
+    # def prenext(self):
+    #     dt = self.datas[0].datetime.date(-1)
 
-    def nextstart(self):
-        dt = self.datas[0].datetime.date(-1)
+    # def prenext_open(self):
+    #     dt = self.datas[0].datetime.date(-1)
+    #
+    # def nextstart_open(self):
+    #     dt = self.datas[0].datetime.date(-1)
+
+    # def nextstart(self):
+    #     dt = self.datas[0].datetime.date(-1)
 
     @staticmethod
     def data_process(data_paths):
@@ -77,9 +83,16 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
     #                       size=int(self.broker.getcash() / self.datas[max_index].close[0]),
     #                       price=self.datas[max_index].close[0])
 
-    def next_open(self):
+    def prenext_open(self):
         if self.order:
             return
+
+        # print(len(self.datas[0]))
+        # print(len(self.datas[1]))
+        # print(len(self.datas[2]))
+        # print(len(self.datas[3]))
+        # print(len(self.datas[4]))
+        # self.log("proc dict:{}".format(self.proc), doprint=True)
 
         max_proc = -100
         max_index = -1
@@ -110,24 +123,20 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
 
 
 if __name__ == "__main__":
-    for i in range(3, 100):
-        print("time_period:", i)
-        ret, cerebro, ret_dict = PriceMomentumStrategyMultiData.run(
-            data_path=["dataset/1d/BTC.csv", "dataset/1d/ETH.csv"],
-            IS_ALL_IN=True,
-            cash=10000000,
-            params_dict={"strategy_params":
-                             {"time_period": i, },
-                         'analyzers': {
-                             'sharp': bt.analyzers.SharpeRatio,
-                             'annual_return': bt.analyzers.AnnualReturn,
-                             'drawdown': bt.analyzers.DrawDown}}
-        )
+    ret, cerebro, ret_dict = PriceMomentumStrategyMultiData.run(
+        data_path=["dataset/1d/LTC.csv", "dataset/1d/DOT.csv"],
+        IS_ALL_IN=True,
+        cash=10000000,
+        params_dict={"strategy_params": {"time_period": 3, },
+                     'analyzers': {
+                         'sharp': bt.analyzers.SharpeRatio,
+                         'annual_return': bt.analyzers.AnnualReturn,
+                         'drawdown': bt.analyzers.DrawDown}}
+    )
 
-        print('Sharpe Ratio: ', ret[0].analyzers.sharp.get_analysis()["sharperatio"])
-        print('annual return: ', ret[0].analyzers.annual_return.get_analysis())
-        print('drawdown: ', ret[0].analyzers.drawdown.get_analysis()["max"]["drawdown"])
-        print('-' * 200)
-        print(ret_dict)
-        break
-    # cerebro.plot(style='candle')
+    print('Sharpe Ratio: ', ret[0].analyzers.sharp.get_analysis()["sharperatio"])
+    print('annual return: ', ret[0].analyzers.annual_return.get_analysis())
+    print('drawdown: ', ret[0].analyzers.drawdown.get_analysis()["max"]["drawdown"])
+    print('-' * 200)
+    print(ret_dict)
+    # cerebro.plot(style='line')
