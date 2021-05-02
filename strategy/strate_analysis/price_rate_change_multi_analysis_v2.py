@@ -100,4 +100,4 @@ if __name__ == '__main__':
     strategy_param_optim = StrategyParamOptim(data_dir_path="/root/adolf/crypto/dataset/1d")
 
     df = strategy_param_optim()
-    # df.to_csv("result/all_test.csv")
+    df.to_csv("/root/adolf/crypto/result/all_test_v2.csv")

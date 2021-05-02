@@ -14,7 +14,6 @@ import pandas as pd
 from strategy.backtrader_base.price_rate_change_multidata import PriceMomentumStrategyMultiData
 
 from itertools import combinations
-import ray
 
 pd.set_option('expand_frame_repr', False)
 

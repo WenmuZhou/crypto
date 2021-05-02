@@ -91,4 +91,4 @@ if __name__ == '__main__':
     print(df)
 
     # df = strategy_param_optim()
-    # df.to_csv("result/all_test.csv")
+    df.to_csv("/root/adolf/crypto/result/all_test_v3.csv")
