@@ -38,25 +38,28 @@ data_list = os.listdir(data_dir_path)
 combinations_list = []
 for i in range(2, len(data_list) + 1):
     combinations_list.extend(list(combinations(data_list, i)))
+
+
 # res_list = []
 
-print(len(combinations_list))
+# print(len(combinations_list))
 
 
 def task(p):
     combination_index, time_period = p
-    print(combination_index)
-    # data_path = os.path.join(data_dir_path, combinations_list[combination_index])
-    # result = one_strategy(data_path, time_period)
-    # return -result["strategy_yield"]
+    # print(combinations_list[combination_index])
+    data_path = [os.path.join(data_dir_path, name) for name in combinations_list[int(combination_index)]]
+    # print(data_path)
+    result = one_strategy(data_path, int(time_period))
+    return -result["strategy_yield"]
 
 
 p = (0, 3)
-print(task(p))
-# ga = GA(func=task, n_dim=4, size_pop=100, max_iter=1000, lb=[1, 1, 1, 1], ub=[30, 30, 30, 30], prob_mut=0.1,
-#         precision=1)
-# best_x, best_y = ga.run()
-# print('best_x:', best_x, '\n', 'best_y:', best_y)
+# print(task(p))
+ga = GA(func=task, n_dim=2, size_pop=100, max_iter=10000, lb=[0, 3], ub=[len(combinations_list) - 1, 250], prob_mut=0.1,
+        precision=1)
+best_x, best_y = ga.run()
+print('best_x:', best_x, '\n', 'best_y:', best_y)
 # for one_combination in combinations_list:
 #     print(one_combination)
 #     data_path = [os.path.join(data_dir_path, name) for name in one_combination]
