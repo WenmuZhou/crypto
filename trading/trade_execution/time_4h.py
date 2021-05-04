@@ -17,7 +17,7 @@ auto_trade = TurnTrade()
 #     print("wxt bug")
 try:
     auto_trade.trading_main(
-        coin_list=["EOS", "ANT", "DOT", "CHZ", "ADA", "UNI", "DOGE", "FIL", "CAKE", "ONT", "TLM", "BAKE"], user="wenmu",
+        coin_list=["MATIC", "ANT", "DOT", "CHZ", "KSM", "UNI", "DOGE", "FIL", "CAKE", "ONT", "TLM", "BAKE"], user="wenmu",
         time_periods="4h", momentum_days=5)
 except Exception as e:
     print(e)
@@ -35,4 +35,4 @@ try:
 except Exception as e:
     print(e)
     print('feip bug')
-A
+
