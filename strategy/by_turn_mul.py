@@ -18,12 +18,12 @@ pd.set_option("display.max_rows", 1000)
 trade_rate = 1.5 / 1000
 
 
-# @ray.remote
+@ray.remote
 def turn_strategy(coin_list_, short_momentum_day_, long_momentum_day_):
     res_df = None
     for coin_name in coin_list_:
         # print(coin_name)
-        df_ = pd.read_csv("dataset/4h/" + coin_name + ".csv")
+        df_ = pd.read_csv("dataset/1d/" + coin_name + ".csv")
         # print("coin name:", coin_name)
         # print("how long test:", len(df_))
         # print('=' * 20)
@@ -105,15 +105,17 @@ def turn_strategy(coin_list_, short_momentum_day_, long_momentum_day_):
 
 
 # coin_list = ["BTC", "ETH", "DOT", "ADA", "UNI", "EOS", "BNB", "XRP"]
-coin_list = ["BTC", "ETH"]
+coin_list = ["BTC", "ETH", "BNB", "DOT", "UNI", "CAKE"]
+# coin_list = ["BTC", "ETH",]
 
-for i in range(3,100):
-    strategy_net, max_draw_down, start_date, end_date = turn_strategy(coin_list, short_momentum_day_=i,
-                                                                      long_momentum_day_=i)
-    print(i)
-    print(strategy_net)
-    print(max_draw_down)
-    print('==========')
+
+# for i in range(3, 100):
+#     strategy_net, max_draw_down, start_date, end_date = turn_strategy(coin_list, short_momentum_day_=i,
+#                                                                       long_momentum_day_=i)
+#     print(i)
+#     print(strategy_net)
+#     print(max_draw_down)
+#     print('==========')
 
 
 def ray_test(coin_list):
@@ -122,9 +124,11 @@ def ray_test(coin_list):
     result = ray.get(futures)
 
     for i in range(len(result)):
-        print(i, result[i + 3][:2])
+        print(i + 3, result[i][:2])
     # print(result[i - 3][1])
 
+
+ray_test(coin_list)
 # momentum_day = 18
 # for momentum_day in range(3, 31):
 #     df = turn_strategy(coin_list, momentum_day_=momentum_day)
