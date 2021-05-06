@@ -11,10 +11,11 @@ import numpy as np
 pd.set_option("expand_frame_repr", False)
 pd.set_option("display.max_rows", 2000)
 
+
 def down50off(stock_name, time_periods, threshold, stoploss, stopwin):
     df = pd.read_csv("/root/adolf/dataset/d_pre/" + stock_name)
     df.reset_index(drop=True, inplace=True)
-    del df['amount'], df["turn"], df["adjustflag"] ,df["pctChg"]
+    del df['amount'], df["turn"], df["adjustflag"], df["pctChg"]
 
     # history_high = now_high = df['close'][0]
     df["pct"] = df["close"].pct_change(periods=1)
@@ -61,10 +62,11 @@ if __name__ == '__main__':
     stopwin = 100
 
     import os
+
     stock_list = os.listdir("/root/adolf/dataset/d_pre/")
     for stock_name in stock_list:
-        my_position = down50off(stock_name=stock_name,time_periods=time_periods,
-                                threshold=threshold,stoploss=stoploss,stopwin=stopwin)
+        my_position = down50off(stock_name=stock_name, time_periods=time_periods,
+                                threshold=threshold, stoploss=stoploss, stopwin=stopwin)
         print(stock_name)
         print(my_position['my_value'])
-        print('='*50)
+        print('=' * 50)

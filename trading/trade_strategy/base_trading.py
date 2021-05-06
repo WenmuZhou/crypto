@@ -91,7 +91,8 @@ class BasisTrading:
                         max_value_coin, e)
 
             if now_style != "USDT" and sell_success:
-                time.sleep(15)
+                time.sleep(5)
+                balance_my, max_value_coin, balance_my_value = self.get_balance_info()
                 try:
                     self.buy(now_style, balance_my)
                     message = "调仓时间:{}\n\n账户所有人:{}\n\n原来持有的币种:{}\n\n买入的新币种为:{}\n\n账户余额:{:.2f}元".format(
