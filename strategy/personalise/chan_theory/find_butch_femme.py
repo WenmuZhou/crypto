@@ -14,11 +14,11 @@ for index in range(1, len(get_merge_data) - 1):
     # print(get_merge_data[index])
     if get_merge_data[index][1] > get_merge_data[index - 1][1] and \
             get_merge_data[index][1] > get_merge_data[index + 1][1]:
-        butch_list.append(get_merge_data[index])
+        butch_list.append([get_merge_data[index - 1], get_merge_data[index], get_merge_data[index + 1]])
 
     if get_merge_data[index][2] < get_merge_data[index - 1][2] and \
             get_merge_data[index][2] < get_merge_data[index + 1][2]:
-        femme_list.append(get_merge_data[index])
+        femme_list.append([get_merge_data[index - 1], get_merge_data[index], get_merge_data[index + 1]])
 
 # print(butch_list)
 # print("=" * 100)
@@ -29,17 +29,31 @@ f_p = 0
 line_bi = []
 
 while b_p < len(butch_list) - 1 or f_p < len(femme_list) - 1:
-    b_t = butch_list[b_p][0]
-    f_t = femme_list[f_p][0]
+    b_t = butch_list[b_p][1][0]
+    f_t = femme_list[f_p][1][0]
     if b_t > f_t:
+        # 目前是底分型
         f_p += 1
         if len(line_bi) == 0:
-            line_bi.append([f_t, "f"])
+            line_bi.append([femme_list[f_p], "f"])
         else:
-            pass
+            pre_point = line_bi[-1]
+            # print('11111111')
+            # if pre_point
+            # print(line_bi)
     else:
+        # 目前是顶分型
         b_p += 1
         if len(line_bi) == 0:
-            line_bi.append([b_t, "b"])
+            line_bi.append([butch_list[b_p], "b"])
+        else:
+            # print('222222222')
+            pre_point_flag = line_bi[-1][1]
+            print(pre_point)
+            if pre_point_flag == "f":
+                pass
+            else:
+                pass
+            break
 
-print(line_bi)
+# print(line_bi)
