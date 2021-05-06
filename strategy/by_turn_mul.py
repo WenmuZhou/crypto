@@ -105,7 +105,7 @@ def turn_strategy(coin_list_, short_momentum_day_, long_momentum_day_):
 
 
 # coin_list = ["BTC", "ETH", "DOT", "ADA", "UNI", "EOS", "BNB", "XRP"]
-coin_list = ["BTC", "ETH", "BNB", "DOT", "UNI", "CAKE"]
+coin_list = ["BTC", "ETH", "BNB", "DOT", "UNI"]
 # coin_list = ["BTC", "ETH",]
 
 

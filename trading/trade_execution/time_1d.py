@@ -24,7 +24,8 @@ except Exception as e:
 #     print("wxt bug")
 
 try:
-    auto_trade.trading_main(coin_list=["BTC", "ETH", "CAKE"], user="shuig", time_periods="1d", momentum_days=20)
+    auto_trade.trading_main(coin_list=["BTC", "ETH", "CAKE", "BCH", "ETC"], user="shuig", time_periods="1d",
+                            momentum_days=20)
 except Exception as e:
     print(e)
     print('shug bug')

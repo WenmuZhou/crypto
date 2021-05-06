@@ -17,14 +17,15 @@ except Exception as e:
     print("wxt bug")
 try:
     auto_trade.trading_main(
-        coin_list=["MATIC", "ANT", "DOT", "CHZ", "KSM", "UNI", "DOGE", "FIL", "CAKE", "ONT", "TLM", "BAKE"], user="wenmu",
+        coin_list=["MATIC", "ANT", "DOT", "CHZ", "KSM", "UNI", "DOGE", "FIL", "CAKE", "ONT", "TLM", "BAKE"],
+        user="wenmu",
         time_periods="4h", momentum_days=5)
 except Exception as e:
     print(e)
     print('wenmu bug')
 
 try:
-    auto_trade.trading_main(coin_list=["DOT", "ADA"], user="zuol", time_periods="4h", momentum_days=120)
+    auto_trade.trading_main(coin_list=["DOT", "ADA", "BCH", "ETC"], user="zuol", time_periods="4h", momentum_days=60)
 except Exception as e:
     print(e)
     print('zuol bug')
@@ -35,4 +36,3 @@ try:
 except Exception as e:
     print(e)
     print('feip bug')
-
