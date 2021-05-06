@@ -92,6 +92,7 @@ class BasisTrading:
 
             if now_style != "USDT" and sell_success:
                 try:
+                    time.sleep(5)
                     self.buy(now_style, balance_my)
                     message = "调仓时间:{}\n\n账户所有人:{}\n\n原来持有的币种:{}\n\n买入的新币种为:{}\n\n账户余额:{:.2f}元".format(
                         datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),

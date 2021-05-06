@@ -35,9 +35,11 @@ class TurnTrade(BasisTrading):
 if __name__ == '__main__':
     auto_trade = TurnTrade(post_to_ding_talk=True)
     # auto_trade.trading_main(coin_list=["BTC", "ETH", "ADA", "DOT", "ONT", "UNI", "BNB"], user="wxt", time_periods="4h",
-                            # momentum_days=5)
-#
-    auto_trade.trading_main(
-        coin_list=["EOS", "ANT", "DOT", "CHZ", "ADA", "UNI", "DOGE", "FIL", "CAKE", "ONT", "TLM", "BNB"], user="wenmu",
-        time_periods="4h", momentum_days=5)
-#     auto_trade.trading_main(coin_list=["DOT", "ADA"], user="zuol", time_periods="4h", data_limit=10, momentum_days=5)
+    # momentum_days=5)
+    #
+    # auto_trade.trading_main(
+    #     coin_list=["EOS", "ANT", "DOT", "CHZ", "ADA", "UNI", "DOGE", "FIL", "CAKE", "ONT", "TLM", "BNB"], user="wenmu",
+    #     time_periods="4h", momentum_days=5)
+    #     auto_trade.trading_main(coin_list=["DOT", "ADA"], user="zuol", time_periods="4h", data_limit=10, momentum_days=5)
+    auto_trade.trading_main(coin_list=["BTC", "ETH", "CAKE", "BCH", "ETC"], user="shuig", time_periods="1d",
+                            momentum_days=20)
