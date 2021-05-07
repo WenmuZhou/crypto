@@ -10,14 +10,15 @@ from trading.trade_strategy.two_ma import TwoMATrade
 
 auto_trade = TurnTrade()
 try:
-    auto_trade.trading_main(coin_list=["BTC", "ETH", "BNB", "DOT", "UNI", "CAKE"], user="wxt", time_periods="4h",
+    auto_trade.trading_main(coin_list=["BTC", "ETH", "BNB", "DOT", "UNI", "CAKE", "BAKE", "FIL", "FLOW"], user="wxt",
+                            time_periods="4h",
                             momentum_days=5)
 except Exception as e:
     print(e)
     print("wxt bug")
 try:
     auto_trade.trading_main(
-        coin_list=["MATIC", "ANT", "DOT", "CHZ", "KSM", "UNI", "DOGE", "FIL", "CAKE", "ONT", "TLM", "BAKE"],
+        coin_list=["MATIC", "ANT", "DOT", "CHZ", "DOGE", "FIL", "CAKE", "ONT", "TLM", "BAKE", "CHR"],
         user="wenmu",
         time_periods="4h", momentum_days=5)
 except Exception as e:
