@@ -49,26 +49,32 @@ for i in range(2, len(data_list) + 1):
     combinations_list.append(list(combinations(data_list, i)))
 # print(combinations_list)
 res_list = []
-for combinations_one_list in combinations_list:
+for combinations_one_list in combinations_list[:10]:
     for one in combinations_one_list:
         # print(one)
         data_path = [os.path.join(data_dir_path, name) for name in one]
         # print(data_path)
-        time_period = 10
-        result = one_strategy(data_path, time_period)
-        # print(result)
-        coin_yield = []
-        coin_yield_max = max(result.values())
-        for key, value in result.items():
-            if "coin_yield" in key:
-                coin_yield.append(str(round(value, 3)))
-        tmp_list = [','.join([i.replace(".csv", "") for i in one]),
-                    time_period, ",".join(coin_yield),
-                    round(result["strategy_yield"], 3),
-                    round(result["drawdown"], 3),
-                    result["strategy_yield"] > coin_yield_max]
-        print(tmp_list)
-        res_list.append(tmp_list)
+        for time_period in range(3, 101):
+            result = one_strategy(data_path, time_period)
+            # print(result)
+            coin_yield = []
+            # print(result)
+            # coin_yield_max = max(result.values())
+            # print(coin_yield_max)
+            coin_yield_max = 0
+            for key, value in result.items():
+                if "coin_yield" in key:
+                    if value > coin_yield_max:
+                        coin_yield_max = round(value, 3)
+                    coin_yield.append(str(round(value, 3)))
+            # print(coin_yield_max)
+            tmp_list = [','.join([i.replace(".csv", "") for i in one]),
+                        time_period, ",".join(coin_yield),
+                        round(result["strategy_yield"], 3),
+                        round(result["drawdown"], 3),
+                        result["strategy_yield"] > coin_yield_max]
+            # print(tmp_list)
+            res_list.append(tmp_list)
         # break
     # break
 # print(res_list)

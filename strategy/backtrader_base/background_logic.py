@@ -55,7 +55,7 @@ class BasisStrategy(bt.Strategy):
             # print(self.datas)
             self.log(
                 'Order status: {}, Canceled-{}/Margin-{}/Rejected-{}'.format(order.status, order.Canceled, order.Margin,
-                                                                             order.Rejected), doprint=True)
+                                                                             order.Rejected), doprint=False)
         self.log('Value: {:.6f}, price: {:.6f}, size: {:6f}'.format(order.executed.value, order.executed.price,
                                                                     order.executed.size), doprint=False)
         # 订单状态处理完成，设为空

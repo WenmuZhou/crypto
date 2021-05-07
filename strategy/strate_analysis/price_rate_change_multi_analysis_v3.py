@@ -17,11 +17,12 @@ import ray
 ray.init()
 
 
-@ray.remote
+@ray.remote(num_cpus=20)
 class StrategyParamOptim:
-    def __init__(self, data_dir_path):
+    def __init__(self, data_dir_path, time_period):
         self.data_dir_path = data_dir_path
         self.data_list = os.listdir(data_dir_path)
+        self.time_period = time_period
 
     @staticmethod
     def one_strategy(data_path_, time_period_):
@@ -45,7 +46,7 @@ class StrategyParamOptim:
 
         return combinations_list
 
-    def one_config_function(self, time_period):
+    def one_config_function(self):
         combinations_list_ = self.get_combination_list()
 
         result_list = []
@@ -54,18 +55,20 @@ class StrategyParamOptim:
             # print("time_period", time_period)
             data_path = [os.path.join(self.data_dir_path, name) for name in one_combination]
             # for time_period in time_period_list_:
-            result = self.one_strategy(data_path, time_period)
+            result = self.one_strategy(data_path, self.time_period)
             coin_yield = []
-            coin_yield_max = max(result.values())
+            coin_yield_max = 0
             for key, value in result.items():
                 if "coin_yield" in key:
+                    if value > coin_yield_max:
+                        coin_yield_max = round(value, 3)
                     coin_yield.append(str(round(value, 3)))
             tmp_list = [','.join([i.replace(".csv", "") for i in one_combination]),
-                        time_period, ",".join(coin_yield),
+                        self.time_period, ",".join(coin_yield),
                         round(result["strategy_yield"], 3),
                         round(result["drawdown"], 3),
                         result["strategy_yield"] > coin_yield_max]
-            # print(tmp_list)
+            print(tmp_list)
             # print('---------------')
             result_list.append(tmp_list)
         return result_list
@@ -78,17 +81,18 @@ class StrategyParamOptim:
 
 if __name__ == '__main__':
     # strategy_param_optim = StrategyParamOptim(data_dir_path="dataset/1d")
-    counters = [StrategyParamOptim.remote(data_dir_path="/root/adolf/crypto/dataset/1d") for i in range(20)]
+    counters = [StrategyParamOptim.remote(data_dir_path="/root/adolf/crypto/dataset/1d", time_period=i) for i in
+                range(3, 181)]
+    futures = [c.one_config_function.remote() for c in counters]
     res_list = []
-    for i in range(3, 250):
-        futures = [c.one_config_function.remote(time_period=i) for c in counters]
-        res_list.extend(ray.get(futures))
-
-    # print(res_list)
-    df = pd.DataFrame(res_list[0],
+    # print(ray.get(futures))
+    #     res_list.extend(ray.get(futures))
+    #
+    # # print(res_list)
+    for one_res in ray.get(futures):
+        res_list.extend(one_res)
+    df = pd.DataFrame(res_list,
                       columns=["coin", "time_period", "coin_yield", "strategy_yield", "drawdown", "is_win"])
 
-    print(df)
-
-    # df = strategy_param_optim()
-    df.to_csv("/root/adolf/crypto/result/all_test_v3.csv")
+    # print(df)
+    df.to_csv("/root/adolf/crypto/result/prc_mul_day.csv")
