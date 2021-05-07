@@ -27,4 +27,3 @@ import tushare as ts
 
 df = ts.get_realtime_quotes('000581')
 print(df)
-

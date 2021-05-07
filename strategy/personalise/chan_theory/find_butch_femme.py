@@ -34,31 +34,49 @@ while b_p < len(butch_list) - 1 or f_p < len(femme_list) - 1:
     if b_t > f_t:
         # 目前是底分型
         if len(line_bi) == 0:
-            line_bi.append([femme_list[f_p][1][0], "f"])
+            line_bi.append([femme_list[f_p][1][0], "f", femme_list[f_p][1][2]])
         else:
-            pre_point = line_bi[-1]
-            # print('11111111')
-            # if pre_point
-            # print(line_bi)
+            pre_point_flag = line_bi[-1][1]
+            # 上一个是顶分型
+            if pre_point_flag == "b":
+                now_femme = femme_list[f_p]
+                pre_butch = butch_list[b_p - 1]
+                print('当前的底:', now_butch)
+                print("上一个的顶", pre_butch)
+                if now_femme[0][0] > pre_butch[2][0] and now_femme[1][2] < min(one_k[2] for one_k in pre_butch) and \
+                        max(one_k[1] for one_k in now_femme) < pre_butch[1][1]:
+                    line_bi.append([now_femme[1][0], "f", now_femme[1][2]])
+            # 上一个节点也是底分型
+            else:
+                now_femme = femme_list[f_p]
+                pre_femme = femme_list[f_p - 1]
+                if now_femme[1][2] < pre_femme[1][2]:
+                    line_bi.pop()
+                    line_bi.append([now_femme[1][0], "f", now_femme[1][2]])
         f_p += 1
     else:
         # 目前是顶分型
         if len(line_bi) == 0:
-            line_bi.append([butch_list[b_p][1][0], "b"])
+            line_bi.append([butch_list[b_p][1][0], "b", butch_list[b_p][1][1]])
         else:
-            # print('222222222')
             pre_point_flag = line_bi[-1][1]
             # 上一个节点是底
             if pre_point_flag == "f":
                 now_butch = butch_list[b_p]
                 pre_femme = femme_list[f_p - 1]
                 print('当前的顶:', now_butch)
-                print("上一个的底", pre_femme)
+                print("上一个的底:", pre_femme)
                 if now_butch[0][0] > pre_femme[2][0] and now_butch[1][1] > max(one_k[1] for one_k in pre_femme) and \
                         min(one_k[2] for one_k in now_butch) > pre_femme[1][2]:
-                    line_bi.append([now_butch[1][0], "f"])
+                    line_bi.append([now_butch[1][0], "b", now_butch[1][1]])
+            # 上一个节点也是顶
             else:
-                pass
-            break
+                now_butch = butch_list[b_p]
+                pre_butch = butch_list[b_p - 1]
+                if now_butch[1][1] > pre_butch[1][1]:
+                    line_bi.pop()
+                    line_bi.append([now_butch[1][0], "b", now_butch[1][1]])
+            # break
         b_p += 1
+
 print(line_bi)
