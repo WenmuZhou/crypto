@@ -11,3 +11,5 @@ requests
 gym
 torch
 stable-baselines3
+baostock
+tushare
