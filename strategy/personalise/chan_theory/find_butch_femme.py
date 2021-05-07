@@ -54,9 +54,7 @@ while b_p < len(butch_list) - 1 or f_p < len(femme_list) - 1:
                 pre_femme = femme_list[f_p - 1]
                 print('当前的顶:', now_butch)
                 print("上一个的底", pre_femme)
-                if now_butch[0][0] > pre_femme[2][0] and
-
-            # 上一个节点是顶
+                if now_butch[0][0] > pre_femme[2][0] and now_butch[0][1][]
             else:
                 pass
             break
