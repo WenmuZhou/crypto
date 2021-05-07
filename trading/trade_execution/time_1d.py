@@ -10,7 +10,8 @@ from trading.trade_strategy.turtle_trade import TurtleTrade
 
 auto_trade = TurnTrade()
 try:
-    auto_trade.trading_main(coin_list=["BTC", "ETH", "BNB", "DOT", "UNI", "CAKE"], user="nan", time_periods="1d",
+    auto_trade.trading_main(coin_list=["BTC", "ETH", "BNB", "DOT", "UNI", "CAKE", "KSM", "ADA", "BAT"], user="nan",
+                            time_periods="1d",
                             momentum_days=6)
 except Exception as e:
     print(e)
@@ -22,6 +23,14 @@ except Exception as e:
 # except Exception as e:
 #     print(e)
 #     print("wxt bug")
+
+try:
+    auto_trade.trading_main(coin_list=["BTC", "ETH", "BNB", "DOT", "UNI", "CAKE", "ADA"], user="shengl",
+                            time_periods="1d",
+                            momentum_days=10)
+except Exception as e:
+    print(e)
+    print('shengl bug')
 
 try:
     auto_trade.trading_main(coin_list=["BTC", "ETH", "CAKE", "BCH", "ETC"], user="shuig", time_periods="1d",
