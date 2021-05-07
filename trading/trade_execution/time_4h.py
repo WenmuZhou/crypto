@@ -10,9 +10,12 @@ from trading.trade_strategy.two_ma import TwoMATrade
 
 auto_trade = TurnTrade()
 try:
-    auto_trade.trading_main(coin_list=["BTC", "ETH", "BNB", "DOT", "UNI", "CAKE", "BAKE", "FIL", "FLOW"], user="wxt",
-                            time_periods="4h",
-                            momentum_days=5)
+    auto_trade.trading_main(
+        coin_list=["BTC", "ETH", "BNB", "DOT", "KSM", "UNI", "CAKE", "BAKE", "FIL", "FLOW", "MATIC", "XRP", "BCH",
+                   "LINK"],
+        user="wxt",
+        time_periods="4h",
+        momentum_days=5)
 except Exception as e:
     print(e)
     print("wxt bug")
