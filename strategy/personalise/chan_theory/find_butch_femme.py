@@ -23,8 +23,8 @@ for index in range(1, len(get_merge_data) - 1):
 # print(butch_list)
 # print("=" * 100)
 # print(femme_list)
-b_p = 0
-f_p = 0
+b_p = 0  # 顶
+f_p = 0  # 底
 
 line_bi = []
 
@@ -33,27 +33,32 @@ while b_p < len(butch_list) - 1 or f_p < len(femme_list) - 1:
     f_t = femme_list[f_p][1][0]
     if b_t > f_t:
         # 目前是底分型
-        f_p += 1
         if len(line_bi) == 0:
-            line_bi.append([femme_list[f_p], "f"])
+            line_bi.append([femme_list[f_p][1][0], "f"])
         else:
             pre_point = line_bi[-1]
             # print('11111111')
             # if pre_point
             # print(line_bi)
+        f_p += 1
     else:
         # 目前是顶分型
-        b_p += 1
         if len(line_bi) == 0:
-            line_bi.append([butch_list[b_p], "b"])
+            line_bi.append([butch_list[b_p][1][0], "b"])
         else:
             # print('222222222')
             pre_point_flag = line_bi[-1][1]
-            print(pre_point)
+            # 上一个节点是底
             if pre_point_flag == "f":
-                pass
+                now_butch = butch_list[b_p]
+                pre_femme = femme_list[f_p - 1]
+                print('当前的顶:', now_butch)
+                print("上一个的底", pre_femme)
+                if now_butch[0][0] > pre_femme[2][0] and
+
+            # 上一个节点是顶
             else:
                 pass
             break
-
-# print(line_bi)
+        b_p += 1
+print(line_bi)
