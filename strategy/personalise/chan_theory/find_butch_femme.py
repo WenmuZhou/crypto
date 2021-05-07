@@ -54,7 +54,9 @@ while b_p < len(butch_list) - 1 or f_p < len(femme_list) - 1:
                 pre_femme = femme_list[f_p - 1]
                 print('当前的顶:', now_butch)
                 print("上一个的底", pre_femme)
-                if now_butch[0][0] > pre_femme[2][0] and now_butch[0][1][]
+                if now_butch[0][0] > pre_femme[2][0] and now_butch[1][1] > max(one_k[1] for one_k in pre_femme) and \
+                        min(one_k[2] for one_k in now_butch) > pre_femme[1][2]:
+                    line_bi.append([now_butch[1][0], "f"])
             else:
                 pass
             break
