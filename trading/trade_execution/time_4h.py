@@ -30,7 +30,7 @@ except Exception as e:
 
 try:
     auto_trade.trading_main(
-        coin_list=["MATIC", "ANT", "DOT", "CHZ", "DOGE", "FIL", "CAKE", "ONT", "TLM", "BAKE", "CHR"],
+        coin_list=["MATIC", "ANT", "DOT", "CHZ", "DOGE", "FIL", "CAKE", "ONT", "TLM", "BAKE", "CHR", "BNB"],
         user="szq",
         time_periods="4h", momentum_days=10)
 except Exception as e:
