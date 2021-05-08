@@ -6,6 +6,10 @@
 # @File     : trend_line.py
 # @Function  :
 import pandas as pd
+import mplfinance as mpf
+import matplotlib.pyplot as plt
 
 df = pd.read_csv("result/hs_stock.csv")
-print(df)
+print(df[:10])
+
+plt.plot(df['date'],df[df[flag]])

@@ -29,6 +29,15 @@ except Exception as e:
     print('wenmu bug')
 
 try:
+    auto_trade.trading_main(
+        coin_list=["MATIC", "ANT", "DOT", "CHZ", "DOGE", "FIL", "CAKE", "ONT", "TLM", "BAKE", "CHR"],
+        user="szq",
+        time_periods="4h", momentum_days=10)
+except Exception as e:
+    print(e)
+    print('szq bug')
+
+try:
     auto_trade.trading_main(coin_list=["DOT", "ADA", "BCH", "ETC"], user="zuol", time_periods="4h", momentum_days=60)
 except Exception as e:
     print(e)
