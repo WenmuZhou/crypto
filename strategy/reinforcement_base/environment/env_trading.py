@@ -13,6 +13,7 @@ from gym.utils import seeding
 
 import matplotlib
 import matplotlib.pyplot as plt
+
 matplotlib.use('Agg')
 
 pd.set_option("expand_frame_repr", False)

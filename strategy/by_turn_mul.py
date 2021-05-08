@@ -20,7 +20,7 @@ pd.set_option("display.max_rows", 1000)
 trade_rate = 1.5 / 1000
 
 
-@ray.remote(num_cpus=10)
+@ray.remote(num_cpus=20)
 def turn_strategy(coin_list_, short_momentum_day_, long_momentum_day_):
     res_df = None
     for coin_name in coin_list_:
@@ -108,6 +108,7 @@ def turn_strategy(coin_list_, short_momentum_day_, long_momentum_day_):
     res_df.drop(['max2here', 'dd2here'], axis=1, inplace=True)
 
     # return res_df, max_draw_down, start_date, end_date
+    print(short_momentum_day_, max_coin_net, res_df.tail(1)['strategy_net'].item(), max_draw_down)
     return res_df.tail(1)['strategy_net'].item(), max_draw_down, start_date, end_date, short_momentum_day_, max_coin_net
 
 
@@ -129,9 +130,10 @@ def coin_mul(coin_list, res_list):
     futures = [turn_strategy.remote(coin_list, short_momentum_day_=i, long_momentum_day_=i) for i in range(3, 121)]
     result = ray.get(futures)
     for i in range(len(result)):
-        res_list.append(
-            [",".join(coin_list), result[i][-2], result[i][-1], result[i][0], result[i][1],
-             result[i][0] > result[i][-1]])
+        tmp_list = [",".join(coin_list), result[i][-2], result[i][-1], result[i][0], result[i][1],
+                    result[i][0] > result[i][-1]]
+        res_list.append(tmp_list)
+        # print(tmp_list)
 
 
 # print(i + 3, result[i][:2])

@@ -5,7 +5,7 @@
 # @Author   : Adolf
 # @File     : find_butch_femme.py
 # @Function  :
-from strategy.personalise.chan_theory.K_data_handle import get_merge_data
+from strategy.personalise.chan_theory.K_data_handle import get_merge_data, df
 
 # print(get_merge_data)
 butch_list = []
@@ -41,8 +41,8 @@ while b_p < len(butch_list) - 1 or f_p < len(femme_list) - 1:
             if pre_point_flag == "b":
                 now_femme = femme_list[f_p]
                 pre_butch = butch_list[b_p - 1]
-                print('当前的底:', now_butch)
-                print("上一个的顶", pre_butch)
+                # print('当前的底:', now_butch)
+                # print("上一个的顶", pre_butch)
                 if now_femme[0][0] > pre_butch[2][0] and now_femme[1][2] < min(one_k[2] for one_k in pre_butch) and \
                         max(one_k[1] for one_k in now_femme) < pre_butch[1][1]:
                     line_bi.append([now_femme[1][0], "f", now_femme[1][2]])
@@ -64,8 +64,8 @@ while b_p < len(butch_list) - 1 or f_p < len(femme_list) - 1:
             if pre_point_flag == "f":
                 now_butch = butch_list[b_p]
                 pre_femme = femme_list[f_p - 1]
-                print('当前的顶:', now_butch)
-                print("上一个的底:", pre_femme)
+                # print('当前的顶:', now_butch)
+                # print("上一个的底:", pre_femme)
                 if now_butch[0][0] > pre_femme[2][0] and now_butch[1][1] > max(one_k[1] for one_k in pre_femme) and \
                         min(one_k[2] for one_k in now_butch) > pre_femme[1][2]:
                     line_bi.append([now_butch[1][0], "b", now_butch[1][1]])
@@ -79,4 +79,16 @@ while b_p < len(butch_list) - 1 or f_p < len(femme_list) - 1:
             # break
         b_p += 1
 
-print(line_bi)
+# print(df)
+# print(line_bi)
+
+line_bi_index = 0
+for index, row in df.iterrows():
+    if line_bi_index == len(line_bi) - 1:
+        break
+    if row["date"] == line_bi[line_bi_index][0]:
+        df.loc[index, 'flag'] = line_bi[line_bi_index][1]
+        line_bi_index += 1
+
+print(df)
+df.to_csv("result/hs_stock.csv")
