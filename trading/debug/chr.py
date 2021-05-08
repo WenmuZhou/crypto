@@ -11,13 +11,13 @@ from trading.utils import get_balance_info
 
 exchange = ccxt.binance()
 
-exchange.apiKey = api_key_dict["chr"]
-exchange.secret = api_secret_dict["chr"]
+exchange.apiKey = api_key_dict["szq"]
+exchange.secret = api_secret_dict["szq"]
 
 balance_my, max_value_coin, balance_my_value = get_balance_info(exchange)
 
 print(balance_my)
-trick = exchange.fetch_ticker(symbol="CHR/USDT")
-print(trick)
-exchange.create_limit_buy_order(symbol="CHR/USDT", price=trick['ask'],
-                                amount=balance_my["USDT"] / trick['ask'])
+# trick = exchange.fetch_ticker(symbol="CHR/USDT")
+# print(trick)
+# exchange.create_limit_buy_order(symbol="CHR/USDT", price=trick['ask'],
+#                                 amount=balance_my["USDT"] / trick['ask'])
