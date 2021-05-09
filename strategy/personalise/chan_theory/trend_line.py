@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 pd.set_option("expand_frame_repr", False)
 pd.set_option("display.max_rows", 1000)
 
-df = pd.read_csv("result/hs_stock.csv")
+df = pd.read_csv("result/mnjk_stock.csv")
 del df['amount'], df['turn'], df['pctChg'], df['adjustflag']
 
 # butch_femme_df = df[(df["flag"] == "b") | (df["flag"] == "f")]
@@ -82,5 +82,5 @@ l1 = plt.plot(df["date"], df["close"], 'r', label='close')
 l2 = plt.plot(df2['date'], df2['price'], 'b', label='trend')
 plt.plot(df["date"], df["close"], 'r', df2['date'], df2['price'], 'b')
 # plt.savefig('result/test_trend.jpg')
-plt.savefig("result/test_trend.svg", format="svg")
+plt.savefig("result/test_trend_mn.svg", format="svg")
 plt.show()

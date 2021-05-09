@@ -33,6 +33,8 @@ line_bi = []
 while b_p < len(butch_list) - 1 or f_p < len(femme_list) - 1:
     b_t = butch_list[b_p][1]['high_date']
     f_t = femme_list[f_p][1]['low_date']
+    # print(1111, b_t)
+    # print(2222, f_t)
     if b_t > f_t:
         # 目前是底分型
         if len(line_bi) == 0:
@@ -110,4 +112,4 @@ for index, row in df.iterrows():
         line_bi_index += 1
 
 # print(df[(df["flag"] == "b") | (df["flag"] == "f")])
-df.to_csv("result/hs_stock.csv", index=False)
+df.to_csv("result/mnjk_stock.csv", index=False)

@@ -10,7 +10,7 @@ import pandas as pd
 pd.set_option("expand_frame_repr", False)
 pd.set_option("display.max_rows", 1000)
 
-df = pd.read_csv("dataset/stock/sh.600570.csv")
+df = pd.read_csv("dataset/stock/sz.002044.csv")
 df = df[-1000:]
 # print(df)
 # exit()
@@ -33,11 +33,14 @@ for index, row in df.iterrows():
         pre_high = pre_dict["high_value"]
         pre_low = pre_dict["low_value"]
         pre_high_date = pre_dict["high_date"]
-        pre_low_date = pre_dict["low_value"]
+        pre_low_date = pre_dict["low_date"]
         # print(pre_high, pre_low)
         if (row["high"] >= pre_high and row["low"] <= pre_low) or (row["high"] <= pre_high and row["low"] >= pre_low):
-            pre_plus_dict = get_merge_data[-2]
-            pre_plus_high = pre_plus_dict["high_value"]
+            if len(get_merge_data) > 2:
+                pre_plus_dict = get_merge_data[-2]
+                pre_plus_high = pre_plus_dict["high_value"]
+            else:
+                pre_plus_high = 0
             get_merge_data.pop()
             if pre_high > pre_plus_high:
                 now_high = max(row["high"], pre_high)
@@ -71,7 +74,7 @@ for index, row in df.iterrows():
             now_low_data = row["date"]
 
         one_k_info["high_date"] = now_high_date
-        one_k_info["low_date"] = now_low_data
+        one_k_info["low_date"] = now_low_date
         one_k_info["high_value"] = now_high
         one_k_info["low_value"] = now_low
         # print(one_k_info)
@@ -83,4 +86,4 @@ for index, row in df.iterrows():
 
 # print(len(df))
 # print(len(get_merge_data))
-# print(get_merge_data)
+print(get_merge_data)
