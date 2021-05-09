@@ -49,6 +49,11 @@ while b_p < len(butch_list) - 1 or f_p < len(femme_list) - 1:
                         now_femme[1]["low_value"] < min(one_k['low_value'] for one_k in pre_butch) and \
                         max(one_k['high_value'] for one_k in now_femme) < pre_butch[1]['high_value']:
                     line_bi.append([now_femme[1]["low_date"], "f", now_femme[1]["low_value"]])
+                else:
+                    if len(line_bi) > 1 and now_femme[1]["low_value"] < line_bi[-2][2]:
+                        line_bi.pop()
+                        line_bi.pop()
+                        line_bi.append([now_femme[1]["low_date"], "f", now_femme[1]["low_value"]])
             # 上一个节点也是底分型
             else:
                 now_femme = femme_list[f_p]
@@ -75,6 +80,14 @@ while b_p < len(butch_list) - 1 or f_p < len(femme_list) - 1:
                         now_butch[1]["high_value"] > max(one_k["high_value"] for one_k in pre_femme) and \
                         min(one_k["low_value"] for one_k in now_butch) > pre_femme[1]["low_value"]:
                     line_bi.append([now_butch[1]["high_date"], "b", now_butch[1]["high_value"]])
+
+                else:
+                    if len(line_bi) > 1 and now_butch[1]["high_value"] > line_bi[-2][2]:
+                        # print(b_p)
+                        # print(line_bi)
+                        line_bi.pop()
+                        line_bi.pop()
+                        line_bi.append([now_butch[1]["high_date"], "b", now_butch[1]["high_value"]])
             # 上一个节点也是顶
             else:
                 now_butch = butch_list[b_p]

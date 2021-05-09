@@ -59,6 +59,7 @@ if __name__ == '__main__':
     # stk_list = update_stk_list(datetime.date.today() - datetime.timedelta(days = 31))
     # 非首次运行
     stk_list = load_stk_list()
+    # stk_list = ""
 
     # 下载日线
     download_data(stk_list, datas='date,open,high,low,close,volume,amount,turn,pctChg,adjustflag')
