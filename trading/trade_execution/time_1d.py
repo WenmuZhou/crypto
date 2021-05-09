@@ -33,6 +33,14 @@ except Exception as e:
     print('shengl bug')
 
 try:
+    auto_trade.trading_main(coin_list=["BTC", "ETH", "BNB", "UNI"], user="wyy",
+                            time_periods="1d",
+                            momentum_days=20)
+except Exception as e:
+    print(e)
+    print('wyy bug')
+
+try:
     auto_trade.trading_main(coin_list=["BTC", "ETH", "CAKE", "BCH", "ETC"], user="shuig", time_periods="1d",
                             momentum_days=20)
 except Exception as e:

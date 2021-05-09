@@ -11,8 +11,8 @@ from trading.utils import get_balance_info
 
 exchange = ccxt.binance()
 
-exchange.apiKey = api_key_dict["szq"]
-exchange.secret = api_secret_dict["szq"]
+exchange.apiKey = api_key_dict["wyy"]
+exchange.secret = api_secret_dict["wyy"]
 
 balance_my, max_value_coin, balance_my_value = get_balance_info(exchange)
 

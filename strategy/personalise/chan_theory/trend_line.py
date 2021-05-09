@@ -26,10 +26,23 @@ for index, row in df.iterrows():
 last_state = "p"
 last_index = -1
 for index, row in df.iterrows():
-    if row["flag"] == "b" or row["flag"] == "f":
-        if row["flag"] == last_state:
-            # df.loc[index, 'flag'] = "gan"
-
+    if row["flag"] == "b" and row["flag"] == last_state:
+        if df.loc[index, "high"] > df.loc[last_index, "high"]:
+            df.loc[last_index, 'flag'] = "gan"
+            last_index = index
+        else:
+            df.loc[index, 'flag'] = "gan"
+    elif row["flag"] == "f" and row["flag"] == last_state:
+        if df.loc[index, "low"] < df.loc[last_index, "low"]:
+            df.loc[last_index, "flag"] = "gan"
+            last_index = index
+        else:
+            df.loc[index, 'flag'] = "gan"
+    elif row["flag"] == "b" or row["flag"] == "f":
+        last_state = row["flag"]
+        last_index = index
+    else:
+        continue
 # exit()
 df.loc[df["flag"] == "b", "price"] = df["high"]
 df.loc[df["flag"] == "f", "price"] = df["low"]
@@ -41,4 +54,5 @@ l1 = plt.plot(df["date"], df["close"], 'r', label='close')
 l2 = plt.plot(df2['date'], df2['price'], 'b', label='trend')
 plt.plot(df["date"], df["close"], 'r', df2['date'], df2['price'], 'b')
 # plt.savefig('result/test_trend.jpg')
+plt.savefig("result/test_trend.svg", format="svg")
 plt.show()
