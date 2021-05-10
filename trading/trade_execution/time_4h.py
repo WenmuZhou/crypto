@@ -18,7 +18,7 @@ auto_trade = TurnTrade()
 #     print('nan bug')
 try:
     auto_trade.trading_main(
-        coin_list=["BTC", "ETH", "BNB", "DOT", "KSM", "UNI", "CAKE", "BAKE", "FIL", "MATIC", "XRP", "BCH",
+        coin_list=["ONT", "QTUM", "OMG", "LSK", "KSM", "UNI", "CAKE", "BAKE", "FIL", "MATIC", "BCH",
                    "LINK", "BAT"],
         user="wxt",
         time_periods="4h",
@@ -28,7 +28,7 @@ except Exception as e:
     print("wxt bug")
 try:
     auto_trade.trading_main(
-        coin_list=["MATIC", "ANT", "DOT", "CHZ", "DOGE", "FIL", "CAKE", "ONT", "TLM", "BAKE", "CHR"],
+        coin_list=["MATIC", "ANT", "DOT", "CHZ", "DOGE", "OMG", "CAKE", "ONT", "TLM", "BAKE", "CHR"],
         user="wenmu",
         time_periods="4h", momentum_days=5)
 except Exception as e:
@@ -45,14 +45,14 @@ except Exception as e:
     print('szq bug')
 
 try:
-    auto_trade.trading_main(coin_list=["DOT", "ADA", "BCH", "ETC"], user="zuol", time_periods="4h", momentum_days=60)
+    auto_trade.trading_main(coin_list=["DOT", "ADA", "BCH", "ETC"], user="zuol", time_periods="4h", momentum_days=10)
 except Exception as e:
     print(e)
     print('zuol bug')
 
 auto_trade_ma = TwoMATrade()
 try:
-    auto_trade_ma.trading_main(coin_name="REEF", long_ma=25, short_ma=8, user="feip", time_periods="4h")
+    auto_trade_ma.trading_main(coin_name="REEF", long_ma=20, short_ma=5, user="feip", time_periods="4h")
 except Exception as e:
     print(e)
     print('feip bug')

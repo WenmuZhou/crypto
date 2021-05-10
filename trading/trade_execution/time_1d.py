@@ -25,7 +25,7 @@ except Exception as e:
 #     print("wxt bug")
 
 try:
-    auto_trade.trading_main(coin_list=["BTC", "ETH", "BNB", "DOT", "UNI", "CAKE", "ADA"], user="shengl",
+    auto_trade.trading_main(coin_list=["BTC", "ETH", "BNB", "UNI"], user="shengl",
                             time_periods="1d",
                             momentum_days=10)
 except Exception as e:
@@ -42,14 +42,14 @@ except Exception as e:
 
 try:
     auto_trade.trading_main(coin_list=["BTC", "ETH", "CAKE", "BCH", "ETC"], user="shuig", time_periods="1d",
-                            momentum_days=20)
+                            momentum_days=10)
 except Exception as e:
     print(e)
     print('shug bug')
 
 auto_trade_v2 = TurtleTrade()
 try:
-    auto_trade_v2.trading_main(coin_name="BTC", user="yujl", upper_band=30, lower_band=20, time_periods="1d")
+    auto_trade_v2.trading_main(coin_name="BTC", user="yujl", upper_band=20, lower_band=10, time_periods="1d")
 except Exception as e:
     print(e)
     print('yujl bug')
