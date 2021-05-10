@@ -56,6 +56,7 @@ class BasisTrading:
         trick = self.exchange.fetch_ticker(symbol=overweight_pos + "/USDT")
         self.exchange.create_limit_buy_order(symbol=overweight_pos + "/USDT", price=trick['ask'],
                                              amount=balance_my["USDT"] / trick['ask'])
+        return trick['ask']
 
     def strategy_trade(self, *args, **kwargs):
         # now_style = "USDT"
@@ -94,11 +95,11 @@ class BasisTrading:
                 time.sleep(5)
                 balance_my, max_value_coin, balance_my_value = self.get_balance_info()
                 try:
-                    self.buy(now_style, balance_my)
-                    message = "调仓时间:{}\n\n账户所有人:{}\n\n原来持有的币种:{}\n\n买入的新币种为:{}\n\n账户余额:{:.2f}元".format(
+                    buy_price = self.buy(now_style, balance_my)
+                    message = "调仓时间:{}\n\n账户所有人:{}\n\n原来持有的币种:{}\n\n买入的新币种为:{}\n\n买入价格:{}\n\n账户余额:{:.2f}元".format(
                         datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                         kwargs["user"],
-                        max_value_coin, now_style, balance_my_value)
+                        max_value_coin, now_style, buy_price, balance_my_value)
                 except Exception as e:
                     print(e)
                     message = "调仓时间:{}\n\n账户所有人:{}\n\n本次希望买入币种:{}\n\n本次买入出现bug:{}\n\n".format(
