@@ -11,7 +11,8 @@ from trading.trade_strategy.two_ma import TwoMATrade
 auto_trade = TurnTrade()
 try:
     auto_trade.trading_main(
-        coin_list=["ONT", "WAVES", "KSM", "UNI", "CAKE", "BAKE", "FIL", "MATIC", "BCH", "LINK", "BAT", "LTC", "EOS"],
+        coin_list=["ONT", "WAVES", "KSM", "UNI", "CAKE", "BAKE", "FIL", "MATIC", "BCH", "LINK", "BAT", "LTC", "EOS",
+                   "SHIB"],
         user="wxt",
         time_periods="4h",
         momentum_days=5)
