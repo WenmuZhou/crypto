@@ -40,12 +40,12 @@ except Exception as e:
     print(e)
     print('wyy bug')
 
-# try:
-#     auto_trade.trading_main(coin_list=["BTC", "ETH", "CAKE", "BCH", "ETC"], user="shuig", time_periods="1d",
-#                             momentum_days=10)
-# except Exception as e:
-#     print(e)
-#     print('shug bug')
+try:
+    auto_trade.trading_main(coin_list=["BTC", "ETH", "XRP", "BNB"], user="yanjx", time_periods="1d",
+                            momentum_days=10)
+except Exception as e:
+    print(e)
+    print('shug bug')
 #
 auto_trade_v2 = TurtleTrade()
 try:

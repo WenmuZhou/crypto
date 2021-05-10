@@ -43,5 +43,7 @@ if __name__ == '__main__':
     #     auto_trade.trading_main(coin_list=["DOT", "ADA"], user="zuol", time_periods="4h", data_limit=10, momentum_days=5)
     # auto_trade.trading_main(coin_list=["BTC", "ETH", "CAKE", "BCH", "ETC"], user="shuig", time_periods="1d",
     #                         momentum_days=20)
-    auto_trade.trading_main(coin_list=["BTC", "ETH", "BNB", "DOT", "UNI", "CAKE", "ADA"], user="shengl",
-                            time_periods="1d", momentum_days=10)
+    # auto_trade.trading_main(coin_list=["BTC", "ETH", "BNB", "DOT", "UNI", "CAKE", "ADA"], user="shengl",
+    #                         time_periods="1d", momentum_days=10)
+    auto_trade.trading_main(coin_list=["BTC", "ETH", "XRP", "BNB"], user="yanjx", time_periods="1d",
+                            momentum_days=10)

@@ -9,13 +9,6 @@ from trading.trade_strategy.turn_trade import TurnTrade
 from trading.trade_strategy.two_ma import TwoMATrade
 
 auto_trade = TurnTrade()
-# try:
-#     auto_trade.trading_main(coin_list=["BTC", "ETH", "UNI", "FIL", "DOT", "ADA", "REEF"], user="nan",
-#                             time_periods="1d",
-#                             momentum_days=5)
-# except Exception as e:
-#     print(e)
-#     print('nan bug')
 try:
     auto_trade.trading_main(
         coin_list=["ONT", "QTUM", "OMG", "LSK", "KSM", "UNI", "CAKE", "BAKE", "FIL", "MATIC", "BCH",
