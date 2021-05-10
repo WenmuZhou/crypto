@@ -70,6 +70,23 @@ class ChanBi:
                 one_k_info["low_value"] = now_low
                 self.merge_data.append(one_k_info.copy())
 
+    def get_butch_femme(self):
+        butch_list = []
+        femme_list = []
+        for index in range(1, len(self.merge_data) - 1):
+            # print(get_merge_data[index])
+            if self.merge_data[index]['high_value'] > self.merge_data[index - 1]['high_value'] and \
+                    self.merge_data[index]['high_value'] > self.merge_data[index + 1]['high_value']:
+                butch_list.append([self.merge_data[index - 1], self.merge_data[index], self.merge_data[index + 1]])
+
+            if self.merge_data[index]['low_value'] < self.merge_data[index - 1]['low_value'] and \
+                    self.merge_data[index]['low_value'] < self.merge_data[index + 1]['low_value']:
+                femme_list.append([self.merge_data[index - 1], self.merge_data[index], self.merge_data[index + 1]])
+
+        return butch_list, femme_list
+
+    def flag_butch_femme(self):
+
     def _make_plot(self, df_, param):
         plt.plot(self.df["date"], self.df["close"], "r", label="close")
         plt.savefig("result/tmp/test_v1.svg", format="svg")
@@ -77,8 +94,11 @@ class ChanBi:
 
     def run(self):
         self.k_data_handle()
-        print(self.merge_data)
-        # self._make_plot()
+        butch_list, femme_list = self.get_butch_femme()
+        print(butch_list)
+        print('----------------------------')
+        print(femme_list)
+
 
 
 if __name__ == '__main__':

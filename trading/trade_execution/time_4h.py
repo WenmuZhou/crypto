@@ -19,7 +19,7 @@ except Exception as e:
     print(e)
     print("wxt bug")
 
-coin_list_ji = ["MATIC", "ANT", "OMG", "CHZ", "DOGE", "OMG", "CAKE", "ONT", "TLM", "BAKE", "CHR", "ETC", "XTZ"]
+coin_list_ji = ["MATIC", "ANT", "OMG", "CHZ", "DOGE", "OMG", "CAKE", "ONT", "TLM", "BAKE", "CHR", "ETC", "XTZ", "SHIB"]
 try:
     auto_trade.trading_main(
         coin_list=coin_list_ji,
