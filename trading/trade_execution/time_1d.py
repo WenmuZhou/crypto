@@ -10,7 +10,7 @@ from trading.trade_strategy.turtle_trade import TurtleTrade
 
 auto_trade = TurnTrade()
 try:
-    auto_trade.trading_main(coin_list=["BTC", "ETH", "UNI", "FIL", "DOT", "ADA"], user="nan",
+    auto_trade.trading_main(coin_list=["BTC", "ETH", "UNI", "FIL", "DOT", "ADA", "BNB"], user="nan",
                             time_periods="1d",
                             momentum_days=6)
 except Exception as e:

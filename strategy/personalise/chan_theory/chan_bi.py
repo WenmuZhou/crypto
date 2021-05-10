@@ -6,6 +6,7 @@
 # @File     : chan_bi.py
 # @Function  :
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 class ChanBi:
@@ -67,10 +68,13 @@ class ChanBi:
                 self.get_merge_data.append(one_k_info.copy())
 
     def _make_plot(self, df_, param):
-        pass
+        plt.plot(self.df["date"], self.df["close"], "r", label="close")
+        plt.savefig("result/tmp/test_v1.svg", format="svg")
+        plt.show()
 
-    def __call__(self):
+    def run(self):
         self.k_data_handle()
 
 
 if __name__ == '__main__':
+    ChanBi(data_path="dataset/stock/sh.600570.csv").run()
