@@ -66,5 +66,11 @@ class ChanBi:
                 one_k_info["low_value"] = now_low
                 self.get_merge_data.append(one_k_info.copy())
 
+    def _make_plot(self, df_, param):
+        pass
+
     def __call__(self):
         self.k_data_handle()
+
+
+if __name__ == '__main__':
