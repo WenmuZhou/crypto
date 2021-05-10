@@ -8,13 +8,17 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
+pd.set_option("expand_frame_repr", False)
+pd.set_option("display.max_rows", 1000)
+
 
 class ChanBi:
     def __init__(self, data_path):
         df = pd.read_csv(data_path)
         self.df = df[-1000:]
         self.merge_data = []
-        # self.k_data_handle()
+        self.butch_list = []
+        self.femme_list = []
 
     def k_data_handle(self):
         one_k_info = {"high_date": "",
@@ -71,21 +75,29 @@ class ChanBi:
                 self.merge_data.append(one_k_info.copy())
 
     def get_butch_femme(self):
-        butch_list = []
-        femme_list = []
         for index in range(1, len(self.merge_data) - 1):
             # print(get_merge_data[index])
             if self.merge_data[index]['high_value'] > self.merge_data[index - 1]['high_value'] and \
                     self.merge_data[index]['high_value'] > self.merge_data[index + 1]['high_value']:
-                butch_list.append([self.merge_data[index - 1], self.merge_data[index], self.merge_data[index + 1]])
+                self.butch_list.append([self.merge_data[index - 1], self.merge_data[index], self.merge_data[index + 1]])
 
             if self.merge_data[index]['low_value'] < self.merge_data[index - 1]['low_value'] and \
                     self.merge_data[index]['low_value'] < self.merge_data[index + 1]['low_value']:
-                femme_list.append([self.merge_data[index - 1], self.merge_data[index], self.merge_data[index + 1]])
-
-        return butch_list, femme_list
+                self.femme_list.append([self.merge_data[index - 1], self.merge_data[index], self.merge_data[index + 1]])
 
     def flag_butch_femme(self):
+        butch_index = 0
+        femme_index = 0
+        for index, row in self.df.iterrows():
+            butch_date = self.butch_list[butch_index][1]["high_date"]
+            femme_date = self.femme_list[femme_index][1]["low_date"]
+            if row["date"] == butch_date:
+                self.df["dd_flag"] = "butch"
+                butch_index += 1
+            if row["date"] == femme_date:
+                self.df["dd_flag"] = "femme"
+
+        print(self.df)
 
     def _make_plot(self, df_, param):
         plt.plot(self.df["date"], self.df["close"], "r", label="close")
@@ -94,11 +106,8 @@ class ChanBi:
 
     def run(self):
         self.k_data_handle()
-        butch_list, femme_list = self.get_butch_femme()
-        print(butch_list)
-        print('----------------------------')
-        print(femme_list)
-
+        self.get_butch_femme()
+        self.flag_butch_femme()
 
 
 if __name__ == '__main__':
