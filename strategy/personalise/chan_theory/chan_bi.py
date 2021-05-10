@@ -38,7 +38,9 @@ class ChanBi:
                         row["high"] <= pre_high and row["low"] >= pre_low):
                     if len(self.merge_data) > 1:
                         pre_plus_dict = self.merge_data[-2]
-                    pre_plus_high = pre_plus_dict["high_value"]
+                        pre_plus_high = pre_plus_dict["high_value"]
+                    else:
+                        pre_plus_high = 0
                     self.merge_data.pop()
                     if pre_high > pre_plus_high:
                         now_high = max(row["high"], pre_high)
