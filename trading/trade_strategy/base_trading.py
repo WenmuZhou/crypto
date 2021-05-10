@@ -79,14 +79,14 @@ class BasisTrading:
             if max_value_coin != "USDT":
                 try:
                     self.sell(max_value_coin, balance_my)
-                    message = "调仓时间:{}\n\n账户所有人:{}\n\n原来持有的币种:{}\n\n本次出现卖出成功\n\n".format(
+                    message = "调仓时间:{}\n\n账户所有人:{}\n\n原来持有的币种:{}\n\n本次卖出成功\n\n".format(
                         datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                         kwargs["user"],
                         max_value_coin)
                 except Exception as e:
                     print(e)
                     sell_success = False
-                    message = "调仓时间:{}\n\n账户所有人:{}\n\n原来持有的币种:{}\n\n本次出现卖出出现bug:{}\n\n".format(
+                    message = "调仓时间:{}\n\n账户所有人:{}\n\n原来持有的币种:{}\n\n本次卖出出现bug:{}\n\n".format(
                         datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                         kwargs["user"],
                         max_value_coin, e)
