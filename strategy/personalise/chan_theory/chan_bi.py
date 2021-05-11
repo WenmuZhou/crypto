@@ -253,14 +253,7 @@ class ChanBi:
         # df2 = self.df.dropna(how="any")
         # print(self.df)
 
-    def _make_plot(self, df_, param):
-        # l1 = plt.plot(self.df["date"], self.df["close"], 'r', label='close')
-        # l2 = plt.plot(df_['date'], df_['price'], 'b', label='trend')
-        plt.plot(self.df["date"], self.df["close"], 'r', df_['date'], df_[param], 'b')
-        plt.savefig("result/tmp/test_v1.svg", format="svg")
-        plt.show()
-
-    def run(self):
+    def run(self, save_path):
         self.k_data_handle()
         self.get_butch_femme()
         self.flag_butch_femme()
@@ -273,9 +266,10 @@ class ChanBi:
         # exit()
 
         plt.plot(self.df["date"], self.df["high"], '-r', df2['date'], df2['price'], 'b')
-        plt.savefig("result/tmp/test_v1.svg", format="svg")
+        plt.savefig(save_path, format="svg")
         plt.show()
 
 
 if __name__ == '__main__':
-    ChanBi(data_path="dataset/stock/sz.002044.csv").run()
+    stock_id = "002044"
+    ChanBi(data_path="dataset/stock/" + stock_id + ".csv").run(save_path="result/chan_bi/" + stock_id + ".svg")

@@ -66,7 +66,7 @@ class TwoSmaStrategy(BasisStrategy):
 
 
 if __name__ == '__main__':
-    ret, cerebro, ret_dict = TwoSmaStrategy.run(data_path="/root/adolf/dataset/d_pre/sh.600570.csv", cash=100000000,
+    ret, cerebro, ret_dict = TwoSmaStrategy.run(data_path="/root/adolf/dataset/d_pre/600570.csv", cash=100000000,
                                                 IS_ALL_IN=True, params_dict={"strategy_params":
                                                                                  {"short_period": 5,
                                                                                   "long_period": 10},

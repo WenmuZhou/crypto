@@ -10,7 +10,7 @@ import pandas as pd
 pd.set_option("expand_frame_repr", False)
 pd.set_option("display.max_rows", 1000)
 
-df = pd.read_csv("dataset/stock/sz.002044.csv")
+df = pd.read_csv("dataset/stock/002044.csv")
 df = df[-1000:]
 # print(df)
 # exit()
