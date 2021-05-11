@@ -89,13 +89,17 @@ class ChanBi:
         butch_index = 0
         femme_index = 0
         for index, row in self.df.iterrows():
-            butch_date = self.butch_list[butch_index][1]["high_date"]
-            femme_date = self.femme_list[femme_index][1]["low_date"]
-            if row["date"] == butch_date:
-                self.df["dd_flag"] = "butch"
-                butch_index += 1
-            if row["date"] == femme_date:
-                self.df["dd_flag"] = "femme"
+            if butch_index < len(self.butch_list):
+                butch_date = self.butch_list[butch_index][1]["high_date"]
+                if row["date"] == butch_date:
+                    self.df.loc[index, "dd_flag"] = "butch"
+                    butch_index += 1
+            if femme_index < len(self.femme_list):
+                femme_date = self.femme_list[femme_index][1]["low_date"]
+
+                if row["date"] == femme_date:
+                    self.df.loc[index, "dd_flag"] = "femme"
+                    femme_index += 1
 
         print(self.df)
 
