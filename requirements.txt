@@ -13,3 +13,4 @@ torch
 stable-baselines3
 baostock
 tushare
+pysocks
