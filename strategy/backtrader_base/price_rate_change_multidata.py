@@ -46,8 +46,8 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
         ret_datas = []
         for item in data_paths:
             df = pd.read_csv(item)
-            df["time_stamp"] = pd.to_datetime(df["time_stamp"])
-            data = bt.feeds.PandasData(dataname=df, datetime="time_stamp", volume="vol")
+            df["date"] = pd.to_datetime(df["date"])
+            data = bt.feeds.PandasData(dataname=df, datetime="date", volume="volume")
             ret_datas.append(data)
         return ret_datas
 
