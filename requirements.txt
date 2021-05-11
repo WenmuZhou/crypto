@@ -1,6 +1,6 @@
 ccxt
+numpy==1.18.0
 pandas
-numpy
 matplotlib==3.2.2
 mplfinance
 backtrader
@@ -13,3 +13,4 @@ torch
 stable-baselines3
 baostock
 tushare
+pysocks
