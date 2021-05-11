@@ -16,9 +16,11 @@ class ChanBi:
     def __init__(self, data_path):
         df = pd.read_csv(data_path)
         self.df = df[-1000:]
+        self.df.reset_index(drop=True, inplace=True)
         self.merge_data = []
         self.butch_list = []
         self.femme_list = []
+        self.markers_on = []
 
     def k_data_handle(self):
         one_k_info = {"high_date": "",
@@ -37,7 +39,7 @@ class ChanBi:
                 pre_high = pre_dict["high_value"]
                 pre_low = pre_dict["low_value"]
                 pre_high_date = pre_dict["high_date"]
-                pre_low_date = pre_dict["low_value"]
+                pre_low_date = pre_dict["low_date"]
                 if (row["high"] >= pre_high and row["low"] <= pre_low) or (
                         row["high"] <= pre_high and row["low"] >= pre_low):
                     if len(self.merge_data) > 1:
@@ -85,6 +87,9 @@ class ChanBi:
                     self.merge_data[index]['low_value'] < self.merge_data[index + 1]['low_value']:
                 self.femme_list.append([self.merge_data[index - 1], self.merge_data[index], self.merge_data[index + 1]])
 
+        # print(len(self.butch_list))
+        # print(len(self.femme_list))
+
     def flag_butch_femme(self):
         butch_index = 0
         femme_index = 0
@@ -94,17 +99,21 @@ class ChanBi:
                 if row["date"] == butch_date:
                     self.df.loc[index, "dd_flag"] = "butch"
                     butch_index += 1
+                    self.markers_on.append(index)
+
             if femme_index < len(self.femme_list):
                 femme_date = self.femme_list[femme_index][1]["low_date"]
-
                 if row["date"] == femme_date:
                     self.df.loc[index, "dd_flag"] = "femme"
                     femme_index += 1
+                    self.markers_on.append(index)
 
-        print(self.df)
+        # print(len(self.df))
 
     def _make_plot(self, df_, param):
-        plt.plot(self.df["date"], self.df["close"], "r", label="close")
+        # l1 = plt.plot(self.df["date"], self.df["close"], 'r', label='close')
+        # l2 = plt.plot(df_['date'], df_['price'], 'b', label='trend')
+        plt.plot(self.df["date"], self.df["close"], 'r', df_['date'], df_[param], 'b')
         plt.savefig("result/tmp/test_v1.svg", format="svg")
         plt.show()
 
@@ -112,6 +121,12 @@ class ChanBi:
         self.k_data_handle()
         self.get_butch_femme()
         self.flag_butch_femme()
+
+        # df2 = self.df.dropna(how="any")
+
+        plt.plot(self.df["date"], self.df["close"], '-rD', markevery=self.markers_on)
+        plt.savefig("result/tmp/test_v1.svg", format="svg")
+        plt.show()
 
 
 if __name__ == '__main__':

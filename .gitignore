@@ -10,6 +10,7 @@ build/
 dist/
 
 study/
+result/
 .idea/
 .vscode/
 .DS_Store
