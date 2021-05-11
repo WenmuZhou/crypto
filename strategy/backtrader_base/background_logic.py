@@ -55,9 +55,9 @@ class BasisStrategy(bt.Strategy):
             # print(self.datas)
             self.log(
                 'Order status: {}, Canceled-{}/Margin-{}/Rejected-{}'.format(order.status, order.Canceled, order.Margin,
-                                                                             order.Rejected), doprint=False)
-        self.log('Value: {:.6f}, price: {:.6f}, size: {:6f}'.format(order.executed.value, order.executed.price,
-                                                                    order.executed.size), doprint=False)
+                                                                             order.Rejected), doprint=True)
+        self.log('Value: {:.6f}, price: {:.6f}, size: {}'.format(order.executed.value, order.executed.price,
+                                                                    order.executed.size), doprint=True)
         # 订单状态处理完成，设为空
         self.order = None
 
@@ -81,7 +81,7 @@ class BasisStrategy(bt.Strategy):
                 -len(self.datas[i]) + 1]
 
         BasisStrategy.cls_ret['strategy_yield'] = self.broker.getvalue() / self.origin_cash
-        BasisStrategy.cls_ret['end_value'] = self.broker.getvalue()
+        BasisStrategy.cls_ret['end_value'] = self.broker.get_value()
 
     @staticmethod
     def data_process(data_path):
@@ -109,14 +109,16 @@ class BasisStrategy(bt.Strategy):
             cerebro.adddata(datas)
 
         cerebro.broker.setcash(cash)
-        cerebro.broker.setcommission(commission)
+        # cerebro.broker.setcommission(0) #(commission)
 
         cerebro.broker.addcommissioninfo(CommInforFractional())
         # 滑点、投入资金百分比、回测指标
-        if slip_type == 0:
-            cerebro.broker.set_slippage_fixed(slip_value)
-        elif slip_type == 1:
-            cerebro.broker.set_slippage_perc(slip_value)
+        # if slip_type == 0:
+        #     cerebro.broker.set_slippage_fixed(slip_value)
+        # elif slip_type == 1:
+        #     cerebro.broker.set_slippage_perc(slip_value)
+
+        # cerebro.broker.set_slippage_fixed(0)
 
         for ana_name, ana_class in analyzer_params.items():
             cerebro.addanalyzer(ana_class, _name=ana_name)

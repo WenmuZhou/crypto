@@ -12,6 +12,7 @@
 
 import pandas as pd
 import backtrader as bt
+import datetime
 
 from strategy.backtrader_base.background_logic import BasisStrategy
 
@@ -107,16 +108,42 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
                         size=self.position.size,
                         data=self.datas[i],
                     )
+
         if max_proc > 0:
             # print('{} Send Buy, from data {}, open {}'.format(
             #     self.datas[max_index].datetime.date(),
             #     max_index,
             #     self.datas[max_index].open[0]
             # ))
+            # print(type(self.datas[max_index].datetime.date()))
+            # time_tmp = '9/2/2018'
+            # if self.datas[max_index].datetime.date() == datetime.date.strftime(time_tmp, '%Y-%m-%d'):
+            #     print("pause")
+            # print("==== ", type(self.datas[max_index].datetime.date().strftime('%Y-%m-%d')), self.datas[max_index].datetime.date().strftime('%Y-%m-%d'))
+            # if self.datas[max_index].datetime.date().strftime('%Y-%m-%d') == '2018-09-02':
+            #     print('pause')
+            size_ = self.broker.getcash() / self.datas[max_index].open[0]
+            size_str = str(size_).split('.')[0] + '.' + str(size_).split('.')[1][:4]
+            size_real = float(size_str)
+            # diff_ = size_ * self.datas[max_index].open[0] - self.broker.getcash()
+            # print("date = {}, price: {}, size: {}, cash: {}, diff: {}".format(self.datas[max_index].datetime.date(), self.datas[max_index].open[0], size_, self.broker.getcash(), diff_))
             self.order = self.buy(
                 data=self.datas[max_index],
-                size=(self.broker.getcash() / self.datas[max_index].open[0]),
+                size=size_real, #(self.broker.getcash() / self.datas[max_index].open[0]),
             )
+
+
+        # pos_1 = self.getposition(data=self.datas[0])
+        # pos_2 = self.getposition(data=self.datas[1])
+        # print("position1: size = {}, price = {}, value = {}, cash = {}".format(pos_1.size, pos_1.price,
+        #                                                                       pos_1.size * pos_1.price,
+        #                                                                       self.broker.getcash()))
+        # print("position2: size = {}, price = {}, value = {}, cash = {}".format(pos_2.size, pos_2.price,
+        #                                                                       pos_2.size * pos_2.price,
+        #                                                                       self.broker.getcash()))
+        # print("position: size = {}, price = {}, value = {}, cash = {}".format(self.position.size, self.position.price, self.position.size * self.position.price, self.broker.getcash()))
+        # print("position size: ", self.position.size)
+        # print("position price: ", self.position.price)
             # dt = self.datas[max_index].datetime.date(-1)
             # self.order = self.buy(data=self.datas[max_index],
             #                       size=(self.broker.getcash() / self.datas[max_index].open[0]))
