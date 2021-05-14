@@ -12,7 +12,8 @@
 
 import backtrader as bt
 
-from strategy.backtrader_base.background_logic import BasisStrategy
+# from strategy.backtrader_base.background_logic import BasisStrategy
+from background_logic import BasisStrategy
 
 class TurtleSizer(bt.Sizer):
     """交易量的大小

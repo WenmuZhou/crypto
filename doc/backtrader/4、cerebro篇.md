@@ -107,6 +107,7 @@ run(**kwargs)
 ```python
 plot(plotter=None, numfigs=1, iplot=True, start=None, end=None, width=16, height=9, dpi=300, tight=True, use=None, **kwargs)
 ```
+&emsp;&emsp;plot在可视化里面详细介绍。
 
 ### 3.3 其他
 &emsp;&emsp;其他的方法如下：
