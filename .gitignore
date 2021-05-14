@@ -4,6 +4,7 @@ __pycache__/
 *.pyd
 *.so
 *.ipynb
+*.pth
 .ipynb_checkpoints
 _build
 build/
