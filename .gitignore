@@ -9,6 +9,7 @@ _build
 build/
 dist/
 
+dataset/
 study/
 result/
 log/
