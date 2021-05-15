@@ -20,7 +20,7 @@ pd.set_option("display.max_rows", 1000)
 trade_rate = 1.5 / 1000
 
 
-@ray.remote(num_cpus=20)
+# @ray.remote
 def turn_strategy(coin_list_, short_momentum_day_, long_momentum_day_):
     res_df = None
     for coin_name in coin_list_:
@@ -158,27 +158,36 @@ def get_combination_list(data_list):
     return combinations_list
 
 
-ray.init()
+# ray.init()
 # futures = [one_coin_list.remote(coin_list, res_list) for coin_list in coin_type]
 # result_ray = ray.get(futures)
 # print(result_ray)
-res_list = []
-combinations_list = get_combination_list(data_list)
-for coin_list in combinations_list:
-    coin_mul(coin_list, res_list)
+# result_list = []
+# combinations_list = get_combination_list(data_list)
+# for coin_list in combinations_list:
+#     coin_mul(coin_list, res_list)
+# coin_mul(coin_list=["BTC", "ETH", "UNI", "FIL", "DOT", "ADA"], res_list=result_list)
 # print(res_list)
 # exit()
-df = pd.DataFrame(res_list,
-                  columns=["coin_list", "time_period", "coin_yield", "strategy_yield", "drawdown", "is_win"])
-print(df)
-df.to_csv("result/turn_mul_4h.csv")
+# df = pd.DataFrame(result_list,
+#                   columns=["coin_list", "time_period", "coin_yield", "strategy_yield", "drawdown", "is_win"])
+# print(df)
+# df.to_csv("result/turn_mul_4h.csv")
 # momentum_day = 18
-# for momentum_day in range(3, 31):
-#     df = turn_strategy(coin_list, momentum_day_=momentum_day)
-#     print(momentum_day, df.tail(1)["strategy_net"].item())
+coin_list = ["BTC", "ETH", "UNI", "FIL", "DOT", "ADA"]
+for momentum_day in range(3, 161):
+    strategy_net, max_draw_down, start_date, end_date, _, _ = turn_strategy(coin_list, short_momentum_day_=momentum_day,
+                                                                            long_momentum_day_=momentum_day)
+    print("momentum_day:", momentum_day)
+    print("strategy_net:", strategy_net)
+    print("max_draw_down:", max_draw_down)
+    print("start_date:", start_date)
+    print("end_date:", end_date)
+    print('-------------------')
+    # break
 # res_list = list()
 # for i in range(3, 101):
-#     df, max_draw_down, start_date, end_date = turn_strategy(coin_list, short_momentum_day_=i, long_momentum_day_=i)
+# df, max_draw_down, start_date, end_date = turn_strategy(coin_list, short_momentum_day_=i, long_momentum_day_=i)
 # print(len(df))
 # print('time period:', i)
 # print('strategy net:', df.tail(1)['strategy_net'].item())
