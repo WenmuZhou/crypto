@@ -46,8 +46,8 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
         ret_datas = []
         for item in data_paths:
             df = pd.read_csv(item)
-            df["date"] = pd.to_datetime(df["date"])
-            data = bt.feeds.PandasData(dataname=df, datetime="date", volume="volume")
+            df["time"] = pd.to_datetime(df["time"])
+            data = bt.feeds.PandasData(dataname=df, datetime="time", volume="vol")
             ret_datas.append(data)
         return ret_datas
 
@@ -131,6 +131,8 @@ class PriceMomentumStrategyMultiData(BasisStrategy):
                 data=self.datas[max_index],
                 size=size_real, #(self.broker.getcash() / self.datas[max_index].open[0]),
             )
+            # self.order = self.order_target_percent(data=self.datas[max_index], target=1)
+            # self.order = self.order_target_value(data=self.datas[max_index], target=self.broker.getcash())
 
 
         # pos_1 = self.getposition(data=self.datas[0])
