@@ -80,5 +80,3 @@ for i in range(3, 61):
     my_position = cal_mom(_momentum_day=i)
     print(my_position["my_value"])
     break
-
-    print("11111")
