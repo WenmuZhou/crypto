@@ -5,22 +5,29 @@
 # @Author  : Adolf
 # @File    : valid_strategy.py
 # @Function:
+import os
+
 import pandas as pd
 from functools import reduce
 
 pd.set_option("expand_frame_repr", False)
 pd.set_option("display.max_rows", 1000)
 
-coin_list = ["UNI", "FIL", "DOT", "ADA", "BNB", "EOS", "XRP", "KSM", "CAKE"]
+coin_list = ["BTC", "ETH"]
 # momentum_day = 5
 trade_rate = 2 / 1000
+time_period = "1d"
 
 
 def cal_mom(_momentum_day):
     data_frames = []
     for coin_name in coin_list:
-        df = pd.read_csv("dataset/4h/" + coin_name + ".csv")
+        df_dir = "dataset/" + time_period + "/" + coin_name + "_USDT_" + time_period
+        df_list = os.listdir(df_dir)
+        # exit()
+        df = pd.read_csv(os.path.join(df_dir, df_list[0]))
         del df['time'], df['high'], df['low'], df['vol']
+        df = df[['time_stamp', 'open', 'close']]
         df[coin_name + '_pct'] = df['close'].pct_change(periods=1)
         df[coin_name + '_momentum'] = df['close'].pct_change(periods=_momentum_day)
         df.rename(columns={'open': coin_name + '_open',
@@ -31,21 +38,19 @@ def cal_mom(_momentum_day):
 
     df_merged = reduce(lambda left, right: pd.merge(left, right, on=['time_stamp'],
                                                     how='outer'), data_frames)
-    # print(df_merged)
+    df_merged.sort_values(by=['time_stamp'], inplace=True)
     df_merged["USDT_close"] = 1
     df_merged["USDT_pct"] = 0
-    my_position = {"date": "2018-07-19",
-                   "pre_close": 1,
-                   "pre_style": "USDT",
-                   "style_close": 1,
-                   "pos_style": "USDT",
-                   "my_value": 1,
-                   "is_turn": False}
+    _my_position = {"date": "2018-07-19",
+                    "pre_close": 1,
+                    "pre_style": "USDT",
+                    "style_close": 1,
+                    "pos_style": "USDT",
+                    "my_value": 1,
+                    "is_turn": False}
 
     for index, row in df_merged.iterrows():
-        if row["time_stamp"] == "2020-09-16 20:00:00":
-            print(row)
-        my_position["date"] = row["time_stamp"]
+        _my_position["date"] = row["time_stamp"]
         max_momentum = 0
         coin_style = "USDT"
         for coin_name in coin_list:
@@ -54,29 +59,29 @@ def cal_mom(_momentum_day):
                 if row[coin_name + '_momentum'] > max_momentum:
                     max_momentum = row[coin_name + '_momentum']
                     coin_style = coin_name
-        my_position["pre_close"] = my_position["style_close"]
-        my_position["pre_style"] = my_position["pos_style"]
+        _my_position["pre_close"] = _my_position["style_close"]
+        _my_position["pre_style"] = _my_position["pos_style"]
 
         # my_position["style_close"] = row[my_position["pos_style"] + "_close"]
         # my_position["my_value"] *= (1 + my_position["style_close"] / my_position["pre_close"])
-        my_position["is_turn"] = False
+        _my_position["is_turn"] = False
 
-        if max_momentum > 0 and my_position["pos_style"] != coin_style:
-            my_position["my_value"] *= (1 - trade_rate)
-            my_position["pos_style"] = coin_style
-            my_position["is_turn"] = True
+        if max_momentum > 0 and _my_position["pos_style"] != coin_style:
+            _my_position["my_value"] *= (1 - trade_rate)
+            _my_position["pos_style"] = coin_style
+            _my_position["is_turn"] = True
 
-        my_position["style_close"] = row[my_position["pos_style"] + "_close"]
-        if not my_position["is_turn"]:
-            my_position["my_value"] *= (1 + row[my_position["pos_style"] + "_pct"])
+        _my_position["style_close"] = row[_my_position["pos_style"] + "_close"]
+        if not _my_position["is_turn"]:
+            _my_position["my_value"] *= (1 + row[_my_position["pos_style"] + "_pct"])
         else:
-            my_position["my_value"] *= (1 + row[my_position["pre_style"] + "_pct"])
-        print(my_position)
-    return my_position
+            _my_position["my_value"] *= (1 + row[_my_position["pre_style"] + "_pct"])
+        # print(_my_position)
+    return _my_position
 
 
 for i in range(3, 61):
     print(i)
     my_position = cal_mom(_momentum_day=i)
     print(my_position["my_value"])
-    break
+    # break

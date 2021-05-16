@@ -21,10 +21,11 @@ coin_list = ["BTC", "ETH", "EOS", "FIL", "LTC", "ETC", "BCH", "BAT",
              "XRP", "DOT", "KSM", "CAKE", "BNB", "LINK", "ADA", "UNI",
              "CHZ", "DOGE", "MATIC"]
 time_period = "1m"
-range_number = 5
-storage_path = "dataset/1m/"
+range_number = 10
+storage_path = "dataset/" + time_period + "/"
 limit = 1000
 
 for coin_name in coin_list:
     get_exchange_data(_exchange_handler=exchange, _coin_name=coin_name, _time_period=time_period,
-                      _range_number=range_number, _storage_path=storage_path, _limit=limit, _retry_times=2)
+                      _range_number=range_number, _storage_path=storage_path, _limit=limit, _retry_times=3)
+    # break
