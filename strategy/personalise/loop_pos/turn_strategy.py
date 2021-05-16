@@ -19,9 +19,9 @@ trade_rate = 2 / 1000
 time_period = "1d"
 
 
-def cal_mom(_momentum_day):
+def cal_mom(_momentum_day, _coin_list):
     data_frames = []
-    for coin_name in coin_list:
+    for coin_name in _coin_list:
         df_dir = "dataset/" + time_period + "/" + coin_name + "_USDT_" + time_period
         df_list = os.listdir(df_dir)
         # exit()
@@ -53,7 +53,7 @@ def cal_mom(_momentum_day):
         _my_position["date"] = row["time_stamp"]
         max_momentum = 0
         coin_style = "USDT"
-        for coin_name in coin_list:
+        for coin_name in _coin_list:
             if not pd.isnull(row[coin_name + '_momentum']):
                 # print(coin_name)
                 if row[coin_name + '_momentum'] > max_momentum:
@@ -82,6 +82,6 @@ def cal_mom(_momentum_day):
 
 for i in range(3, 61):
     print(i)
-    my_position = cal_mom(_momentum_day=i)
+    my_position = cal_mom(_momentum_day=i, _coin_list=coin_list)
     print(my_position["my_value"])
     # break
