@@ -8,12 +8,23 @@
 import ccxt
 from get_data.get_crypto_data.DownloadDataFromBinance import get_exchange_data
 
-exchange_handler = ccxt.binance()
-coin_name = "DOT"
-time_period = "4h"
-range_number = 2
-storage_path = "dataset/test/"
+exchange = ccxt.binance()
+
+proxies = {
+    'http': "http://127.0.0.1:1087",
+    'https': "http://127.0.0.1:1087",
+}
+
+exchange.proxies = proxies
+# coin_name = "DOT"
+coin_list = ["BTC", "ETH", "EOS", "FIL", "LTC", "ETC", "BCH", "BAT",
+             "XRP", "DOT", "KSM", "CAKE", "BNB", "LINK", "ADA", "UNI",
+             "CHZ", "DOGE", "MATIC"]
+time_period = "1m"
+range_number = 5
+storage_path = "dataset/1m/"
 limit = 1000
 
-get_exchange_data(_exchange_handler=exchange_handler, _coin_name=coin_name, _time_period=time_period,
-                  _range_number=range_number, _storage_path=storage_path, _limit=limit, _retry_times=3)
+for coin_name in coin_list:
+    get_exchange_data(_exchange_handler=exchange, _coin_name=coin_name, _time_period=time_period,
+                      _range_number=range_number, _storage_path=storage_path, _limit=limit, _retry_times=2)
