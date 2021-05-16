@@ -3,12 +3,32 @@ import os
 import pandas as pd
 import argparse
 import logging
+import time
+import datetime
 
 from ccxt import RequestTimeout
 
 FORMAT = '%(name)s %(levelname)s %(asctime)s %(funcName)s  %(message)s'
 logging.basicConfig(format=FORMAT)
 logger = logging.getLogger('GetDataFromBinance')
+
+
+# 正确10位长度的时间戳可精确到秒，11-14位长度则是包含了毫秒
+def timestamp_to_localtime(_timestamp):
+    if len(str(_timestamp)) == 10:
+        # 精确到秒
+        time_value = time.localtime(_timestamp)
+        temp_date = time.strftime("%Y-%m-%d %H%:M:%S", time_value)
+        datetime_value = datetime.datetime.strptime(temp_date, "%Y-%m-%d_%H:%M:%S")
+    elif 10 < len(str(_timestamp)) < 15:
+        # 精确到毫秒
+        k = len(str(_timestamp)) - 10
+        time_tamp = datetime.datetime.fromtimestamp(_timestamp / (1 * 10 ** k))
+        datetime_value = time_tamp.strftime("%Y-%m-%d_%H:%M:%S.%f")
+        datetime_value = datetime_value.split('.')[0]
+    else:
+        return -1
+    return datetime_value
 
 
 def get_exchange_data(_exchange_handler,
@@ -58,7 +78,8 @@ def get_exchange_data(_exchange_handler,
                 else:
                     raise te
         logger.debug(f'fetch {len(m_data)} records')
-        if len(retrieved_data_list) == 0 or (retrieved_data_list and m_data[0][0] < retrieved_data_list[0][0]):
+        if len(retrieved_data_list) == 0 or (
+                len(m_data) > 0 and retrieved_data_list and m_data[0][0] < retrieved_data_list[0][0]):
             retrieved_data_list = m_data + retrieved_data_list
         else:
             logger.info('reach head')
@@ -67,12 +88,14 @@ def get_exchange_data(_exchange_handler,
         start_time = retrieved_data_list[0][0] - _limit * m_time_interval_between_records
     logger.info('finish download data')
     end_time = retrieved_data_list[-1][0]
+    start_time = retrieved_data_list[0][0]
     df = pd.DataFrame.from_records(retrieved_data_list, columns=["time", "open", "high", "low", "close", "vol"])
     df['time_stamp'] = pd.to_datetime(df["time"], unit="ms")
     df.drop_duplicates(subset=['time_stamp'], inplace=True)
     logger.debug(f'downloaded {len(df)} records of {coin_pair}')
     to_save_path = os.path.join(_storage_path, f'{_coin_name}_{target_coin_name}_{_time_period}')
-    target_file_name = f'from_{start_time}_to_{end_time}.csv'
+
+    target_file_name = f'from_{timestamp_to_localtime(start_time)}_to_{timestamp_to_localtime(end_time)}.csv'
     target_file_full_path = os.path.join(to_save_path, target_file_name)
     logger.debug(f'save to {target_file_full_path}')
     os.makedirs(to_save_path, exist_ok=True)
@@ -133,4 +156,5 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    print(timestamp_to_localtime(1621137600000))
