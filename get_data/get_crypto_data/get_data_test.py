@@ -22,7 +22,7 @@ coin_list = ["BTC", "ETH", "EOS", "FIL", "LTC", "ETC", "BCH", "BAT",
              "CHZ", "DOGE", "MATIC"]
 time_period = "1m"
 range_number = 5
-storage_path = "dataset_v2/1m/"
+storage_path = "dataset/1m/"
 limit = 1000
 
 for coin_name in coin_list:
