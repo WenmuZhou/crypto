@@ -3,7 +3,7 @@
 # @Project : crypto
 # @Date    : 2021/5/15 22:21
 # @Author  : Adolf
-# @File    : valid_strategy.py
+# @File    : turn_strategy.py
 # @Function:
 import os
 
