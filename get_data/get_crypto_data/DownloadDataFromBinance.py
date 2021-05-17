@@ -19,12 +19,12 @@ def timestamp_to_localtime(_timestamp):
         # 精确到秒
         time_value = time.localtime(_timestamp)
         temp_date = time.strftime("%Y-%m-%d %H%:M:%S", time_value)
-        datetime_value = datetime.datetime.strptime(temp_date, "%Y-%m-%d_%H:%M:%S")
+        datetime_value = datetime.datetime.strptime(temp_date, "%Y-%m-%d_%H-%M-%S")
     elif 10 < len(str(_timestamp)) < 15:
         # 精确到毫秒
         k = len(str(_timestamp)) - 10
         time_tamp = datetime.datetime.fromtimestamp(_timestamp / (1 * 10 ** k))
-        datetime_value = time_tamp.strftime("%Y-%m-%d_%H:%M:%S.%f")
+        datetime_value = time_tamp.strftime("%Y-%m-%d_%H-%M-%S.%f")
         datetime_value = datetime_value.split('.')[0]
     else:
         return -1

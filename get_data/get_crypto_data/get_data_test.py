@@ -11,8 +11,8 @@ from get_data.get_crypto_data.DownloadDataFromBinance import get_exchange_data
 exchange = ccxt.binance()
 
 proxies = {
-    'http': "http://127.0.0.1:1087",
-    'https': "http://127.0.0.1:1087",
+    'http': "http://172.17.45.65:1087",
+    'https': "http://172.17.45.65:1087",
 }
 
 exchange.proxies = proxies
