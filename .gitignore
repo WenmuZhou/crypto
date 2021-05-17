@@ -9,10 +9,10 @@ _build
 build/
 dist/
 
-#dataset/
-#study/
-#result/
-#log/
+dataset/
+study/
+result/
+log/
 .idea/
 .vscode/
 .DS_Store
