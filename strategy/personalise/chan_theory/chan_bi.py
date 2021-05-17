@@ -266,12 +266,13 @@ class ChanBi:
         # exit()
         if make_plot:
             plt.plot(self.df["date"], self.df["high"], '-r', df2['date'], df2['price'], 'b')
-        plt.savefig(save_path, format="svg")
-        plt.show()
+            plt.savefig(save_path, format="svg")
+            plt.show()
         return self.df
 
 
 if __name__ == '__main__':
     stock_id = "002044"
-    ChanBi(data_path="dataset/stock/" + stock_id + ".csv").run(save_path="result/chan_bi/" + stock_id + ".svg",
-                                                               make_plot=True)
+    res_df = ChanBi(data_path="dataset/stock/" + stock_id + ".csv").run(save_path="result/chan_bi/" + stock_id + ".svg",
+                                                                        make_plot=False)
+    res_df.to_csv("result/chan_" + stock_id + ".csv", index=False)
