@@ -6,6 +6,7 @@
 # @File     : time_15min.py
 # @Function  :
 from trading.trade_strategy.two_ma import TwoMATrade
+from trading.trade_strategy.turn_trade import TurnTrade
 
 auto_trade_ma = TwoMATrade()
 try:
@@ -13,3 +14,12 @@ try:
 except Exception as e:
     print(e)
     print('feip bug')
+
+auto_trade = TurnTrade()
+try:
+    auto_trade.trading_main(coin_list=["EOS", "FIL", "LTC", "ETC", "BCH", "BAT", "BAKE", "XLM",
+                                       "KSM", "CAKE", "LINK", "CHZ", "DOGE", "MATIC"],
+                            user="zuol", time_periods="15m", momentum_days=96)
+except Exception as e:
+    print(e)
+    print('zuol bug')

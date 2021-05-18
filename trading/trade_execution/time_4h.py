@@ -46,8 +46,3 @@ except Exception as e:
     print(e)
     print('szq bug')
 
-try:
-    auto_trade.trading_main(coin_list=["DOT", "ADA", "BCH", "ETC"], user="zuol", time_periods="4h", momentum_days=10)
-except Exception as e:
-    print(e)
-    print('zuol bug')

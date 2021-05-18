@@ -103,9 +103,8 @@ class MomStrategy:
 
 
 if __name__ == '__main__':
-    coin_list = ["BTC", "ETH", "EOS", "FIL", "LTC", "ETC", "BCH", "BAT",
-                 "XRP", "DOT", "KSM", "CAKE", "BNB", "LINK", "ADA", "UNI",
-                 "CHZ", "DOGE", "MATIC"]
+    coin_list = ["EOS", "FIL", "LTC", "ETC", "BCH", "BAT",
+                 "KSM", "CAKE", "LINK", "CHZ", "DOGE", "MATIC"]
     momstrage = MomStrategy(_coin_list=coin_list, _time_period="15m")
     momstrage.run()
     # print(momstrage.df_merge)
