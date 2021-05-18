@@ -13,10 +13,12 @@ from functools import reduce
 pd.set_option("expand_frame_repr", False)
 pd.set_option("display.max_rows", 1000)
 
-coin_list = ["BTC", "ETH"]
+coin_list = ["BTC", "ETH", "EOS", "FIL", "LTC", "ETC", "BCH", "BAT",
+             "XRP", "DOT", "KSM", "CAKE", "BNB", "LINK", "ADA", "UNI",
+             "CHZ", "DOGE", "MATIC"]
 # momentum_day = 5
 trade_rate = 2 / 1000
-time_period = "1d"
+time_period = "15m"
 
 
 def cal_mom(_momentum_day, _coin_list):
@@ -39,6 +41,7 @@ def cal_mom(_momentum_day, _coin_list):
     df_merged = reduce(lambda left, right: pd.merge(left, right, on=['time_stamp'],
                                                     how='outer'), data_frames)
     df_merged.sort_values(by=['time_stamp'], inplace=True)
+    print('共使用K线:', len(df_merged))
     df_merged["USDT_close"] = 1
     df_merged["USDT_pct"] = 0
     _my_position = {"date": "2018-07-19",
