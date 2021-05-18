@@ -272,6 +272,13 @@ class ChanBi:
 
 
 if __name__ == '__main__':
+<<<<<<< HEAD
     stock_id = "002044"
     ChanBi(data_path="dataset/stock/" + stock_id + ".csv").run(save_path="result/chan_bi/" + stock_id + ".svg",
                                                                make_plot=True)
+=======
+    stock_id = "600570"
+    res_df = ChanBi(data_path="dataset/stock/" + stock_id + ".csv").run(save_path="result/chan_bi/" + stock_id + ".svg",
+                                                                        make_plot=False)
+    res_df.to_csv("result/chan_" + stock_id + ".csv", index=False)
+>>>>>>> 04cf20b... update data
