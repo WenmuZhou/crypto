@@ -19,7 +19,7 @@ class BasisStrategy(bt.Strategy):
 
     def log(self, txt, dt=None, doprint=True):
         if doprint:
-            dt = dt or self.datas[0].datetime.date(0)
+            dt = dt or self.datas[0].datetime.datetime(0)
             print('%s, %s' % (dt.isoformat(), txt))
 
     def __init__(self):
@@ -56,8 +56,9 @@ class BasisStrategy(bt.Strategy):
             self.log(
                 'Order status: {}, Canceled-{}/Margin-{}/Rejected-{}'.format(order.status, order.Canceled, order.Margin,
                                                                              order.Rejected), doprint=True)
+
         self.log('Value: {:.6f}, price: {:.6f}, size: {}'.format(order.executed.value, order.executed.price,
-                                                                    order.executed.size), doprint=True)
+                                                                 order.executed.size), doprint=True)
         # 订单状态处理完成，设为空
         self.order = None
 
@@ -93,7 +94,7 @@ class BasisStrategy(bt.Strategy):
         return data
 
     @classmethod
-    def run(cls, data_path="", cash=100000, commission=1.5 / 1000, slip_type=-1, slip_value=0, IS_ALL_IN=False,
+    def run(cls, data_path="", cash=100000, commission=1 / 1000, slip_type=-1, slip_value=0, IS_ALL_IN=False,
             params_dict={}):
         cls.origin_cash = cash
         strategy_params = params_dict.get("strategy_params", {})
@@ -109,7 +110,7 @@ class BasisStrategy(bt.Strategy):
             cerebro.adddata(datas)
 
         cerebro.broker.setcash(cash)
-        # cerebro.broker.setcommission(0) #(commission)
+        cerebro.broker.setcommission(commission)  # (commission)
 
         cerebro.broker.addcommissioninfo(CommInforFractional())
         # 滑点、投入资金百分比、回测指标
