@@ -8,9 +8,10 @@
 
 import backtrader as bt
 import pandas as pd
-from backtrader.indicators import MovingAverageSimple
-
+# from backtrader.indicators import MovingAverageSimple
 from strategy.backtrader_base.background_logic import BasisStrategy
+
+pd.set_option("expand_frame_repr", False)
 
 
 class TwoSmaStrategy(BasisStrategy):
@@ -29,8 +30,8 @@ class TwoSmaStrategy(BasisStrategy):
     @staticmethod
     def data_process(data_path):
         df = pd.read_csv(data_path)
-        df["date"] = pd.to_datetime(df["date"])
-        data = bt.feeds.PandasData(dataname=df, datetime="date", volume="volume")
+        df["DATES"] = pd.to_datetime(df["DATES"])
+        data = bt.feeds.PandasData(dataname=df, datetime="DATES", timeframe=bt.TimeFrame.Minutes)
         return data
 
     def cal_technical_index(self):
@@ -66,14 +67,15 @@ class TwoSmaStrategy(BasisStrategy):
 
 
 if __name__ == '__main__':
-    ret, cerebro, ret_dict = TwoSmaStrategy.run(data_path="/root/adolf/dataset/d_pre/600570.csv", cash=100000000,
-                                                IS_ALL_IN=True, params_dict={"strategy_params":
-                                                                                 {"short_period": 5,
-                                                                                  "long_period": 10},
-                                                                             'analyzers': {
-                                                                                 'sharp': bt.analyzers.SharpeRatio,
-                                                                                 'annual_return': bt.analyzers.AnnualReturn,
-                                                                                 'drawdown': bt.analyzers.DrawDown}})
+    ret, cerebro, ret_dict = TwoSmaStrategy.run(data_path="/root/adolf/dataset/stock/juyuan_data/1min/002386.SZ.csv",
+                                                cash=100000000, IS_ALL_IN=True,
+                                                params_dict={"strategy_params":
+                                                                 {"short_period": 50,
+                                                                  "long_period": 100},
+                                                             'analyzers': {
+                                                                 'sharp': bt.analyzers.SharpeRatio,
+                                                                 'annual_return': bt.analyzers.AnnualReturn,
+                                                                 'drawdown': bt.analyzers.DrawDown}})
     print("stock yield:", ret_dict['coin_yield_0'])
     print("strategy yield:", ret_dict["strategy_yield"])
     print('drawdown: ', ret[0].analyzers.drawdown.get_analysis()["max"]["drawdown"])

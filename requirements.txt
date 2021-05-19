@@ -1,5 +1,5 @@
 ccxt
-numpy==1.18.0
+numpy
 pandas
 matplotlib==3.2.2
 mplfinance

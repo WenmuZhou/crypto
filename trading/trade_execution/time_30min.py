@@ -12,7 +12,7 @@ try:
     auto_trade.trading_main(coin_list=["ETH", "FIL", "LTC", "ETC", "BCH", "BAT",
                                        "XRP", "DOT", "KSM", "CAKE", "LINK", "UNI",
                                        "CHZ", "DOGE", "BAKE", "MATIC"], user="nan",
-                            time_periods="1d",
+                            time_periods="30m",
                             momentum_days=46)
 except Exception as e:
     print(e)
