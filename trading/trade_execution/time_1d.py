@@ -8,14 +8,14 @@
 from trading.trade_strategy.turn_trade import TurnTrade
 from trading.trade_strategy.turtle_trade import TurtleTrade
 
-auto_trade = TurnTrade()
-try:
-    auto_trade.trading_main(coin_list=["BTC", "ETH", "UNI", "FIL", "DOT", "ADA"], user="nan",
-                            time_periods="1d",
-                            momentum_days=5)
-except Exception as e:
-    print(e)
-    print('nan bug')
+# auto_trade = TurnTrade()
+# try:
+#     auto_trade.trading_main(coin_list=["BTC", "ETH", "UNI", "FIL", "DOT", "ADA"], user="nan",
+#                             time_periods="1d",
+#                             momentum_days=5)
+# except Exception as e:
+#     print(e)
+#     print('nan bug')
 
 # try:
 #     auto_trade.trading_main(coin_list=["BTC", "ETH", "ADA", "DOT", "UNI", "BNB"], user="wxt", time_periods="1d",

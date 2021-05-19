@@ -8,9 +8,10 @@
 import os
 import pandas as pd
 from functools import reduce
+import matplotlib.pyplot as plt
 
 pd.set_option("expand_frame_repr", False)
-pd.set_option("display.max_rows", 1000)
+pd.set_option("display.max_rows", 2000)
 
 
 class MomStrategy:
@@ -64,7 +65,7 @@ class MomStrategy:
                 periods=momentum_day)
 
         self.my_position = self.init_my_position()
-
+        my_position_list = []
         for index, row in self.df_merge.iterrows():
             self.my_position["date"] = row["time_stamp"]
             max_momentum = 0
@@ -92,19 +93,39 @@ class MomStrategy:
                 self.my_position["my_value"] *= (1 + row[self.my_position["pos_style"] + "_pct"])
             else:
                 self.my_position["my_value"] *= (1 + row[self.my_position["pre_style"] + "_pct"])
+
             # print(self.my_position)
+            my_position_list.append(self.my_position.copy())
+
+        return my_position_list
 
     def run(self):
-        for i in range(30, 201):
-            self.trade_process(momentum_day=i)
-            print(i)
-            print(self.my_position["my_value"])
-            print("=" * 20)
+        my_position_list = self.trade_process(momentum_day=46)
+        # print(self.my_position)
+        my_position_df = pd.DataFrame(my_position_list)
+        print(my_position_df)
+        # my_position_df = my_position_df[-300:]
+
+        my_position_df['max2here'] = my_position_df['my_value'].expanding().max()
+        my_position_df['dd2here'] = my_position_df['my_value'] / my_position_df['max2here'] - 1
+        # 计算最大回撤，以及最大回撤结束时间
+        end_date, max_draw_down = tuple(my_position_df.sort_values(by=['dd2here']).iloc[0][['date', 'dd2here']])
+        # 计算最大回撤开始时间
+        # start_date = \
+        #     my_position_df[my_position_df['date'] <= end_date].sort_values(by='my_value', ascending=False).iloc[0][
+        #         'date']
+        # 将无关的变量删除
+        # my_position_df.drop(['max2here', 'dd2here'], axis=1, inplace=True)
+
+        my_position_df.to_csv("result/turn_30min.csv")
+        plt.plot(my_position_df['date'], my_position_df['my_value'], label='strategy')
+        plt.show()
 
 
 if __name__ == '__main__':
-    coin_list = ["EOS", "FIL", "LTC", "ETC", "BCH", "BAT",
-                 "KSM", "CAKE", "LINK", "CHZ", "DOGE", "MATIC"]
-    momstrage = MomStrategy(_coin_list=coin_list, _time_period="15m")
+    coin_list = ["ETH", "FIL", "LTC", "ETC", "BCH", "BAT",
+                 "XRP", "DOT", "KSM", "CAKE", "LINK", "UNI",
+                 "CHZ", "DOGE"]
+    momstrage = MomStrategy(_coin_list=coin_list, _time_period="30m")
     momstrage.run()
     # print(momstrage.df_merge)
