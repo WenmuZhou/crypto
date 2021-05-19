@@ -57,6 +57,7 @@ class MomStrategy:
         df_merged.sort_values(by=['time_stamp'], inplace=True)
         df_merged["USDT_close"] = 1
         df_merged["USDT_pct"] = 0
+        df_merged.dropna(inplace=True)
         return df_merged
 
     def trade_process(self, momentum_day):
@@ -95,21 +96,22 @@ class MomStrategy:
                 self.my_position["my_value"] *= (1 + row[self.my_position["pre_style"] + "_pct"])
 
             # print(self.my_position)
-            my_position_list.append(self.my_position.copy())
-
-        return my_position_list
+            # my_position_list.append(self.my_position.copy())
 
     def run(self):
-        my_position_list = self.trade_process(momentum_day=46)
-        # print(self.my_position)
-        my_position_df = pd.DataFrame(my_position_list)
-        print(my_position_df)
+        for mom_day in range(300, 3601, 100):
+            self.trade_process(momentum_day=mom_day)
+            print("momentum long", mom_day)
+            print(self.my_position["my_value"])
+            print('=' * 20)
+        # my_position_df = pd.DataFrame(my_position_list)
+        # print(my_position_df)
         # my_position_df = my_position_df[-300:]
 
-        my_position_df['max2here'] = my_position_df['my_value'].expanding().max()
-        my_position_df['dd2here'] = my_position_df['my_value'] / my_position_df['max2here'] - 1
+        # my_position_df['max2here'] = my_position_df['my_value'].expanding().max()
+        # my_position_df['dd2here'] = my_position_df['my_value'] / my_position_df['max2here'] - 1
         # 计算最大回撤，以及最大回撤结束时间
-        end_date, max_draw_down = tuple(my_position_df.sort_values(by=['dd2here']).iloc[0][['date', 'dd2here']])
+        # end_date, max_draw_down = tuple(my_position_df.sort_values(by=['dd2here']).iloc[0][['date', 'dd2here']])
         # 计算最大回撤开始时间
         # start_date = \
         #     my_position_df[my_position_df['date'] <= end_date].sort_values(by='my_value', ascending=False).iloc[0][
@@ -117,9 +119,9 @@ class MomStrategy:
         # 将无关的变量删除
         # my_position_df.drop(['max2here', 'dd2here'], axis=1, inplace=True)
 
-        my_position_df.to_csv("result/turn_30min.csv")
-        plt.plot(my_position_df['date'], my_position_df['my_value'], label='strategy')
-        plt.show()
+        # my_position_df.to_csv("result/turn_30min.csv")
+        # plt.plot(my_position_df['date'], my_position_df['my_value'], label='strategy')
+        # plt.show()
 
 
 if __name__ == '__main__':
