@@ -13,7 +13,7 @@ try:
                                        "XRP", "DOT", "KSM", "CAKE", "LINK", "UNI",
                                        "CHZ", "DOGE", "BAKE", "MATIC"], user="nan",
                             time_periods="1d",
-                            momentum_days=5)
+                            momentum_days=46)
 except Exception as e:
     print(e)
     print('nan bug')
