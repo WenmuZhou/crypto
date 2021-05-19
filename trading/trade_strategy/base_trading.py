@@ -64,6 +64,7 @@ class BasisTrading:
         pass
 
     def trading_main(self, **kwargs):
+        print("目前的时间是:", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         self.exchange.apiKey = api_key_dict[kwargs["user"]]
         self.exchange.secret = api_secret_dict[kwargs["user"]]
 
