@@ -23,16 +23,13 @@ class StrategyParamOptim:
 
     @staticmethod
     def one_strategy(data_path_, time_period_):
-        ret, cerebro, ret_dict = PriceMomentumStrategyMultiData.run(
-            data_path=data_path_,
-            IS_ALL_IN=True,
-            cash=10000000,
-            params_dict={"strategy_params": {"time_period": time_period_, },
-                         'analyzers': {
-                             'sharp': bt.analyzers.SharpeRatio,
-                             'annual_return': bt.analyzers.AnnualReturn,
-                             'drawdown': bt.analyzers.DrawDown}}
-        )
+        ret, cerebro, ret_dict = PriceMomentumStrategyMultiData.run(data_path=data_path_, cash=10000000, IS_ALL_IN=True,
+                                                                    params_dict={"strategy_params": {
+                                                                        "time_period": time_period_, },
+                                                                                 'analyzers': {
+                                                                                     'sharp': bt.analyzers.SharpeRatio,
+                                                                                     'annual_return': bt.analyzers.AnnualReturn,
+                                                                                     'drawdown': bt.analyzers.DrawDown}})
         ret_dict["drawdown"] = ret[0].analyzers.drawdown.get_analysis()["max"]["drawdown"]
         return ret_dict
 

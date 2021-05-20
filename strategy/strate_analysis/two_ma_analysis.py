@@ -19,18 +19,14 @@ for data_name in data_list:
     # df = pd.read_csv(os.path.join(data_dir, data_name))
     data_path = os.path.join(data_dir, data_name)
     # print(df)
-    ret, cerebro, ret_dict = TwoSmaStrategy.run(
-        data_path=data_path,
-        cash=10000000,
-        IS_ALL_IN=True,
-        params_dict={"strategy_params":
-                         {"short_period": 5,
-                          "long_period": 10},
-                     'analyzers': {
-                         'sharp': bt.analyzers.SharpeRatio,
-                         'annual_return': bt.analyzers.AnnualReturn,
-                         'drawdown': bt.analyzers.DrawDown}}
-    )
+    ret, cerebro, ret_dict = TwoSmaStrategy.run(data_path=data_path, cash=10000000, IS_ALL_IN=True,
+                                                params_dict={"strategy_params":
+                                                                 {"short_period": 5,
+                                                                  "long_period": 10},
+                                                             'analyzers': {
+                                                                 'sharp': bt.analyzers.SharpeRatio,
+                                                                 'annual_return': bt.analyzers.AnnualReturn,
+                                                                 'drawdown': bt.analyzers.DrawDown}})
 
     # print('Sharpe Ratio: ', ret[0].analyzers.sharp.get_analysis()["sharperatio"])
     # print('annual return: ', ret[0].analyzers.annual_return.get_analysis())

@@ -30,8 +30,13 @@ class TwoSmaStrategy(BasisStrategy):
     @staticmethod
     def data_process(data_path):
         df = pd.read_csv(data_path)
-        df["DATES"] = pd.to_datetime(df["DATES"])
-        data = bt.feeds.PandasData(dataname=df, datetime="DATES", timeframe=bt.TimeFrame.Minutes)
+        df = df[-1000:]
+        # 聚源分钟级别数据
+        # df["DATES"] = pd.to_datetime(df["DATES"])
+        # data = bt.feeds.PandasData(dataname=df, datetime="DATES", timeframe=bt.TimeFrame.Minutes)
+        # 股票日线级别数据
+        df["date"] = pd.to_datetime(df["date"])
+        data = bt.feeds.PandasData(dataname=df, datetime="date", timeframe=bt.TimeFrame.Minutes)
         return data
 
     def cal_technical_index(self):
@@ -67,15 +72,20 @@ class TwoSmaStrategy(BasisStrategy):
 
 
 if __name__ == '__main__':
-    ret, cerebro, ret_dict = TwoSmaStrategy.run(data_path="/root/adolf/dataset/stock/juyuan_data/1min/002386.SZ.csv",
-                                                cash=100000000, IS_ALL_IN=True,
+    ret, cerebro, ret_dict = TwoSmaStrategy.run(data_path="dataset/stock/600570.csv", cash=100000000, IS_ALL_IN=True,
+                                                make_plot=True,
                                                 params_dict={"strategy_params":
-                                                                 {"short_period": 50,
-                                                                  "long_period": 100},
+                                                                 {"short_period": 5,
+                                                                  "long_period": 10},
                                                              'analyzers': {
                                                                  'sharp': bt.analyzers.SharpeRatio,
                                                                  'annual_return': bt.analyzers.AnnualReturn,
-                                                                 'drawdown': bt.analyzers.DrawDown}})
+                                                                 'drawdown': bt.analyzers.DrawDown},
+                                                             'plot': {
+                                                                 "style": "line",
+                                                                 "numfigs": 2,
+                                                                 "dpi": 600,
+                                                             }})
     print("stock yield:", ret_dict['coin_yield_0'])
     print("strategy yield:", ret_dict["strategy_yield"])
     print('drawdown: ', ret[0].analyzers.drawdown.get_analysis()["max"]["drawdown"])
