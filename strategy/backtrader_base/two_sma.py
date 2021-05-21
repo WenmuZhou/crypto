@@ -43,6 +43,8 @@ class TwoSmaStrategy(BasisStrategy):
         self.sma_short = bt.indicators.MovingAverageSimple(self.datas[0], period=self.params.short_period)
         self.sma_long = bt.indicators.MovingAverageSimple(self.datas[0], period=self.params.long_period)
 
+        self.sma_diff = self.sma_short - self.sma_long
+
     def next_open(self):
         # self.log('Open,%.2f' % self.datas[0].open[0])
         # self.log('Close, %.2f' % self.data_close[0])
@@ -51,6 +53,7 @@ class TwoSmaStrategy(BasisStrategy):
         if self.order:
             return
 
+        self.log(self.sma_diff[0])
         if not self.position:
             if self.sma_short[0] > self.sma_long[0] and self.sma_short[-1] > self.sma_long[-1]:
                 # buy_size = int(self.broker.getcash() / self.data_close[0]) - 1
@@ -73,7 +76,7 @@ class TwoSmaStrategy(BasisStrategy):
 
 if __name__ == '__main__':
     ret, cerebro, ret_dict = TwoSmaStrategy.run(data_path="dataset/stock/600570.csv", cash=100000000, IS_ALL_IN=True,
-                                                make_plot=True,
+                                                make_plot=False,
                                                 params_dict={"strategy_params":
                                                                  {"short_period": 5,
                                                                   "long_period": 10},
@@ -82,9 +85,11 @@ if __name__ == '__main__':
                                                                  'annual_return': bt.analyzers.AnnualReturn,
                                                                  'drawdown': bt.analyzers.DrawDown},
                                                              'plot': {
-                                                                 "style": "line",
-                                                                 "numfigs": 2,
+                                                                 "style": "candle",
+                                                                 "numfigs": 5,
                                                                  "dpi": 600,
+                                                                 "bardown": "green",
+                                                                 "barup": "red"
                                                              }})
     print("stock yield:", ret_dict['coin_yield_0'])
     print("strategy yield:", ret_dict["strategy_yield"])
