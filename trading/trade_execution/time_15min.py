@@ -15,11 +15,11 @@ except Exception as e:
     print(e)
     print('feip bug')
 
-auto_trade = TurnTrade()
-try:
-    auto_trade.trading_main(coin_list=["EOS", "FIL", "LTC", "ETC", "BCH", "BAT", "BAKE", "XLM",
-                                       "KSM", "CAKE", "LINK", "CHZ", "DOGE", "MATIC"],
-                            user="zuol", time_periods="15m", momentum_days=96)
-except Exception as e:
-    print(e)
-    print('zuol bug')
+# auto_trade = TurnTrade()
+# try:
+#     auto_trade.trading_main(coin_list=["EOS", "FIL", "LTC", "ETC", "BCH", "BAT", "BAKE", "XLM",
+#                                        "KSM", "CAKE", "LINK", "CHZ", "DOGE", "MATIC"],
+#                             user="zuol", time_periods="15m", momentum_days=96)
+# except Exception as e:
+#     print(e)
+#     print('zuol bug')
