@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="referrer" content="no-referrer">
+
+    <title>第一个 ECharts 实例</title>
+    <!-- 引入 echarts.js -->
+    <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!--    <script src="./data.json"></script>-->
+
+</head>
+
+
+
+<body>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="width: 100%;height:100%;"></div>
+<!--    <div id="main1" style="width: 600px;height:400px;"></div>-->
+<!--    <div id="main2" style="width: 600px;height:400px;"></div>-->
+<!--    <div id="main3" style="width: 600px;height:400px;"></div>-->
+
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var option={
+    title: {
+        text: '收益率变化',
+    },
+    tooltip: {
+        trigger: 'axis'
+    },
+
+    xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: []
+    },
+    yAxis: {
+        type: 'value',
+        axisLabel: {
+            formatter: '{value} '
+        }
+    },
+    series: [
+        {
+            name: '策略收益率',
+            type: 'line',
+            data: []
+        },
+        {
+            name: '股票收益率',
+            type: 'line',
+            data: []
+        }
+    ]
+};
+        var url  = "./data2.json"
+        $.get(url).done(
+            function (static_data) {
+        // 填入数据
+        console.log("into ....");
+        console.log(static_data);
+
+        static_data=JSON.parse(static_data);
+        for (var i =0 ; i < static_data.length;i++){
+            var boarddiv = "<div id=\"main"+i+"\" style='background:white;width:100%;height:600px;margin-top:100px;'></div>";
+            $("#main").append(boarddiv);
+            var myChart = echarts.init(document.getElementById('main'+i));
+            myChart.setOption(option);
+            console.log(static_data[i].strategy_data);
+            console.log(static_data[i].stock_data);
+            myChart.setOption({
+                title:{text:'股票代码：'+static_data[i].stock_number},
+            xAxis:
+                    { data :static_data[i].date},
+            series:[
+                {name:'策略收益率',data: static_data[i].strategy_data},
+                {name:'股票收益率',data: static_data[i].stock_data}
+            ],
+                });
+        }
+
+        });
+
+        // var url = "./data.json"
+        // var request = new XMLHttpRequest();
+        // request.open("get", url);/*设置请求方法与路径*/
+        // request.send(null);/*不发送数据到服务器*/
+        // request.onload = function () {/*XHR对象获取到返回信息后执行*/
+        //      console.log("into ..")
+        //     if (request.status == 200) {/*返回状态为200，即为数据获取成功*/
+        //         var json = JSON.parse(request.responseText);
+        //         for (var i = 0; i < json.length; i++) {
+        //             console.log(json[i]);
+        //         }
+        //         data = json;
+        //         console.log(json);
+        //     }
+        // }
+    </script>
+</body>
+</html>
