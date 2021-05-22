@@ -91,7 +91,7 @@ class ChanBi:
                     self.merge_data[index]['low_value'] < self.merge_data[index + 1]['low_value']:
                 self.femme_list.append([self.merge_data[index - 1], self.merge_data[index], self.merge_data[index + 1]])
 
-        # print(len(self.butch_list))
+        # print(self.butch_list)
         # print(len(self.femme_list))
 
     def flag_butch_femme(self):
@@ -113,7 +113,7 @@ class ChanBi:
                     self.markers_on.append(index)
 
     def merge_butch_femme(self):
-        del self.df["dd_flag"]
+        # del self.df["dd_flag"]
         self.markers_on.clear()
         b_p = 0  # 顶
         f_p = 0  # 底
@@ -278,15 +278,20 @@ class ChanBi:
     def to_front_end_show(self, json_path="result/front_end_show_json/test.json"):
         res_list = []
         for index, row in self.df.iterrows():
-            if pd.isnull(row['flag_bf']) or row["flag_bf"] == "gan":
+            # print(row["dd_flag"])
+            if row["dd_flag"] == "butch":
                 res_list.append(
-                    [row['date'], row['open'], row['close'], row['low'], row['high'],row["volume"],""])
-            else:
+                    [row['date'], row['open'], row['close'], row['low'], row['high'], row["volume"],
+                     "s_" + str(row["high"])])
+            elif row["dd_flag"] == "femme":
                 # print(row["flag_bf"])
                 res_list.append(
-                    [row['date'], row['open'], row['close'], row['low'], row['high'],row["volume"],
-                     row['flag_bf'] + "_" + str(row['price'])])
-        # print(res_list)
+                    [row['date'], row['open'], row['close'], row['low'], row['high'], row["volume"],
+                     "b_" + str(row['low'])])
+            else:
+                res_list.append(
+                    [row['date'], row['open'], row['close'], row['low'], row['high'], row["volume"],
+                     ""])
 
         with open(json_path, 'w', encoding='UTF-8') as fp:
             fp.write(json.dumps(res_list, indent=2, ensure_ascii=False))
@@ -298,4 +303,4 @@ if __name__ == '__main__':
         run(save_path="result/chan_bi/" + stock_id + ".svg",
             json_path="result/front_end_show_json/" + stock_id + ".json",
             make_plot=False, front_show=True)
-    # res_df.to_csv("result/chan_" + stock_id + ".csv", index=False)
+# res_df.to_csv("result/chan_" + stock_id + ".csv", index=False)
