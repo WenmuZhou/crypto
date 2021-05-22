@@ -278,12 +278,13 @@ class ChanBi:
     def to_front_end_show(self, json_path="result/front_end_show_json/test.json"):
         res_list = []
         for index, row in self.df.iterrows():
-            if pd.isnull(row['flag_bf']):
+            if pd.isnull(row['flag_bf']) or row["flag_bf"] == "gan":
                 res_list.append(
-                    [row['date'], row['open'], row['close'], row['low'], row['high'], ""])
+                    [row['date'], row['open'], row['close'], row['low'], row['high'],row["volume"],""])
             else:
+                # print(row["flag_bf"])
                 res_list.append(
-                    [row['date'], row['open'], row['close'], row['low'], row['high'],
+                    [row['date'], row['open'], row['close'], row['low'], row['high'],row["volume"],
                      row['flag_bf'] + "_" + str(row['price'])])
         # print(res_list)
 
