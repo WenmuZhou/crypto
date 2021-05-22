@@ -5,6 +5,7 @@
 # @Author   : Adolf
 # @File     : chan_bi.py
 # @Function  :
+import json
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -253,7 +254,7 @@ class ChanBi:
         # df2 = self.df.dropna(how="any")
         # print(self.df)
 
-    def run(self, save_path, make_plot=False):
+    def run(self, save_path="", json_path="", make_plot=False, front_show=False):
         self.k_data_handle()
         self.get_butch_femme()
         self.flag_butch_femme()
@@ -268,11 +269,32 @@ class ChanBi:
             plt.plot(self.df["date"], self.df["high"], '-r', df2['date'], df2['price'], 'b')
             plt.savefig(save_path, format="svg")
             plt.show()
+
+        if front_show:
+            self.to_front_end_show(json_path=json_path)
+
         return self.df
+
+    def to_front_end_show(self, json_path="result/front_end_show_json/test.json"):
+        res_list = []
+        for index, row in self.df.iterrows():
+            if pd.isnull(row['flag_bf']):
+                res_list.append(
+                    [row['date'], row['open'], row['close'], row['low'], row['high'], ""])
+            else:
+                res_list.append(
+                    [row['date'], row['open'], row['close'], row['low'], row['high'],
+                     row['flag_bf'] + "_" + str(row['price'])])
+        # print(res_list)
+
+        with open(json_path, 'w', encoding='UTF-8') as fp:
+            fp.write(json.dumps(res_list, indent=2, ensure_ascii=False))
 
 
 if __name__ == '__main__':
     stock_id = "600570"
-    res_df = ChanBi(data_path="dataset/stock/" + stock_id + ".csv").run(save_path="result/chan_bi/" + stock_id + ".svg",
-                                                                        make_plot=False)
-    res_df.to_csv("result/chan_" + stock_id + ".csv", index=False)
+    res_df = ChanBi(data_path="dataset/stock/" + stock_id + ".csv"). \
+        run(save_path="result/chan_bi/" + stock_id + ".svg",
+            json_path="result/front_end_show_json/" + stock_id + ".json",
+            make_plot=False, front_show=True)
+    # res_df.to_csv("result/chan_" + stock_id + ".csv", index=False)
