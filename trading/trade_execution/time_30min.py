@@ -9,9 +9,8 @@ from trading.trade_strategy.turn_trade import TurnTrade
 
 auto_trade = TurnTrade()
 try:
-    auto_trade.trading_main(coin_list=["BTC", "ETH", "FIL", "LTC", "BAT", "BCH",
-                                       "ADA", "DOT", "KSM", "CAKE", "LINK", "UNI",
-                                       "DOGE", "MATIC"], user="nan",
+    auto_trade.trading_main(coin_list=["BTC", "ETH", "FIL", "BAT", "ADA", "DOT", "CAKE", "LINK", "UNI", "MATIC"],
+                            user="nan",
                             time_periods="30m",
                             momentum_days=46)
 except Exception as e:
