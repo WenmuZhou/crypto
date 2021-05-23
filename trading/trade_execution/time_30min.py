@@ -9,7 +9,7 @@ from trading.trade_strategy.turn_trade import TurnTrade
 
 auto_trade = TurnTrade()
 try:
-    auto_trade.trading_main(coin_list=["BTC", "ETH", "FIL", "BAT", "ADA", "DOT", "CAKE", "UNI"],
+    auto_trade.trading_main(coin_list=["BTC", "ETH", "FIL", "BAT", "ADA", "DOT", "CAKE", "UNI", "KSM"],
                             user="nan",
                             time_periods="30m",
                             momentum_days=46)
