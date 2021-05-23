@@ -282,12 +282,12 @@ class ChanBi:
             if row["dd_flag"] == "butch":
                 res_list.append(
                     [row['date'], row['open'], row['close'], row['low'], row['high'], row["volume"],
-                     "s_" + str(row["high"])])
+                     "s"])
             elif row["dd_flag"] == "femme":
                 # print(row["flag_bf"])
                 res_list.append(
                     [row['date'], row['open'], row['close'], row['low'], row['high'], row["volume"],
-                     "b_" + str(row['low'])])
+                     "b"])
             else:
                 res_list.append(
                     [row['date'], row['open'], row['close'], row['low'], row['high'], row["volume"],
@@ -298,9 +298,10 @@ class ChanBi:
 
 
 if __name__ == '__main__':
-    stock_id = "600570"
+    stock_id = "002044"
     res_df = ChanBi(data_path="dataset/stock/" + stock_id + ".csv"). \
         run(save_path="result/chan_bi/" + stock_id + ".svg",
             json_path="result/front_end_show_json/" + stock_id + ".json",
             make_plot=False, front_show=True)
+
 # res_df.to_csv("result/chan_" + stock_id + ".csv", index=False)

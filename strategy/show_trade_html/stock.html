@@ -28,8 +28,30 @@
         <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-nightly@5.1.2-dev.20210512/dist/extension/bmap.min.js"></script>
         -->
 
-        <script type="text/javascript">
-PATH= '../personalise/loop_pos/test.json'
+<script type="text/javascript">
+stock_id=getQueryVariable("stock_id")
+level=getQueryVariable("level")
+if(level==null){
+        level="day"
+    }
+ma1=getQueryVariable("ma1")
+ma2=getQueryVariable("ma2")
+ma3=getQueryVariable("ma3")
+    if(ma3==null){
+        ma3="20"
+    }
+ma4=getQueryVariable("ma4")
+    if(ma4==null){
+        ma4="30"
+    }
+ma5=getQueryVariable("ma5")
+    if(ma5==null){
+        ma5="60"
+    }
+//访问远程
+PATH="http://172.27.28.196:8888/show_stock_data?"+"stock_id="+stock_id+"&level="+level
+//访问本地文件
+// PATH= "../../result/front_end_show_json/'+stock_id+'.json'
 // stock.json data form:
 //date,open,close,low,high,volume,buy_or_sell
 //an example:
@@ -66,6 +88,17 @@ var app = {};
 var option;
 var upColor = '#ec0000';
 var downColor = '#00da3c';
+function getQueryVariable(variable)
+{
+       var query = window.location.search.substring(1);
+       var vars = query.split("&");
+       for (var i=0;i<vars.length;i++) {
+               var pair = vars[i].split("=");
+               if(pair[0] == variable){return pair[1];}
+       }
+       return null;
+}
+
 function splitData(rawData) {
     rawData=JSON.parse(rawData);
 
@@ -82,7 +115,7 @@ function splitData(rawData) {
                         coord: [categoryData[i],rawData[i][3]],
                         value: rawData[i][5],
                     })
-            if (rawData[i][5] == "s"){
+            if (rawData[i][5].startsWith("s")){
                 // console.log(markPoints[markPoints.length-1])
                 markPoints[markPoints.length-1].itemStyle={
                                     color: 'rgb(41,60,85)'
@@ -121,13 +154,14 @@ function calculateMA(dayCount, data) {
 
 $.get(PATH, function (rawData) {
 
+    console.log("stock_id:"+stock_id)
     var data = splitData(rawData);
 option = {
         animation: false,
         legend: {
             bottom: 10,
             left: 'center',
-            data: ['k线', 'MA5', 'MA10', 'MA20', 'MA30','MA60']
+            data: ['k线', ma1, ma2, ma3, ma4,ma5]
         },
         tooltip: {
             trigger: 'axis',
@@ -298,36 +332,36 @@ option = {
             },
             },
             {
-                name: 'MA5',
+                name: ma1,
                 type: 'line',
-                data: calculateMA(5, data),
+                data: calculateMA(ma1, data),
                 smooth: true,
                 lineStyle: {
                     opacity: 0.5
                 }
             },
             {
-                name: 'MA10',
+                name: ma2,
                 type: 'line',
-                data: calculateMA(10, data),
+                data: calculateMA(ma2, data),
                 smooth: true,
                 lineStyle: {
                     opacity: 0.5
                 }
             },
             {
-                name: 'MA20',
+                name: ma3,
                 type: 'line',
-                data: calculateMA(20, data),
+                data: calculateMA(ma3, data),
                 smooth: true,
                 lineStyle: {
                     opacity: 0.5
                 }
             },
             {
-                name: 'MA30',
+                name: ma4,
                 type: 'line',
-                data: calculateMA(30, data),
+                data: calculateMA(ma4, data),
                 smooth: true,
                 lineStyle: {
                     opacity: 0.5
@@ -342,9 +376,9 @@ option = {
                 data: data.volumes
             },
             {
-                name: 'MA60',
+                name: ma5,
                 type: 'line',
-                data: calculateMA(60, data),
+                data: calculateMA(ma5, data),
                 smooth: true,
                 lineStyle: {
                     opacity: 0.5
