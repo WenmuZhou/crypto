@@ -49,9 +49,11 @@ ma5=getQueryVariable("ma5")
         ma5="60"
     }
 //访问远程
-PATH="http://172.27.28.196:8888/show_stock_data?"+"stock_id="+stock_id+"&level="+level
+// PATH="http://172.27.28.196:8888/show_stock_data?"+"stock_id="+stock_id+"&level="+level
 //访问本地文件
-// PATH= "../../result/front_end_show_json/'+stock_id+'.json'
+stock_id = "600570"
+PATH= "../../result/front_end_show_json/"+stock_id+".json"
+
 // stock.json data form:
 //date,open,close,low,high,volume,buy_or_sell
 //an example:

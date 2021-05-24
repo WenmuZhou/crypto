@@ -258,9 +258,9 @@ class ChanBi:
         self.k_data_handle()
         self.get_butch_femme()
         self.flag_butch_femme()
-        self.merge_butch_femme()
-        self.add_bi_markers_on()
-        self.cut_butch_femme()
+        # self.merge_butch_femme()
+        # self.add_bi_markers_on()
+        # self.cut_butch_femme()
 
         df2 = self.df.dropna(how="any")
         # print(self.line_bi)
@@ -271,7 +271,7 @@ class ChanBi:
             plt.show()
 
         if front_show:
-            self.to_front_end_show(json_path=json_path)
+            return self.to_front_end_show(json_path=json_path)
 
         return self.df
 
@@ -292,9 +292,9 @@ class ChanBi:
                 res_list.append(
                     [row['date'], row['open'], row['close'], row['low'], row['high'], row["volume"],
                      ""])
-
-        with open(json_path, 'w', encoding='UTF-8') as fp:
-            fp.write(json.dumps(res_list, indent=2, ensure_ascii=False))
+        return json.dumps(res_list, indent=2, ensure_ascii=False)
+        # with open(json_path, 'w', encoding='UTF-8') as fp:
+        #     fp.write(json.dumps(res_list, indent=2, ensure_ascii=False))
 
 
 if __name__ == '__main__':

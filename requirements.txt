@@ -1,7 +1,7 @@
 ccxt
 numpy
 pandas
-matplotlib==3.2.2
+matplotlib
 mplfinance
 backtrader
 tqdm
@@ -14,3 +14,4 @@ stable-baselines3
 baostock
 tushare
 pysocks
+Flask

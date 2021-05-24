@@ -8,7 +8,7 @@
 from trading.trade_strategy.turn_trade import TurnTrade
 from trading.trade_strategy.turtle_trade import TurtleTrade
 
-# auto_trade = TurnTrade()
+auto_trade = TurnTrade()
 # try:
 #     auto_trade.trading_main(coin_list=["BTC", "ETH", "UNI", "FIL", "DOT", "ADA"], user="nan",
 #                             time_periods="1d",
@@ -45,7 +45,7 @@ try:
                             momentum_days=10)
 except Exception as e:
     print(e)
-    print('shug bug')
+    print('yanjx bug')
 #
 auto_trade_v2 = TurtleTrade()
 try:
