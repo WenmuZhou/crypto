@@ -21,9 +21,9 @@ class MaWind(TradeStructure):
         self.data['MA10'] = self.data["close"].rolling(10).mean()
 
         self.data.loc[(self.data["MA5"] > self.data["MA10"]) & (
-                    self.data["MA5"].shift(1) < self.data["MA10"].shift(1)), "trade"] = "b"
+                self.data["MA5"].shift(1) < self.data["MA10"].shift(1)), "trade"] = "b"
         self.data.loc[(self.data["MA5"] < self.data["MA10"]) & (
-                    self.data["MA5"].shift(1) > self.data["MA10"].shift(1)), "trade"] = "s"
+                self.data["MA5"].shift(1) > self.data["MA10"].shift(1)), "trade"] = "s"
 
         self.data['diff'] = self.data["MA5"] - self.data["MA10"]
         self.data['diff'] = self.data['diff'].fillna(0)
@@ -41,8 +41,10 @@ class MaWind(TradeStructure):
                 area_ma_list.append(area_ma)
                 area_ma = row["diff"]
 
-        df2 = self.data[self.data["trade"]=="s"]
-        print(area_ma_list)
+        df2 = self.data[(self.data["trade"] == "s") | (self.data["trade"] == "b")]
+        df2.reset_index(inplace=True)
+        df2["pct"] = df2["close"].pct_change(periods=1).shift(-1)
+        print(df2)
 
 
 if __name__ == '__main__':
