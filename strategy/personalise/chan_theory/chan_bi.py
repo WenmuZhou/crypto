@@ -5,6 +5,7 @@
 # @Author   : Adolf
 # @File     : chan_bi.py
 # @Function  :
+import json
 import pandas as pd
 import matplotlib.pyplot as plt
 
@@ -90,7 +91,7 @@ class ChanBi:
                     self.merge_data[index]['low_value'] < self.merge_data[index + 1]['low_value']:
                 self.femme_list.append([self.merge_data[index - 1], self.merge_data[index], self.merge_data[index + 1]])
 
-        # print(len(self.butch_list))
+        # print(self.butch_list)
         # print(len(self.femme_list))
 
     def flag_butch_femme(self):
@@ -112,7 +113,7 @@ class ChanBi:
                     self.markers_on.append(index)
 
     def merge_butch_femme(self):
-        del self.df["dd_flag"]
+        # del self.df["dd_flag"]
         self.markers_on.clear()
         b_p = 0  # 顶
         f_p = 0  # 底
@@ -253,32 +254,54 @@ class ChanBi:
         # df2 = self.df.dropna(how="any")
         # print(self.df)
 
-    def run(self, save_path, make_plot=False):
+    def run(self, save_path="", json_path="", make_plot=False, front_show=False):
         self.k_data_handle()
         self.get_butch_femme()
         self.flag_butch_femme()
-        self.merge_butch_femme()
-        self.add_bi_markers_on()
-        self.cut_butch_femme()
+        # self.merge_butch_femme()
+        # self.add_bi_markers_on()
+        # self.cut_butch_femme()
 
         df2 = self.df.dropna(how="any")
         # print(self.line_bi)
         # exit()
         if make_plot:
             plt.plot(self.df["date"], self.df["high"], '-r', df2['date'], df2['price'], 'b')
-        plt.savefig(save_path, format="svg")
-        plt.show()
+            plt.savefig(save_path, format="svg")
+            plt.show()
+
+        if front_show:
+            return self.to_front_end_show(json_path=json_path)
+
         return self.df
+
+    def to_front_end_show(self, json_path="result/front_end_show_json/test.json"):
+        res_list = []
+        for index, row in self.df.iterrows():
+            # print(row["dd_flag"])
+            if row["dd_flag"] == "butch":
+                res_list.append(
+                    [row['date'], row['open'], row['close'], row['low'], row['high'], row["volume"],
+                     "s"])
+            elif row["dd_flag"] == "femme":
+                # print(row["flag_bf"])
+                res_list.append(
+                    [row['date'], row['open'], row['close'], row['low'], row['high'], row["volume"],
+                     "b"])
+            else:
+                res_list.append(
+                    [row['date'], row['open'], row['close'], row['low'], row['high'], row["volume"],
+                     ""])
+        return json.dumps(res_list, indent=2, ensure_ascii=False)
+        # with open(json_path, 'w', encoding='UTF-8') as fp:
+        #     fp.write(json.dumps(res_list, indent=2, ensure_ascii=False))
 
 
 if __name__ == '__main__':
-<<<<<<< HEAD
     stock_id = "002044"
-    ChanBi(data_path="dataset/stock/" + stock_id + ".csv").run(save_path="result/chan_bi/" + stock_id + ".svg",
-                                                               make_plot=True)
-=======
-    stock_id = "600570"
-    res_df = ChanBi(data_path="dataset/stock/" + stock_id + ".csv").run(save_path="result/chan_bi/" + stock_id + ".svg",
-                                                                        make_plot=False)
-    res_df.to_csv("result/chan_" + stock_id + ".csv", index=False)
->>>>>>> 04cf20b... update data
+    res_df = ChanBi(data_path="dataset/stock/" + stock_id + ".csv"). \
+        run(save_path="result/chan_bi/" + stock_id + ".svg",
+            json_path="result/front_end_show_json/" + stock_id + ".json",
+            make_plot=False, front_show=True)
+
+# res_df.to_csv("result/chan_" + stock_id + ".csv", index=False)

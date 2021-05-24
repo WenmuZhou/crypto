@@ -95,10 +95,11 @@ class BasisStrategy(bt.Strategy):
 
     @classmethod
     def run(cls, data_path="", cash=100000, commission=1 / 1000, slip_type=-1, slip_value=0, IS_ALL_IN=False,
-            params_dict={}):
+            params_dict={}, make_plot=False):
         cls.origin_cash = cash
         strategy_params = params_dict.get("strategy_params", {})
         analyzer_params = params_dict.get('analyzers', {})
+        plot_params = params_dict.get("plot", {})
 
         cerebro = bt.Cerebro(cheat_on_open=IS_ALL_IN)
         cerebro.addstrategy(cls, **strategy_params)
@@ -114,16 +115,17 @@ class BasisStrategy(bt.Strategy):
 
         cerebro.broker.addcommissioninfo(CommInforFractional())
         # 滑点、投入资金百分比、回测指标
-        # if slip_type == 0:
-        #     cerebro.broker.set_slippage_fixed(slip_value)
-        # elif slip_type == 1:
-        #     cerebro.broker.set_slippage_perc(slip_value)
-
-        # cerebro.broker.set_slippage_fixed(0)
+        # 按照固定值设置滑点
+        if slip_type == 0:
+            cerebro.broker.set_slippage_fixed(slip_value)
+        # 按照百分比设置滑点
+        elif slip_type == 1:
+            cerebro.broker.set_slippage_perc(slip_value)
 
         for ana_name, ana_class in analyzer_params.items():
             cerebro.addanalyzer(ana_class, _name=ana_name)
 
         back_ret = cerebro.run()
-
+        if make_plot:
+            cerebro.plot(**plot_params)
         return back_ret, cerebro, cls.cls_ret

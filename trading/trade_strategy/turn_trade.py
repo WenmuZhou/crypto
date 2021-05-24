@@ -47,3 +47,8 @@ if __name__ == '__main__':
     #                         time_periods="1d", momentum_days=10)
     # auto_trade.trading_main(coin_list=["BTC", "ETH", "XRP", "BNB"], user="yanjx", time_periods="1d",
     #                         momentum_days=10)
+    auto_trade.trading_main(coin_list=["ETH", "FIL", "LTC", "ETC", "BCH", "BAT",
+                                       "XRP", "DOT", "KSM", "CAKE", "LINK", "UNI",
+                                       "CHZ", "DOGE", "BAKE", "MATIC"], user="nan",
+                            time_periods="30m",
+                            momentum_days=46)

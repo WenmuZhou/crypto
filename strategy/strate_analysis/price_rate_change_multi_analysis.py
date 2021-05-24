@@ -20,17 +20,13 @@ pd.set_option('expand_frame_repr', False)
 
 # @ray.remote
 def one_strategy(data_path_, time_period_):
-    ret, cerebro, ret_dict = PriceMomentumStrategyMultiData.run(
-        data_path=data_path_,
-        IS_ALL_IN=True,
-        cash=10000000,
-        params_dict={"strategy_params":
-                         {"time_period": time_period_, },
-                     'analyzers': {
-                         'sharp': bt.analyzers.SharpeRatio,
-                         'annual_return': bt.analyzers.AnnualReturn,
-                         'drawdown': bt.analyzers.DrawDown}}
-    )
+    ret, cerebro, ret_dict = PriceMomentumStrategyMultiData.run(data_path=data_path_, cash=10000000, IS_ALL_IN=True,
+                                                                params_dict={"strategy_params":
+                                                                                 {"time_period": time_period_, },
+                                                                             'analyzers': {
+                                                                                 'sharp': bt.analyzers.SharpeRatio,
+                                                                                 'annual_return': bt.analyzers.AnnualReturn,
+                                                                                 'drawdown': bt.analyzers.DrawDown}})
 
     # print('Sharpe Ratio: ', ret[0].analyzers.sharp.get_analysis()["sharperatio"])
     # print('annual return: ', ret[0].analyzers.annual_return.get_analysis())

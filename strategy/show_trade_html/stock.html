@@ -1,0 +1,401 @@
+<!--
+    THIS EXAMPLE WAS DOWNLOADED FROM https://echarts.apache.org/examples/zh/editor.html?c=candlestick-brush
+-->
+<!DOCTYPE html>
+<html style="height: 100%">
+    <head>
+        <meta charset="utf-8">
+    </head>
+    <body style="height: 100%; margin: 0">
+        <div id="container" style="height: 100%"></div>
+
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-nightly@5.1.2-dev.20210512/dist/echarts.min.js"></script>
+
+        <script type="text/javascript" src="http://lib.sinaapp.com/js/jquery/3.1.0/jquery-3.1.0.min.js"></script>
+
+        <!-- Uncomment this line if you want to use gl extension
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-gl@2/dist/echarts-gl.min.js"></script>
+        -->
+        <!-- Uncomment this line if you want to echarts-stat extension
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-stat@latest/dist/ecStat.min.js"></script>
+        -->
+        <!-- Uncomment this line if you want to use map
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-nightly@5.1.2-dev.20210512/map/js/china.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-nightly@5.1.2-dev.20210512/map/js/world.js"></script>
+        -->
+        <!-- Uncomment these two lines if you want to use bmap extension
+        <script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=<Your Key Here>"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/echarts-nightly@5.1.2-dev.20210512/dist/extension/bmap.min.js"></script>
+        -->
+
+<script type="text/javascript">
+stock_id=getQueryVariable("stock_id")
+level=getQueryVariable("level")
+if(level==null){
+        level="day"
+    }
+ma1=getQueryVariable("ma1")
+ma2=getQueryVariable("ma2")
+ma3=getQueryVariable("ma3")
+    if(ma3==null){
+        ma3="20"
+    }
+ma4=getQueryVariable("ma4")
+    if(ma4==null){
+        ma4="30"
+    }
+ma5=getQueryVariable("ma5")
+    if(ma5==null){
+        ma5="60"
+    }
+//访问远程
+// PATH="http://172.27.28.196:8888/show_stock_data?"+"stock_id="+stock_id+"&level="+level
+//访问本地文件
+stock_id = "600570"
+PATH= "../../result/front_end_show_json/"+stock_id+".json"
+
+// stock.json data form:
+//date,open,close,low,high,volume,buy_or_sell
+//an example:
+/* [
+    "2017-03-22",
+    25.78760928,
+    25.06546304,
+    24.9256928,
+    25.78760928,
+    15847552,
+    "s"
+  ],
+  [
+    "2017-03-23",
+    25.1004056,
+    24.96645912,
+    24.68109488,
+    25.3042372,
+    8992578,
+    "b"
+  ],
+    [
+    "2017-03-24",
+    25.1004056,
+    24.96645912,
+    24.68109488,
+    25.3042372,
+    8992578,
+    ""
+  ]*/
+var dom = document.getElementById("container");
+var myChart = echarts.init(dom);
+var app = {};
+var option;
+var upColor = '#ec0000';
+var downColor = '#00da3c';
+function getQueryVariable(variable)
+{
+       var query = window.location.search.substring(1);
+       var vars = query.split("&");
+       for (var i=0;i<vars.length;i++) {
+               var pair = vars[i].split("=");
+               if(pair[0] == variable){return pair[1];}
+       }
+       return null;
+}
+
+function splitData(rawData) {
+    rawData=JSON.parse(rawData);
+
+    var categoryData = [];
+    var values = [];
+    var volumes = [];
+    var markPoints=[];
+    for (var i = 0; i < rawData.length; i++) {
+        // console.log(rawData[i])
+        categoryData.push(rawData[i].splice(0, 1)[0]);
+        if (rawData[i].length>=6 && rawData[i][5]!=""){
+            // console.log(rawData[i][5])
+           markPoints.push({
+                        coord: [categoryData[i],rawData[i][3]],
+                        value: rawData[i][5],
+                    })
+            if (rawData[i][5].startsWith("s")){
+                // console.log(markPoints[markPoints.length-1])
+                markPoints[markPoints.length-1].itemStyle={
+                                    color: 'rgb(41,60,85)'
+                                }
+            }
+
+        }
+
+        values.push(rawData[i]);
+        volumes.push([i, rawData[i][4], rawData[i][0] > rawData[i][1] ? 1 : -1]);
+    }
+    // console.log("markPoints:"+markPoints)
+    return {
+        categoryData: categoryData,
+        values: values,
+        volumes: volumes,
+        markPoints:markPoints
+    };
+}
+
+function calculateMA(dayCount, data) {
+    var result = [];
+    for (var i = 0, len = data.values.length; i < len; i++) {
+        if (i < dayCount) {
+            result.push('-');
+            continue;
+        }
+        var sum = 0;
+        for (var j = 0; j < dayCount; j++) {
+            sum += data.values[i - j][1];
+        }
+        result.push(+(sum / dayCount).toFixed(3));
+    }
+    return result;
+}
+
+$.get(PATH, function (rawData) {
+
+    console.log("stock_id:"+stock_id)
+    var data = splitData(rawData);
+option = {
+        animation: false,
+        legend: {
+            bottom: 10,
+            left: 'center',
+            data: ['k线', ma1, ma2, ma3, ma4,ma5]
+        },
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross'
+            },
+            borderWidth: 1,
+            borderColor: '#ccc',
+            padding: 10,
+            textStyle: {
+                color: '#000'
+            },
+            position: function (pos, params, el, elRect, size) {
+                var obj = {top: 10};
+                obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
+                return obj;
+            }
+            // extraCssText: 'width: 170px'
+        },
+        axisPointer: {
+            link: {xAxisIndex: 'all'},
+            label: {
+                backgroundColor: '#777'
+            }
+        },
+        toolbox: {
+            feature: {
+                dataZoom: {
+                    yAxisIndex: false
+                },
+                brush: {
+                    type: ['lineX', 'clear']
+                }
+            }
+        },
+        brush: {
+            xAxisIndex: 'all',
+            brushLink: 'all',
+            outOfBrush: {
+                colorAlpha: 0.1
+            }
+        },
+        visualMap: {
+            show: false,
+            seriesIndex: 5,
+            dimension: 2,
+            pieces: [{
+                value: 1,
+                color: downColor
+            }, {
+                value: -1,
+                color: upColor
+            }]
+        },
+        grid: [
+            {
+                left: '10%',
+                right: '8%',
+                height: '50%'
+            },
+            {
+                left: '10%',
+                right: '8%',
+                top: '63%',
+                height: '16%'
+            }
+        ],
+        xAxis: [
+            {
+                type: 'category',
+                data: data.categoryData,
+                scale: true,
+                boundaryGap: false,
+                axisLine: {onZero: false},
+                splitLine: {show: false},
+                splitNumber: 20,
+                min: 'dataMin',
+                max: 'dataMax',
+                axisPointer: {
+                    z: 100
+                }
+            },
+            {
+                type: 'category',
+                gridIndex: 1,
+                data: data.categoryData,
+                scale: true,
+                boundaryGap: false,
+                axisLine: {onZero: false},
+                axisTick: {show: false},
+                splitLine: {show: false},
+                axisLabel: {show: false},
+                splitNumber: 20,
+                min: 'dataMin',
+                max: 'dataMax'
+            }
+        ],
+        yAxis: [
+            {
+                scale: true,
+                splitArea: {
+                    show: true
+                }
+            },
+            {
+                scale: true,
+                gridIndex: 1,
+                splitNumber: 2,
+                axisLabel: {show: false},
+                axisLine: {show: false},
+                axisTick: {show: false},
+                splitLine: {show: false}
+            }
+        ],
+        dataZoom: [
+            {
+                type: 'inside',
+                xAxisIndex: [0, 1],
+                start: 98,
+                end: 100
+            },
+            {
+                show: true,
+                xAxisIndex: [0, 1],
+                type: 'slider',
+                top: '85%',
+                start: 98,
+                end: 100
+            }
+        ],
+        series: [
+            {
+                name: 'Dow-Jones index',
+                type: 'candlestick',
+                data: data.values,
+                itemStyle: {
+                    color: upColor,
+                    color0: downColor,
+                    borderColor: null,
+                    borderColor0: null
+                },
+                tooltip: {
+                    formatter: function (param) {
+                        param = param[0];
+                        return [
+                            'Date: ' + param.name + '<hr size=1 style="margin: 3px 0">',
+                            'Open: ' + param.data[0] + '<br/>',
+                            'Close: ' + param.data[1] + '<br/>',
+                            'Lowest: ' + param.data[2] + '<br/>',
+                            'Highest: ' + param.data[3] + '<br/>'
+                        ].join('');
+                    }
+                },
+                markPoint: {
+                label: {
+                    normal: {
+                        formatter: function (param) {
+                            return param != null ? param.value : '';
+                        }
+                    }
+                },
+                data: data.markPoints,
+                tooltip: {
+                    formatter: function (param) {
+                        return param.name + '<br>' + (param.data.coord || '');
+                    }
+                }
+            },
+            },
+            {
+                name: ma1,
+                type: 'line',
+                data: calculateMA(ma1, data),
+                smooth: true,
+                lineStyle: {
+                    opacity: 0.5
+                }
+            },
+            {
+                name: ma2,
+                type: 'line',
+                data: calculateMA(ma2, data),
+                smooth: true,
+                lineStyle: {
+                    opacity: 0.5
+                }
+            },
+            {
+                name: ma3,
+                type: 'line',
+                data: calculateMA(ma3, data),
+                smooth: true,
+                lineStyle: {
+                    opacity: 0.5
+                }
+            },
+            {
+                name: ma4,
+                type: 'line',
+                data: calculateMA(ma4, data),
+                smooth: true,
+                lineStyle: {
+                    opacity: 0.5
+                }
+            },
+
+            {
+                name: 'Volume',
+                type: 'bar',
+                xAxisIndex: 1,
+                yAxisIndex: 1,
+                data: data.volumes
+            },
+            {
+                name: ma5,
+                type: 'line',
+                data: calculateMA(ma5, data),
+                smooth: true,
+                lineStyle: {
+                    opacity: 0.5
+                }
+            }
+        ]
+    }
+    console.log(option)
+    myChart.setOption(option, true);
+});
+
+if (option && typeof option === 'object') {
+    myChart.setOption(option);
+}
+
+        </script>
+    </body>
+</html>

@@ -34,4 +34,9 @@ class TurtleTrade(BasisTrading):
 
 if __name__ == '__main__':
     auto_trade = TurtleTrade(post_to_ding_talk=False)
-    auto_trade.trading_main(coin_name="BTC", user="yujl", upper_band=20, lower_band=10, time_periods="1d")
+    # auto_trade.trading_main(coin_name="BTC", user="yujl", upper_band=20, lower_band=10, time_periods="1d")
+    params = {"coin_name": "BTC",
+              "upper_band": 20,
+              "lower_band": 10,
+              "time_periods": "1d"}
+    print(auto_trade.strategy_trade(params))

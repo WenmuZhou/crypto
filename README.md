@@ -144,7 +144,7 @@ def run(cls, data_path="", cash=100000, commission=1.5/1000, slip_type=-1, slip_
 
 ```
 &emsp;&emsp;***例子：***  
-&emsp;&emsp;以双均线作为例子来说明如何在BasisStrategy()上开发策略。  
+&emsp;&emsp;以双均线作为例子来说明如何在BasisStrategy()上开发策略。
 
 ```python
 import backtrader as bt
@@ -154,46 +154,47 @@ from strategy.backtrader_base.background_logic import BasisStrategy
 
 
 class TwoSmaStrategy(BasisStrategy):
-    params = (('short_period', 5), ('long_period', 10))  #策略参数，外部可更改
-    def __init__(self):
-        super(TwoSmaStrategy, self).__init__()
+  params = (('short_period', 5), ('long_period', 10))  # 策略参数，外部可更改
 
-    @staticmethod
-    def data_process(data_path):                        #重写数据处理方法
-        df = pd.read_csv(data_path)
-        df["date"] = pd.to_datetime(df["date"])
-        data = bt.feeds.PandasData(dataname=df, datetime="date", volume="volume")
-        return data
+  def __init__(self):
+    super(TwoSmaStrategy, self).__init__()
 
-    def cal_technical_index(self):                      #重写指标计算方法
-        print("short_period: ", self.params.short_period)
-        print('long_period: ', self.params.long_period)
-        self.sma5 = bt.indicators.MovingAverageSimple(self.datas[0], period=self.params.short_period)  #短周期均线指标
-        self.sma10 = bt.indicators.MovingAverageSimple(self.datas[0], period=self.params.long_period)  #长周期均线指标
+  @staticmethod
+  def data_process(data_path):  # 重写数据处理方法
+    df = pd.read_csv(data_path)
+    df["date"] = pd.to_datetime(df["date"])
+    data = bt.feeds.PandasData(dataname=df, datetime="date", volume="volume")
+    return data
 
-    def next(self):                                     #重写策略实现方法
-        self.log('Close, %.2f' % self.data_close[0])
+  def cal_technical_index(self):  # 重写指标计算方法
+    print("short_period: ", self.params.short_period)
+    print('long_period: ', self.params.long_period)
+    self.sma5 = bt.indicators.MovingAverageSimple(self.datas[0], period=self.params.short_period)  # 短周期均线指标
+    self.sma10 = bt.indicators.MovingAverageSimple(self.datas[0], period=self.params.long_period)  # 长周期均线指标
 
-        if self.order:
-            return
+  def next(self):  # 重写策略实现方法
+    self.log('Close, %.2f' % self.data_close[0])
 
-        if not self.position:
-            if self.sma5[0] > self.sma10[0]:
-                self.order = self.buy()
-        else:
-            if self.sma5[0] < self.sma10[0]:
-                self.order = self.sell()
+    if self.order:
+      return
+
+    if not self.position:
+      if self.sma5[0] > self.sma10[0]:
+        self.order = self.buy()
+    else:
+      if self.sma5[0] < self.sma10[0]:
+        self.order = self.sell()
 
 
 if __name__ == '__main__':
-    ret, cere = TwoSmaStrategy.run(
-        data_path="dataset/hs300_d/sz.000001.csv",
-        params_dict={"strategy_params": {"short_period": 5, "long_period": 10}, 
-                     'analyzers':{'sharp': bt.analyzers.SharpeRatio, 'annual_return': bt.analyzers.AnnualReturn, 'drawdown': bt.analyzers.DrawDown}}
-    )
-    print('Sharpe Ratio: ', ret[0].analyzers.sharp.get_analysis())
-    print('drawdown: ', ret[0].analyzers.drawdown.get_analysis())
-    cere.plot(style='candle')
+  ret, cere = TwoSmaStrategy.run(data_path="dataset/hs300_d/sz.000001.csv",
+                                 params_dict={"strategy_params": {"short_period": 5, "long_period": 10},
+                                              'analyzers': {'sharp': bt.analyzers.SharpeRatio,
+                                                            'annual_return': bt.analyzers.AnnualReturn,
+                                                            'drawdown': bt.analyzers.DrawDown}})
+  print('Sharpe Ratio: ', ret[0].analyzers.sharp.get_analysis())
+  print('drawdown: ', ret[0].analyzers.drawdown.get_analysis())
+  cere.plot(style='candle')
 ```
 &emsp;&emsp;上面策略有两个参数：短周期和长周期，可通过传参修改，传入参数的键名和类参数中的字符串一致。  
 &emsp;&emsp;回测指标的获取时，第三个属性和传参的键名一致。
