@@ -41,6 +41,7 @@ class MaWind(TradeStructure):
                 area_ma_list.append(area_ma)
                 area_ma = row["diff"]
 
+        df2 = self.data[self.data["trade"]=="s"]
         print(area_ma_list)
 
 

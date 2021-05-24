@@ -10,7 +10,7 @@ from trading.trade_strategy.turn_trade import TurnTrade
 auto_trade = TurnTrade()
 try:
     auto_trade.trading_main(
-        coin_list=["DOT", "KSM", "UNI", "CAKE", "BAKE", "FIL", "MATIC", "BCH", "LINK", "BAT", "LTC", "EOS"],
+        coin_list=["DOT", "KSM", "UNI", "CAKE", "BAKE", "FIL", "MATIC", "BCH", "LINK", "BAT", "LTC", "EOS", "DOGE"],
         user="wxt",
         time_periods="4h",
         momentum_days=5)
@@ -45,4 +45,3 @@ try:
 except Exception as e:
     print(e)
     print('szq bug')
-
