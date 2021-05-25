@@ -34,11 +34,11 @@ def service_main():
         data = request_parse(request)
         if data is not None:
             stock_id = data.get("stock_id")
-            level = data.get("level")
+            time_period = data.get("time_period")
             start_time = data.get("start_time")
             end_time = data.get("end_time")
 
-            result = parse_data(stock_id=stock_id, level=level, start_time=start_time, end_time=end_time)
+            result = parse_data(stock_id=stock_id, time_period=time_period, start_time=start_time, end_time=end_time)
             # result_dict['result'] = result
             return result
 
@@ -50,4 +50,4 @@ def service_main():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=2001, debug=True)
+    app.run(host="0.0.0.0", port=2001, debug=False)

@@ -31,7 +31,7 @@ class TradeStructure:
         df = pd.read_csv(_data_path)
         df = df[['date', 'open', 'close', 'high', 'low', 'volume']]
         df['trade'] = ""
-        df = df[-1000:]
+        # df = df[-1000:]
         return df
 
     def cal_technical_index(self):
