@@ -44,7 +44,8 @@ class MaWind(TradeStructure):
         df2 = self.data[(self.data["trade"] == "s") | (self.data["trade"] == "b")]
         df2.reset_index(inplace=True)
         df2["pct"] = df2["close"].pct_change(periods=1).shift(-1)
-        print(df2)
+        df3 = df2[df2["trade"] == "b"]
+        print(df3)
 
 
 if __name__ == '__main__':
