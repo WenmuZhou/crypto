@@ -18,6 +18,7 @@ pd.set_option("expand_frame_repr", False)
 pd.set_option("display.max_rows", 1000)
 
 trade_rate = 1.5 / 1000
+time_period = "30m"
 
 
 # @ray.remote
@@ -25,7 +26,10 @@ def turn_strategy(coin_list_, short_momentum_day_, long_momentum_day_):
     res_df = None
     for coin_name in coin_list_:
         # print(coin_name)
-        df_ = pd.read_csv("dataset/4h/" + coin_name + ".csv")
+        df_dir = "dataset/" + time_period + "/" + coin_name + "_USDT_" + time_period
+        df_list = os.listdir(df_dir)
+        # exit()
+        df_ = pd.read_csv(os.path.join(df_dir, df_list[0]))
         # print("coin name:", coin_name)
         # print("how long test:", len(df_))
         # print('=' * 20)
@@ -126,13 +130,13 @@ def turn_strategy(coin_list_, short_momentum_day_, long_momentum_day_):
 #     print('==========')
 
 # @ray.remote
-def coin_mul(coin_list, res_list):
-    futures = [turn_strategy.remote(coin_list, short_momentum_day_=i, long_momentum_day_=i) for i in range(3, 121)]
-    result = ray.get(futures)
-    for i in range(len(result)):
-        tmp_list = [",".join(coin_list), result[i][-2], result[i][-1], result[i][0], result[i][1],
-                    result[i][0] > result[i][-1]]
-        res_list.append(tmp_list)
+# def coin_mul(coin_list, res_list):
+#     futures = [turn_strategy.remote(coin_list, short_momentum_day_=i, long_momentum_day_=i) for i in range(3, 121)]
+#     result = ray.get(futures)
+#     for i in range(len(result)):
+#         tmp_list = [",".join(coin_list), result[i][-2], result[i][-1], result[i][0], result[i][1],
+#                     result[i][0] > result[i][-1]]
+#         res_list.append(tmp_list)
         # print(tmp_list)
 
 
@@ -147,15 +151,15 @@ def coin_mul(coin_list, res_list):
 #                             result[0] > result[-1]])
 
 
-data_list = ["ADA", "BNB", "BTC", "CAKE", "DOT", "EOS", "ETH", "FIL", "KSM", "LTC", "UNI", "XRP"]
+# data_list = ["ADA", "BNB", "BTC", "CAKE", "DOT", "EOS", "ETH", "FIL", "KSM", "LTC", "UNI", "XRP"]
 
 
-def get_combination_list(data_list):
-    combinations_list = list()
-    for i in range(2, len(data_list) + 1):
-        combinations_list.extend(list(combinations(data_list, i)))
-
-    return combinations_list
+# def get_combination_list(data_list):
+#     combinations_list = list()
+#     for i in range(2, len(data_list) + 1):
+#         combinations_list.extend(list(combinations(data_list, i)))
+#
+#     return combinations_list
 
 
 # ray.init()
@@ -174,7 +178,8 @@ def get_combination_list(data_list):
 # print(df)
 # df.to_csv("result/turn_mul_4h.csv")
 # momentum_day = 18
-coin_list = ["BTC", "ETH", "UNI", "FIL", "DOT", "ADA"]
+# coin_list = ["BTC", "ETH", "UNI", "FIL", "DOT", "ADA"]
+coin_list = ["BTC", "ETH", "FIL", "BAT", "ADA", "DOT", "CAKE", "UNI", "MATIC", "KSM", "XRP"]
 for momentum_day in range(3, 161):
     strategy_net, max_draw_down, start_date, end_date, _, _ = turn_strategy(coin_list, short_momentum_day_=momentum_day,
                                                                             long_momentum_day_=momentum_day)
