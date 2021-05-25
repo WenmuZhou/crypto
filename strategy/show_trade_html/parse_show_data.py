@@ -6,11 +6,10 @@
 # @File     : parse_show_data.py
 # @Function  :
 import os
-import pandas as pd
-from strategy.personalise.chan_theory.chan_bi import ChanBi
+from strategy.personalise.loop_pos.ma_wind import MaWind
 
 
-def parse_data(stock_id="600570", level="day"):
+def parse_data(stock_id="600570", level="day", start_time="", end_time=""):
     day_data_path = "/root/adolf/dataset/stock/d_pre/"
     if level == "day":
         if os.path.exists(os.path.join(day_data_path, "sz." + stock_id + ".csv")):
@@ -20,7 +19,8 @@ def parse_data(stock_id="600570", level="day"):
         else:
             return {"error_msg": "不存在股票代码"}
     # print(df)
-    show_json = ChanBi(df_path).run(make_plot=False, front_show=True)
+    show_json = MaWind(data_path=df_path)(show_buy_and_sell=True)
+    print(show_json)
     return show_json
 
 

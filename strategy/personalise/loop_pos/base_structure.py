@@ -6,6 +6,7 @@
 # @File     : base_structure.py
 # @Function  :
 import pandas as pd
+import json
 
 
 class TradeStructure:
@@ -26,10 +27,11 @@ class TradeStructure:
             "is_turn": False}
 
     @staticmethod
-    def load_dataset(_data_path):
+    def load_dataset(_data_path, start_stamp="", end_stamp=""):
         df = pd.read_csv(_data_path)
         df = df[['date', 'open', 'close', 'high', 'low', 'volume']]
         df['trade'] = ""
+        df = df[-1000:]
         return df
 
     def cal_technical_index(self):
@@ -57,5 +59,12 @@ class TradeStructure:
     def __call__(self, show_buy_and_sell=False):
         self.cal_technical_index()
         if show_buy_and_sell:
-            pass
+            res_list = []
+            data_dict = {}
+            item_list = ["date", "open", "close", "low", "high", "volume", "trade"]
+            for index, row in self.data.iterrows():
+                for item in item_list:
+                    data_dict[item] = row[item]
+                res_list.append(data_dict.copy())
+            return json.dumps(res_list, indent=2, ensure_ascii=False)
         self.strategy_exec()
