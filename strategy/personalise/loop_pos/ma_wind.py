@@ -43,9 +43,9 @@ class MaWind(TradeStructure):
         # df3 = df2[df2["trade"] == "b"].copy()
         # print(df3)
         # df4 = df3[abs(df3["area"]) < 0.2].copy()
-        # df3['origin_pct'] = (1 + df3['pct']).cumprod()
+        df3['origin_pct'] = (1 + df3['pct']).cumprod()
         # df4['adjust_pct'] = (1 + df4['pct']).cumprod()
-        # print(df3.tail(2)["origin_pct"])
+        print(df3.tail(2)["origin_pct"])
         # print('------')
         # print(df4.tail(2)["adjust_pct"])
 
