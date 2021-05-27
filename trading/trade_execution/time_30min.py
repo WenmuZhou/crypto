@@ -12,7 +12,7 @@ try:
     auto_trade.trading_main(coin_list=["BTC", "ETH", "FIL", "BAT", "ADA", "DOT", "CAKE", "UNI", "MATIC", "KSM", "XRP"],
                             user="nan",
                             time_periods="30m",
-                            momentum_days=46)
+                            momentum_days=30)
 except Exception as e:
     print(e)
     print('nan bug')

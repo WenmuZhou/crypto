@@ -34,16 +34,14 @@ def service_main():
         data = request_parse(request)
         if data is not None:
             stock_id = data.get("stock_id")
-            level = data.get("level")
-            # ma1 = data.get("ma1")
-            # ma2 = data.get("ma2")
-            # ma3 = data.get("ma3")
+            time_period = data.get("time_period")
+            start_time = data.get("start_time")
+            end_time = data.get("end_time")
 
-            result = parse_data(stock_id=stock_id, level=level)
+            result = parse_data(stock_id=stock_id, time_period=time_period, start_time=start_time, end_time=end_time)
             # result_dict['result'] = result
             return result
 
-            # return json.dumps(result)
         else:
             return json.dumps({"error_msg": "data is None", "status": 1}, ensure_ascii=False)
     except Exception as e:
@@ -52,4 +50,4 @@ def service_main():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8888, debug=True)
+    app.run(host="0.0.0.0", port=2001, debug=False)
