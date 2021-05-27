@@ -5,42 +5,30 @@
 # @Author   : Adolf
 # @File     : ma_mom.py
 # @Function  :
+import talib
 import pandas as pd
-# import talib
-import json
+import numpy as np
+from strategy.personalise.loop_pos.base_structure import TradeStructure
 
 pd.set_option("expand_frame_repr", False)
 pd.set_option("display.max_rows", 1000)
 
-df = pd.read_csv("dataset/stock/600570.csv", index_col=False)
-del df["amount"], df["turn"], df["pctChg"], df["adjustflag"]
-df = df[-1000:]
-df.reset_index(inplace=True)
 
-# df['pct'] = df['close'].pct_change(periods=1)
-# df['short_mom'] = df['close'].pct_change(periods=5)
-# df['long_mom'] = df['close'].pct_change(periods=10)
+class MaWind(TradeStructure):
+    def cal_technical_index(self):
+        self.data['wma5'] = (np.cumsum(self.data.volume * self.data.close) / np.cumsum(self.data.volume))
 
-df["MA5"] = df["close"].rolling(5).mean()
-df['MA10'] = df["close"].rolling(10).mean()
-# df['MA10_talib'] = talib.MA(df["close"], timeperiod=10)
-# df["MACD"] = talib.MACD(df["close"], fastperiod=12, slowperiod=26, signalperiod=9)
-df['trade'] = ""
-df.loc[(df["MA5"] > df["MA10"]) & (df["MA5"].shift(1) < df["MA10"].shift(1)), "trade"] = "b"
-df.loc[(df["MA5"] < df["MA10"]) & (df["MA5"].shift(1) > df["MA10"].shift(1)), "trade"] = "s"
+        # self.data["vol_w_ma5"] = cal_vol_weight_ma(self.data, time_period=5)
+        # self.data["vol_w_ma10"] = cal_vol_weight_ma(self.data, time_period=10)
+        #
+        # self.data.loc[(self.data["vol_w_ma5"] > self.data["vol_w_ma10"]) & (
+        #         self.data["vol_w_ma5"].shift(1) <= self.data["vol_w_ma10"].shift(1)), "trade"] = "buy"
+        # self.data.loc[(self.data["vol_w_ma5"] < self.data["vol_w_ma10"]) & (
+        #         self.data["vol_w_ma5"].shift(1) >= self.data["vol_w_ma10"].shift(1)), "trade"] = "sell"
+        print(self.data)
 
-df['diff'] = df["MA5"] - df["MA10"]
-df['diff'] = df['diff'].fillna(0)
-df["area"] = 0
-# print(df)
 
-area_ma = 0
-for index, row in df.iterrows():
-    # print(row)
-    df.loc[index, "area"] = area_ma
-    if row["trade"] != "b" and row["trade"] != "s":
-        area_ma += row["diff"]
-    else:
-        area_ma = row["diff"]
-
-print(df)
+if __name__ == '__main__':
+    mawind = MaWind(data_path="dataset/stock/600570_post.csv")
+    # mawind.cal_technical_index()
+    mawind(analyze_positions=False, make_plot_param={"is_make_plot": True})
