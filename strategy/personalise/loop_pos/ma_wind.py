@@ -27,24 +27,27 @@ class MaWind(TradeStructure):
                 self.data["ma5"].shift(1) >= self.data["ma10"].shift(1)), "trade"] = "sell"
 
         # 计算MACD指标
-        # self.data['MACD'], self.data['MACDsignal'], self.data['MACDhist'] = talib.MACD(self.data.close, fastperiod=12,
-        #                                                                                slowperiod=26,
-        #                                                                                signalperiod=9)
+        self.data['MACD'], self.data['MACDsignal'], self.data['MACDhist'] = talib.MACD(self.data.close, fastperiod=12,
+                                                                                       slowperiod=26,
+                                                                                       signalperiod=9)
 
         # 计算KDJ指标
-        # self.data['slowk'], self.data['slowd'] = talib.STOCH(
-        #     self.data['high'].values,
-        #     self.data['low'].values,
-        #     self.data['close'].values,
-        #     fastk_period=9,
-        #     slowk_period=3,
-        #     slowk_matype=0,
-        #     slowd_period=3,
-        #     slowd_matype=0)
-        # # 求出J值，J = (3*K)-(2*D)
-        # self.data['slowj'] = list(map(lambda x, y: 3 * x - 2 * y, self.data['slowk'], self.data['slowd']))
+        self.data['slowk'], self.data['slowd'] = talib.STOCH(
+            self.data['high'].values,
+            self.data['low'].values,
+            self.data['close'].values,
+            fastk_period=9,
+            slowk_period=3,
+            slowk_matype=0,
+            slowd_period=3,
+            slowd_matype=0)
+        # 求出J值，J = (3*K)-(2*D)
+        self.data['slowj'] = list(map(lambda x, y: 3 * x - 2 * y, self.data['slowk'], self.data['slowd']))
 
-        print(self.data)
+        self.data.fillna(0, inplace=True)
+        # print(self.data)
+
+        # print(self.data)
         # self.data['diff'] = self.data.apply(lambda x: (x.ma5 - x.ma10) / min(x.ma5, x.ma10), axis=1)
         # self.data["area"] = 0
         # area_ma = 0
