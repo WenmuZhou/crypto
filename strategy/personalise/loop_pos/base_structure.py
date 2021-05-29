@@ -6,6 +6,7 @@
 # @File     : base_structure.py
 # @Function  :
 import pandas as pd
+import mplfinance as mpf
 import json
 
 
@@ -47,7 +48,8 @@ class TradeStructure:
             df = df.rename(columns={"DATES": "date"})
         # print(df)
         df['trade'] = ""
-        df = df[-1000:]
+        # df = df[-200:]
+        df.reset_index(inplace=True)
         return df
 
     def cal_technical_index(self):
@@ -101,12 +103,13 @@ class TradeStructure:
         print("策略成功率:{:.2f}%".format(len(eval_df[eval_df["pct"] > 0]) / len(eval_df) * 100))
         print("策略赔率:{:.2f}%".format(eval_df["pct"].mean() * 100))
 
-    def __call__(self, show_buy_and_sell=False, analyze_positions=False):
+    def __call__(self, show_buy_and_sell=False, analyze_positions=False, make_plot_param={}):
         self.cal_technical_index()
         if show_buy_and_sell:
             res_list = []
             data_dict = {}
-            item_list = ["date", "open", "close", "low", "high", "volume", "trade"]
+            item_list = ["date", "open", "close", "low", "high", "volume", "trade", "MACD", "MACDsignal", "MACDhist",
+                         "slowk", "slowd", "slowj"]
             for index, row in self.data.iterrows():
                 for item in item_list:
                     data_dict[item] = row[item]
@@ -115,3 +118,14 @@ class TradeStructure:
         self.strategy_exec()
         if analyze_positions:
             self.eval_index()
+
+        is_make_plot = make_plot_param.get("is_make_plot", False)
+        if is_make_plot:
+            self.data['Date'] = pd.to_datetime(self.data["date"])
+            self.data.set_index('Date', inplace=True)
+
+            my_color = mpf.make_marketcolors(up="red", down="green", edge="inherit", volume="inherit")
+            my_style = mpf.make_mpf_style(marketcolors=my_color)
+            add_plot = [mpf.make_addplot(self.data[['wma10']])]
+            mpf.plot(self.data, type="line", ylabel="price", style=my_style, volume=True, ylabel_lower="volume",
+                     addplot=add_plot)

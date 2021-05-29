@@ -137,7 +137,7 @@ def turn_strategy(coin_list_, short_momentum_day_, long_momentum_day_):
 #         tmp_list = [",".join(coin_list), result[i][-2], result[i][-1], result[i][0], result[i][1],
 #                     result[i][0] > result[i][-1]]
 #         res_list.append(tmp_list)
-        # print(tmp_list)
+# print(tmp_list)
 
 
 # print(i + 3, result[i][:2])
@@ -154,12 +154,12 @@ def turn_strategy(coin_list_, short_momentum_day_, long_momentum_day_):
 # data_list = ["ADA", "BNB", "BTC", "CAKE", "DOT", "EOS", "ETH", "FIL", "KSM", "LTC", "UNI", "XRP"]
 
 
-# def get_combination_list(data_list):
-#     combinations_list = list()
-#     for i in range(2, len(data_list) + 1):
-#         combinations_list.extend(list(combinations(data_list, i)))
-#
-#     return combinations_list
+def get_combination_list(data_list):
+    combinations_list = list()
+    for i in range(2, len(data_list) + 1):
+        combinations_list.extend(list(combinations(data_list, i)))
+
+    return combinations_list
 
 
 # ray.init()
@@ -179,10 +179,19 @@ def turn_strategy(coin_list_, short_momentum_day_, long_momentum_day_):
 # df.to_csv("result/turn_mul_4h.csv")
 # momentum_day = 18
 # coin_list = ["BTC", "ETH", "UNI", "FIL", "DOT", "ADA"]
-coin_list = ["BTC", "ETH", "FIL", "BAT", "ADA", "DOT", "CAKE", "UNI", "MATIC", "KSM", "XRP"]
-for momentum_day in range(3, 161):
+coin_list = ["BTC", "ETH", "EOS", "FIL", "LTC", "ETC", "BCH", "BAT",
+             "XRP", "DOT", "KSM", "CAKE", "BNB", "LINK", "ADA", "UNI",
+             "CHZ", "DOGE", "MATIC"]
+
+#  ('BTC', 'ETH', 'EOS', 'FIL', 'LTC', 'ETC', 'BAT', 'XRP', 'DOT', 'KSM', 'CAKE', 'BNB', 'LINK', 'ADA', 'UNI', 'CHZ', 'DOGE', 'MATIC')
+combinations_list = get_combination_list(coin_list)
+
+# for momentum_day in range(3, 161):
+for coin_list in combinations_list[::-1]:
+    momentum_day = 47
     strategy_net, max_draw_down, start_date, end_date, _, _ = turn_strategy(coin_list, short_momentum_day_=momentum_day,
                                                                             long_momentum_day_=momentum_day)
+    print("coin_list:", coin_list)
     print("momentum_day:", momentum_day)
     print("strategy_net:", strategy_net)
     print("max_draw_down:", max_draw_down)
