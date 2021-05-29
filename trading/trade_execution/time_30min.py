@@ -10,7 +10,7 @@ from trading.trade_strategy.turn_trade import TurnTrade
 auto_trade = TurnTrade()
 try:
     auto_trade.trading_main(
-        coin_list=['BTC', 'ETH', 'EOS', 'FIL', 'LTC', 'ETC', 'BCH', 'BAT', 'XRP', 'DOT', 'KSM', 'BNB', 'LINK', 'ADA',
+        coin_list=['BTC', 'ETH', 'EOS', 'FIL', 'LTC', 'ETC', 'BCH', 'BAT', 'XRP', 'DOT', 'KSM', 'LINK', 'ADA',
                    'UNI', 'CHZ', 'DOGE', 'MATIC'],
         user="nan",
         time_periods="30m",

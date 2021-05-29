@@ -7,9 +7,6 @@
 # @Function  :
 from typing import Any, Dict, Iterable, Iterator, Tuple
 
-
-from typing import Any, Dict, Iterable, Iterator, Tuple
-
 from tabulate import tabulate
 
 

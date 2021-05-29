@@ -184,6 +184,7 @@ coin_list = ["BTC", "ETH", "EOS", "FIL", "LTC", "ETC", "BCH", "BAT",
              "CHZ", "DOGE", "MATIC"]
 
 #  ('BTC', 'ETH', 'EOS', 'FIL', 'LTC', 'ETC', 'BAT', 'XRP', 'DOT', 'KSM', 'CAKE', 'BNB', 'LINK', 'ADA', 'UNI', 'CHZ', 'DOGE', 'MATIC')
+# ('BTC', 'ETH', 'EOS', 'FIL', 'LTC', 'ETC', 'BAT', 'XRP', 'DOT', 'KSM', 'CAKE', 'LINK', 'ADA', 'UNI', 'CHZ', 'DOGE','MATIC')
 combinations_list = get_combination_list(coin_list)
 
 # for momentum_day in range(3, 161):
