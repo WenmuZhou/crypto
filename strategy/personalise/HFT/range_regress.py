@@ -14,10 +14,12 @@ pd.set_option("display.max_rows", 1000)
 k1 = 0.3
 k2 = 0.6
 trade_rate = 2 / 1000
+loss_price = 20
+# trade_rate = 0
 
-test_data = "dataset/5m/BTC_USDT_5m/from_2021-03-21_11-35-00_to_2021-05-29_22-10-00.csv"
+test_data = "dataset/5m/ETH_USDT_5m/from_2021-03-21_11-35-00_to_2021-05-29_22-10-00.csv"
 df = pd.read_csv(test_data)
-df = df[-1000:]
+# df = df[-1000:]
 del df["time"]
 df = df[["time_stamp", "open", "high", "low", "close"]]
 
@@ -33,7 +35,7 @@ for index, row in df.iterrows():
     # print(row)
     if holding:
         if row["low"] < stop_loss_price:
-            df.loc[index, "pct"] = stop_win_price / df.loc[index - 1, "close"] - 1
+            df.loc[index, "pct"] = stop_loss_price / df.loc[index - 1, "close"] - 1
             df.loc[index, "pct"] = (1 + df.loc[index, "pct"]) * (1 - trade_rate) - 1
             holding = False
         elif row["high"] > stop_win_price:
@@ -47,11 +49,14 @@ for index, row in df.iterrows():
         if row["low"] < row["long_open_price"]:
             holding = True
             stop_win_price = row["long_open_price"] + k2 * row["range"]
-            stop_loss_price = row["long_open_price"] - 200
+            stop_loss_price = row["long_open_price"] - loss_price
             if row["low"] < stop_loss_price:
-                df.loc[index, "pct"] = stop_win_price / row["long_open_price"] - 1
+                df.loc[index, "pct"] = stop_loss_price / row["long_open_price"] - 1
                 df.loc[index, "pct"] = (1 + df.loc[index, "pct"]) * (1 - trade_rate) - 1
                 holding = False
+            # elif row["close"] > stop_win_price:
+                # df.loc[index, "pct"] = stop_win_price / row["long_open_price"] - 1
+                # df.loc[index, "pct"] = (1 + df.loc[index, "pct"]) * (1 - trade_rate) - 1
             else:
                 df.loc[index, "pct"] = row["close"] / row["long_open_price"] - 1
 
