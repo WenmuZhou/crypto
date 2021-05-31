@@ -16,3 +16,4 @@ tushare
 pysocks
 Flask
 tabulate
+websocket-client
