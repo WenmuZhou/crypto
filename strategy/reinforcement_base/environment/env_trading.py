@@ -169,7 +169,7 @@ class EnvTrading(gym.Env):
 
 
 if __name__ == '__main__':
-    df_btc = pd.read_csv("dataset/1d/BTC.csv")
+    df_btc = pd.read_csv("dataset/1d/BTC_USDT_1d/from_2017-08-17_08-00-00_to_2021-05-17_08-00-00.csv")
     df_btc["code"] = "BTC"
     # print(df_btc.code)
     env_trading = EnvTrading(df=df_btc, asset_dim=2)

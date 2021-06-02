@@ -8,6 +8,7 @@
 import pandas as pd
 import mplfinance as mpf
 import json
+import talib
 
 
 class TradeStructure:
@@ -49,12 +50,50 @@ class TradeStructure:
         # print(df)
         df['trade'] = ""
         # df = df[-200:]
-        df.reset_index(inplace=True)
+        # df.reset_index(drop=True,inplace=True)
         return df
 
+    def base_technical_index(self, ma_parm=(5, 10, 20), macd_parm=(12, 26, 9), kdj_parm=(9,3)):
+        for ma in ma_parm:
+            self.data["MA" + str(ma)] = self.data["close"].rolling(ma).mean()
+        # 计算MACD指标
+        self.data['MACD'], self.data['MACDsignal'], self.data['MACDhist'] = talib.MACD(self.data.close,
+                                                                                       fastperiod=macd_parm[0],
+                                                                                       slowperiod=macd_parm[1],
+                                                                                       signalperiod=macd_parm[2])
+
+        # 计算KDJ指标
+        self.data['slowk'], self.data['slowd'] = talib.STOCH(
+            self.data['high'].values,
+            self.data['low'].values,
+            self.data['close'].values,
+            fastk_period=kdj_parm[0],
+            slowk_period=kdj_parm[1],
+            slowk_matype=0,
+            slowd_period=kdj_parm[1],
+            slowd_matype=0)
+        # 求出J值，J = (3*K)-(2*D)
+        self.data['slowj'] = list(map(lambda x, y: 3 * x - 2 * y, self.data['slowk'], self.data['slowd']))
+        # 计算MACD指标
+        self.data['MACD'], self.data['MACDsignal'], self.data['MACDhist'] = talib.MACD(self.data.close, fastperiod=12,
+                                                                                       slowperiod=26,
+                                                                                       signalperiod=9)
+
+        # 计算KDJ指标
+        self.data['slowk'], self.data['slowd'] = talib.STOCH(
+            self.data['high'].values,
+            self.data['low'].values,
+            self.data['close'].values,
+            fastk_period=9,
+            slowk_period=3,
+            slowk_matype=0,
+            slowd_period=3,
+            slowd_matype=0)
+        # 求出J值，J = (3*K)-(2*D)
+        self.data['slowj'] = list(map(lambda x, y: 3 * x - 2 * y, self.data['slowk'], self.data['slowd']))
+
     def cal_technical_index(self):
-        self.data["MA5"] = self.data["close"].rolling(5).mean()
-        self.data['MA10'] = self.data["close"].rolling(10).mean()
+        pass
 
     def buy(self, buy_asset="stock", buy_price=1):
         self.position["pos_style"] = buy_asset

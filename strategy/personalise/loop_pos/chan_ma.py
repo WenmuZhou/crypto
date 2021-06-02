@@ -13,24 +13,22 @@ pd.set_option("expand_frame_repr", False)
 pd.set_option("display.max_rows", 1000)
 
 
-class MaWind(TradeStructure):
+class ChanMA(TradeStructure):
     def __init__(self, data_path):
-        super(MaWind, self).__init__(data_path)
+        super(ChanMA, self).__init__(data_path)
 
     def cal_technical_index(self):
-        self.data = self.data[:100]
-        self.data["ma5"] = self.data["close"].rolling(5).mean()
-        self.data['ma10'] = self.data["close"].rolling(10).mean()
+        self.data = self.data[:1000]
+        self.base_technical_index(ma_parm=(5, 10))
+        self.data.dropna(inplace=True)
+        self.data.reset_index(drop=True, inplace=True)
 
-        self.data.loc[(self.data["ma5"] > self.data["ma10"]) & (
-                self.data["ma5"].shift(1) <= self.data["ma10"].shift(1)), "trade"] = "buy"
-        self.data.loc[(self.data["ma5"] < self.data["ma10"]) & (
-                self.data["ma5"].shift(1) >= self.data["ma10"].shift(1)), "trade"] = "sell"
+        self.data['diff'] = self.data.apply(lambda x: 100 * (x.MA5 - x.MA10) / min(x.MA5, x.MA10), axis=1)
 
         print(self.data)
 
 
 if __name__ == '__main__':
-    mawind = MaWind(data_path="dataset/stock/600570_post.csv")
+    mawind = ChanMA(data_path="dataset/stock/600570_post.csv")
     mawind.cal_technical_index()
     # mawind(analyze_positions=True)
