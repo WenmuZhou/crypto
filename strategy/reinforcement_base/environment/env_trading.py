@@ -88,11 +88,55 @@ class EnvTrading(gym.Env):
         # self.reset()
         self._seed()
 
-    def step(self, action):
+    def step(self, actions):
         self.terminal = self.day >= len(self.df.index.unique()) - 1
         if self.terminal:
             if self.make_plots:
                 self._make_plot()
+            end_total_asset = self.state[0] + sum(np.array(self.state[1:(self.asset_dim + 1)]) * np.array(
+                self.state[(self.asset_dim + 1):(self.asset_dim * 2 + 1)]))
+        else:
+            actions = actions * self.hmax
+            actions = (actions.astype(int))
+            if self.turbulence_threshold is not None:
+                if self.turbulence >= self.turbulence_threshold:
+                    actions = np.array([-self.hmax] * self.asset_dim)
+            begin_total_asset = self.state[0] + sum(np.array(self.state[1:(self.asset_dim + 1)]) * np.array(
+                self.state[(self.asset_dim + 1):(self.asset_dim * 2 + 1)]))
+
+            argsort_actions = np.argsort(actions)
+
+            sell_index = argsort_actions[:np.where(actions < 0)[0].shape[0]]
+            buy_index = argsort_actions[::-1][:np.where(actions > 0)[0].shape[0]]
+
+            for index in sell_index:
+                # print(f"Num shares before: {self.state[index+self.stock_dim+1]}")
+                # print(f'take sell action before : {actions[index]}')
+                actions[index] = self._sell_stock(index, actions[index]) * (-1)
+                # print(f'take sell action after : {actions[index]}')
+                # print(f"Num shares after: {self.state[index+self.stock_dim+1]}")
+
+            for index in buy_index:
+                # print('take buy action: {}'.format(actions[index]))
+                actions[index] = self._buy_stock(index, actions[index])
+
+            self.actions_memory.append(actions)
+
+            self.day += 1
+            self.data = self.df.loc[self.day, :]
+            if self.turbulence_threshold is not None:
+                self.turbulence = self.data['turbulence'].values[0]
+            self.state = self._update_state()
+
+            end_total_asset = self.state[0] + sum(np.array(self.state[1:(self.asset_dim + 1)]) * np.array(
+                self.state[(self.asset_dim + 1):(self.asset_dim * 2 + 1)]))
+            self.asset_memory.append(end_total_asset)
+            self.date_memory.append(self._get_date())
+            self.reward = end_total_asset - begin_total_asset
+            self.rewards_memory.append(self.reward)
+            self.reward = self.reward * self.reward_scaling
+
+        return self.state, self.reward, self.terminal, {}
 
     def reset(self):
         self.state = self._initiate_state()
@@ -149,6 +193,23 @@ class EnvTrading(gym.Env):
                         [self.data.close] + \
                         self.previous_state[(self.asset_dim + 1):(self.asset_dim * 2 + 1)] + \
                         sum([[self.data[tech]] for tech in self.tech_indicator_list], [])
+        return state
+
+    def _update_state(self):
+        if len(self.df.tic.unique()) > 1:
+            # for multiple assert
+            state = [self.state[0]] + \
+                    self.data.close.values.tolist() + \
+                    list(self.state[(self.asset_dim + 1):(self.asset_dim * 2 + 1)]) + \
+                    sum([self.data[tech].values.tolist() for tech in self.tech_indicator_list], [])
+
+        else:
+            # for single asset
+            state = [self.state[0]] + \
+                    [self.data.close] + \
+                    list(self.state[(self.asset_dim + 1):(self.asset_dim * 2 + 1)]) + \
+                    sum([[self.data[tech]] for tech in self.tech_indicator_list], [])
+
         return state
 
     def _get_date(self):

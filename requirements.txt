@@ -17,3 +17,4 @@ pysocks
 Flask
 tabulate
 websocket-client
+git+https://github.com/AI4Finance-LLC/FinRL-Library.git
