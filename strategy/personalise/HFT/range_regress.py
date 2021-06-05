@@ -5,6 +5,7 @@
 # @Author  : Adolf
 # @File    : range_regress.py
 # @Function:
+import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -24,8 +25,9 @@ trade_rate = 1 / 1000
 
 
 def range_strategy(_coin_name, _k1, _k2, _loss_price, _time_period):
-    test_data = "dataset/5m/ETH_USDT_5m/from_2021-03-21_11-35-00_to_2021-05-29_22-10-00.csv"
-    df = pd.read_csv(test_data)
+    # test_data = "dataset/5m/ETH_USDT_5m/from_2021-03-21_11-35-00_to_2021-05-29_22-10-00.csv"
+    test_data_dir = os.path.join("dataset/5m/",_coin_name+"_USDT_5m")
+    df = pd.read_csv(os.path.join(test_data_dir,os.listdir(test_data_dir)[0]))
     df = df[:5000]
     del df["time"]
     df = df[["time_stamp", "open", "high", "low", "close"]]
@@ -79,8 +81,9 @@ def range_strategy(_coin_name, _k1, _k2, _loss_price, _time_period):
     # plt.plot(df["time_stamp"], df["coin_net"])
     # plt.show()
 
-
-coin_list = ["BTC", "ETH", "EOS", "XRP", "DOT", "ADA", "UNI", "DOGE", ]
+# print(range_strategy(_coin_name="BTC", _k1=1.2, _k2=5.6, _loss_price=0.99, _time_period=2))
+# coin_list = ["BTC", "ETH", "EOS", "XRP", "DOT", "ADA", "UNI", "DOGE", ]
+coin_list = ["BTC"]
 for coin_name in coin_list:
     for k1 in np.arange(0.6, 4, 0.1):
         for k2 in np.arange(4, 8, 0.2):
@@ -94,6 +97,6 @@ for coin_name in coin_list:
             print("K2:", k2)
             print("strategy_pct", strategy_pct)
             print("=" * 10)
-
+#
 # btc:0.6,6.4;0.6,7.2;0.8,6.8;0.8,7.0;1.2,5.4;1.3,5.6
 # eos:1.2,5.4

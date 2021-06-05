@@ -21,8 +21,10 @@ def on_close(ws):
 
 
 websocket.enableTrace(True)
-ws = websocket.WebSocketApp("wss://stream.binance.com:9443/ws/btcusdt@trde",
+# ws = websocket.WebSocketApp("wss://stream.binance.com:9443/ws/!ticker@arr",
+ws = websocket.WebSocketApp("wss://stream.binance.com:9443/ws/btcusdt@aggTrade",
                             on_message=on_message,
                             on_error=on_error,
                             on_close=on_close)
-ws.run_forever(sslopt={"check_hostname": False})
+ws.run_forever(sslopt={"check_hostname": False}, http_proxy_host="127.0.0.1",
+               http_proxy_port=1087)
