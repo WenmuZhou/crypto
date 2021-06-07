@@ -28,6 +28,7 @@ from finrl.trade.backtest import backtest_stats, backtest_plot, get_daily_return
 from pprint import pprint
 
 pd.set_option("expand_frame_repr", False)
+os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 
 if not os.path.exists("result/" + config.DATA_SAVE_DIR):
     os.makedirs("result/" + config.DATA_SAVE_DIR)
@@ -112,3 +113,38 @@ model_ppo = agent.get_model("ppo", model_kwargs=PPO_PARAMS)
 trained_ppo = agent.train_model(model=model_ppo,
                                 tb_log_name='ppo',
                                 total_timesteps=50000)
+
+data_turbulence = processed_full[(processed_full.date < '2019-01-01') & (processed_full.date >= '2009-01-01')]
+insample_turbulence = data_turbulence.drop_duplicates(subset=['date'])
+
+turbulence_threshold = np.quantile(insample_turbulence.turbulence.values, 1)
+
+trade = data_split(processed_full, '2019-01-01', '2021-01-01')
+e_trade_gym = StockTradingEnv(df=trade, turbulence_threshold=380, **env_kwargs)
+
+df_account_value, df_actions = DRLAgent.DRL_prediction(
+    model=trained_ppo,
+    environment=e_trade_gym)
+
+now = datetime.datetime.now().strftime('%Y%m%d-%Hh%M')
+
+perf_stats_all = backtest_stats(account_value=df_account_value)
+perf_stats_all = pd.DataFrame(perf_stats_all)
+perf_stats_all.to_csv("result/"+config.RESULTS_DIR + "/perf_stats_all_" + now + '.csv')
+
+print("==============Get Baseline Stats===========")
+baseline_df = get_baseline(
+    ticker="^DJI",
+    start='2019-01-01',
+    end='2021-01-01')
+
+stats = backtest_stats(baseline_df, value_col_name='close')
+
+print("==============Compare to DJIA===========")
+# S&P 500: ^GSPC
+# Dow Jones Index: ^DJI
+# NASDAQ 100: ^NDX
+backtest_plot(df_account_value,
+              baseline_ticker='^DJI',
+              baseline_start='2019-01-01',
+              baseline_end='2021-01-01')
