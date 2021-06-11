@@ -61,5 +61,6 @@ df_account_value, df_actions = DRLAgent.DRL_prediction(
     environment=e_trade_gym)
 
 perf_stats_all = backtest_stats(account_value=df_account_value)
+print(df_actions)
 # perf_stats_all = pd.DataFrame(perf_stats_all)
 # print(perf_stats_all)
