@@ -7,6 +7,7 @@
 # @Function  :
 import math
 import os
+import talib
 
 import numpy as np
 import pandas as pd
@@ -14,6 +15,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from scipy import stats
 import ray
+
+import datetime
 
 pd.set_option("expand_frame_repr", False)
 pd.set_option("display.max_rows", 1000)
@@ -93,11 +96,12 @@ df_path = "/root/adolf/dataset/stock/real_data/bs/post_d"
 
 df_list = os.listdir(df_path)
 
-ray.init()
+
+# ray.init()
 
 
 @ray.remote(num_cpus=20)
-def cal_slope_mom(stock, time_period=30):
+def cal_slope_mom(stock):
     df = pd.read_csv(os.path.join(df_path, stock))
     if len(df) < 100:
         return 0
@@ -106,17 +110,30 @@ def cal_slope_mom(stock, time_period=30):
     df["Day5Pct"] = df["Day5Pct"].shift(-5)
     df["ln_close"] = df["close"].apply(math.log)
 
-    x = np.array(range(time_period))
-    # print(x)
-    for index, row in df.iterrows():
-        if index < time_period - 1:
-            continue
-        y = np.array(df.loc[index - time_period + 1:index, "close"])
+    df["ma5"] = df["close"].rolling(5).mean()
+    df["ma10"] = df["close"].rolling(10).mean()
+    df["ma20"] = df["close"].rolling(20).mean()
+    df["ma30"] = df["close"].rolling(30).mean()
+    df["ma60"] = df["close"].rolling(60).mean()
 
-        slope, _, r_value, _, _ = stats.linregress(x, y)
-        mom = slope * r_value ** 2
-        df.loc[index, "slope_" + str(time_period)] = slope
-        df.loc[index, "mom_" + str(time_period)] = mom
+    df["ema12"] = talib.EMA(df["close"], timeperiod=12)
+    df["ema26"] = talib.EMA(df["close"], timeperiod=26)
+
+    df["MACD"] = df["ema12"] - df["ema26"]
+    df["DEA"] = talib.EMA(df["MACD"], timeperiod=9)
+
+    for time_period in [20, 30, 60, 90]:
+        x = np.array(range(time_period))
+        # print(x)
+        for index, row in df.iterrows():
+            if index < time_period - 1:
+                continue
+            y = np.array(df.loc[index - time_period + 1:index, "ln_close"])
+
+            slope, _, r_value, _, _ = stats.linregress(x, y)
+            mom = slope * r_value ** 2
+            df.loc[index, "slope_" + str(time_period)] = slope
+            df.loc[index, "mom_" + str(time_period)] = mom
 
     df.dropna(inplace=True)
     del df["adjustflag"]
@@ -125,9 +142,59 @@ def cal_slope_mom(stock, time_period=30):
     return 0
 
 
-# ray.init()
-# for stock in df_list:
-#     cal_slope_mom(stock)
-#     break
-futures = [cal_slope_mom.remote(stock) for stock in df_list]
-ray.get(futures)
+def cal_one_day_mom(_df, _time_period=30):
+    _df["ma60"] = _df["close"].rolling(60).mean()
+    _df = _df[-_time_period:].copy()
+    _df["ln_close"] = _df["close"].apply(math.log)
+    _df["gap"] = _df["low"] / _df["high"].shift(1) - 1
+    # _df["gap"] = _df["gap"]
+    _df["gap"] = _df["gap"].apply(lambda x: max(x, 0))
+    _df["long"] = _df["close"] > _df["ma60"]
+    _df.fillna(0, inplace=True)
+    x = np.array(range(_time_period))
+    y = np.array(_df["ln_close"])
+
+    slope, _, r_value, _, _ = stats.linregress(x, y)
+    mom = slope * r_value ** 2
+
+    gap_sum = sum(_df["gap"])
+    return slope, mom, gap_sum, _df.tail(1)["long"].item()
+
+
+# futures = [cal_slope_mom.remote(stock) for stock in df_list]
+# ray.get(futures)
+def one_day_choose():
+    df_path_ = "/root/adolf/dataset/stock/real_data/bs/pre_d"
+    df_list_ = os.listdir(df_path_)
+    result_ = {
+        "stock_name": [],
+        "slope": [],
+        "mom": [],
+        "gap_sum": [],
+        "long": []
+    }
+    for stock in df_list_:
+        df = pd.read_csv(os.path.join(df_path, stock))
+        if len(df) < 100:
+            continue
+        slope, mom, gap_sum, long = cal_one_day_mom(df)
+        result_["stock_name"].append(stock.replace(".csv", ""))
+        result_["slope"].append(slope)
+        result_["mom"].append(mom)
+        result_["gap_sum"].append(gap_sum)
+        result_["long"].append(long)
+
+    result = pd.DataFrame(result_)
+    result = result.sort_values(by="mom")
+    result = result[result["long"]]
+    result = result[result["gap_sum"] < 0.2]
+    today = datetime.date.today()
+    result.to_csv("/data3/stock_data/stock_data/real_data/bs/mom_choose/" + today.strftime("%y-%m-%d") + ".csv",
+                  index=False)
+    print(result)
+
+
+# one_day_choose()
+
+df = pd.read_csv("/data3/stock_data/stock_data/real_data/bs/mom_choose/21-06-16.csv")
+print(df.tail(20))
