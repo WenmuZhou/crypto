@@ -10,7 +10,8 @@ from trading.trade_strategy.turn_trade import TurnTrade
 auto_trade = TurnTrade()
 try:
     auto_trade.trading_main(
-        coin_list=["DOT", "KSM", "UNI", "CAKE", "BAKE", "FIL", "MATIC", "BCH", "LINK", "BAT", "LTC", "ETH", "DOGE"],
+        coin_list=["DOT", "KSM", "UNI", "CAKE", "BAKE", "FIL", "MATIC", "BCH", "LINK", "BAT", "LTC", "ETH", "DOGE",
+                   "BTC", "BNB", "ADA", "CHZ"],
         user="wxt",
         time_periods="4h",
         momentum_days=5)
@@ -18,7 +19,7 @@ except Exception as e:
     print(e)
     print("wxt bug")
 
-coin_list_ji = ["MATIC", "ANT", "OMG", "CHZ", "DOGE", "XLM", "CAKE", "ONT", "TLM", "BAKE", "ETC", "XTZ"]
+coin_list_ji = ["MATIC", "ANT", "OMG", "CHZ", "DOGE", "XLM", "CAKE", "ONT", "TLM", "BAKE", "ETC", "XTZ", "BCH", "LINK"]
 try:
     auto_trade.trading_main(
         coin_list=coin_list_ji,

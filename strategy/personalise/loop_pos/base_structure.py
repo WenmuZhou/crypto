@@ -122,10 +122,14 @@ class TradeStructure:
         eval_df["pct"] = (eval_df["sell_price"] / eval_df["buy_price"]) - 1
         eval_df['strategy_net'] = (1 + eval_df['pct']).cumprod()
         eval_df["pct_show"] = eval_df["pct"].apply(lambda x: format(x, '.2%'))
+
+        success_rate = len(eval_df[eval_df["pct"] > 0]) / len(eval_df)
+        odds = eval_df["pct"].mean()
+
         print(eval_df)
 
-        print("策略成功率:{:.2f}%".format(len(eval_df[eval_df["pct"] > 0]) / len(eval_df) * 100))
-        print("策略赔率:{:.2f}%".format(eval_df["pct"].mean() * 100))
+        print("策略成功率:{:.2f}%".format(success_rate * 100))
+        print("策略赔率:{:.2f}%".format(odds* 100))
 
     def __call__(self, show_buy_and_sell=False, analyze_positions=False, make_plot_param={}):
         self.cal_technical_index()
