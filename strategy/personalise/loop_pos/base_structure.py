@@ -8,6 +8,7 @@
 import pandas as pd
 import mplfinance as mpf
 import json
+import talib
 
 
 class TradeStructure:
@@ -49,12 +50,35 @@ class TradeStructure:
         # print(df)
         df['trade'] = ""
         # df = df[-200:]
-        df.reset_index(inplace=True)
+        # df.reset_index(drop=True,inplace=True)
         return df
 
+    def base_technical_index(self, ma_parm=(5, 10, 20), macd_parm=(12, 26, 9), kdj_parm=(9, 3)):
+        for ma in ma_parm:
+            self.data["MA" + str(ma)] = self.data["close"].rolling(ma).mean()
+        # 计算MACD指标
+        if macd_parm:
+            self.data['MACD'], self.data['MACDsignal'], self.data['MACDhist'] = talib.MACD(self.data.close,
+                                                                                           fastperiod=macd_parm[0],
+                                                                                           slowperiod=macd_parm[1],
+                                                                                           signalperiod=macd_parm[2])
+
+        # 计算KDJ指标
+        if kdj_parm:
+            self.data['slowk'], self.data['slowd'] = talib.STOCH(
+                self.data['high'].values,
+                self.data['low'].values,
+                self.data['close'].values,
+                fastk_period=kdj_parm[0],
+                slowk_period=kdj_parm[1],
+                slowk_matype=0,
+                slowd_period=kdj_parm[1],
+                slowd_matype=0)
+            # 求出J值，J = (3*K)-(2*D)
+            self.data['slowj'] = list(map(lambda x, y: 3 * x - 2 * y, self.data['slowk'], self.data['slowd']))
+
     def cal_technical_index(self):
-        self.data["MA5"] = self.data["close"].rolling(5).mean()
-        self.data['MA10'] = self.data["close"].rolling(10).mean()
+        pass
 
     def buy(self, buy_asset="stock", buy_price=1):
         self.position["pos_style"] = buy_asset
@@ -98,10 +122,14 @@ class TradeStructure:
         eval_df["pct"] = (eval_df["sell_price"] / eval_df["buy_price"]) - 1
         eval_df['strategy_net'] = (1 + eval_df['pct']).cumprod()
         eval_df["pct_show"] = eval_df["pct"].apply(lambda x: format(x, '.2%'))
+
+        success_rate = len(eval_df[eval_df["pct"] > 0]) / len(eval_df)
+        odds = eval_df["pct"].mean()
+
         print(eval_df)
 
-        print("策略成功率:{:.2f}%".format(len(eval_df[eval_df["pct"] > 0]) / len(eval_df) * 100))
-        print("策略赔率:{:.2f}%".format(eval_df["pct"].mean() * 100))
+        print("策略成功率:{:.2f}%".format(success_rate * 100))
+        print("策略赔率:{:.2f}%".format(odds* 100))
 
     def __call__(self, show_buy_and_sell=False, analyze_positions=False, make_plot_param={}):
         self.cal_technical_index()
