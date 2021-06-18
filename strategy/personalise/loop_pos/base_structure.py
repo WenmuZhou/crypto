@@ -42,7 +42,7 @@ class TradeStructure:
     def load_dataset(_data_path, start_stamp="", end_stamp=""):
         df = pd.read_csv(_data_path)
         try:
-            df = df[['date', 'open', 'close', 'high', 'low', 'volume']]
+            df = df[['date', 'open', 'close', 'high', 'low', 'volume', "amount", "turn"]]
         except Exception as e:
             print(e)
             df = df[['DATES', 'open', 'close', 'high', 'low', 'volume']]
@@ -117,7 +117,7 @@ class TradeStructure:
                 self.position["pos_price"] = row["close"]
                 self.position["value"] *= (1 + self.position["pos_price"] / self.position["pre_price"])
 
-    def eval_index(self):
+    def eval_index(self, print_log=False):
         eval_df = pd.DataFrame(self.pos_tracking)
         eval_df["pct"] = (eval_df["sell_price"] / eval_df["buy_price"]) - 1
         eval_df['strategy_net'] = (1 + eval_df['pct']).cumprod()
@@ -126,13 +126,17 @@ class TradeStructure:
         success_rate = len(eval_df[eval_df["pct"] > 0]) / len(eval_df)
         odds = eval_df["pct"].mean()
 
-        print(eval_df)
+        if print_log:
+            print(eval_df)
 
-        print("策略成功率:{:.2f}%".format(success_rate * 100))
-        print("策略赔率:{:.2f}%".format(odds* 100))
+            print("策略成功率:{:.2f}%".format(success_rate * 100))
+            print("策略赔率:{:.2f}%".format(odds * 100))
+        return success_rate, odds
 
-    def __call__(self, show_buy_and_sell=False, analyze_positions=False, make_plot_param={}):
+    def __call__(self, show_buy_and_sell=False, analyze_positions=False, print_log=False, make_plot_param={}):
         self.cal_technical_index()
+        if len(self.data) < 500 or self.data.value.tail(1).item() < 1e+10:
+            return None, None
         if show_buy_and_sell:
             res_list = []
             data_dict = {}
@@ -145,7 +149,8 @@ class TradeStructure:
             return json.dumps(res_list, indent=2, ensure_ascii=False)
         self.strategy_exec()
         if analyze_positions:
-            self.eval_index()
+            success_rate, odds = self.eval_index(print_log=print_log)
+            return success_rate, odds
 
         is_make_plot = make_plot_param.get("is_make_plot", False)
         if is_make_plot:

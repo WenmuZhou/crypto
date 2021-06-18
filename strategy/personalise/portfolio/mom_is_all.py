@@ -150,6 +150,10 @@ def cal_one_day_mom(_df, _time_period=30):
     # _df["gap"] = _df["gap"]
     _df["gap"] = _df["gap"].apply(lambda x: max(x, 0))
     _df["long"] = _df["close"] > _df["ma60"]
+
+    _df["value"] = _df["amount"] * 100 / _df["turn"]
+    # _df = _df[_df["value"] > 1e+10]
+
     _df.fillna(0, inplace=True)
     x = np.array(range(_time_period))
     y = np.array(_df["ln_close"])
@@ -158,7 +162,7 @@ def cal_one_day_mom(_df, _time_period=30):
     mom = slope * r_value ** 2
 
     gap_sum = sum(_df["gap"])
-    return slope, mom, gap_sum, _df.tail(1)["long"].item()
+    return slope, mom, gap_sum, _df.tail(1)["long"].item(), _df.tail(1)["value"].item()
 
 
 # futures = [cal_slope_mom.remote(stock) for stock in df_list]
@@ -171,23 +175,27 @@ def one_day_choose():
         "slope": [],
         "mom": [],
         "gap_sum": [],
-        "long": []
+        "long": [],
+        "value": []
     }
     for stock in df_list_:
         df = pd.read_csv(os.path.join(df_path, stock))
         if len(df) < 100:
             continue
-        slope, mom, gap_sum, long = cal_one_day_mom(df)
+        slope, mom, gap_sum, long, value = cal_one_day_mom(df)
         result_["stock_name"].append(stock.replace(".csv", ""))
         result_["slope"].append(slope)
         result_["mom"].append(mom)
         result_["gap_sum"].append(gap_sum)
         result_["long"].append(long)
+        result_["value"].append(value)
 
     result = pd.DataFrame(result_)
     result = result.sort_values(by="mom")
     result = result[result["long"]]
     result = result[result["gap_sum"] < 0.2]
+    result = result[result["value"] > 1e+10]
+
     today = datetime.date.today()
     result.to_csv("/data3/stock_data/stock_data/real_data/bs/mom_choose/" + today.strftime("%y-%m-%d") + ".csv",
                   index=False)
