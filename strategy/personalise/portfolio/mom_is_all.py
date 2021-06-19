@@ -92,12 +92,12 @@ def cal_mom(df):
 # result3 = [i[0] for i in result2]
 # print(result3[:100])
 
-df_path = "/root/adolf/dataset/stock/real_data/bs/post_d"
+df_path = "/root/adolf/dataset/stock/post_d"
 
 df_list = os.listdir(df_path)
 
 
-# ray.init()
+ray.init()
 
 
 @ray.remote(num_cpus=20)
@@ -108,6 +108,10 @@ def cal_slope_mom(stock):
     df["DayPct"] = df["close"] / df["open"] - 1
     df["Day5Pct"] = df["close"].pct_change(5)
     df["Day5Pct"] = df["Day5Pct"].shift(-5)
+
+    df["Day20Pct"] = df["close"].pct_change(20)
+    df["Day20Pct"] = df["Day5Pct"].shift(-20)
+
     df["ln_close"] = df["close"].apply(math.log)
 
     df["ma5"] = df["close"].rolling(5).mean()
@@ -138,9 +142,15 @@ def cal_slope_mom(stock):
     df.dropna(inplace=True)
     del df["adjustflag"]
     # print(df.head(100))
-    df.to_csv(os.path.join("/root/adolf/dataset/stock/handle_stock/mom", stock), index=False)
+    df.to_csv(os.path.join("/root/adolf/dataset/stock/handle_stock/mom_res", stock), index=False)
     return 0
 
+
+# cal_slope_mom(stock="sh.600570.csv")
+
+
+futures = [cal_slope_mom.remote(stock) for stock in df_list]
+ray.get(futures)
 
 def cal_one_day_mom(_df, _time_period=30):
     _df["ma60"] = _df["close"].rolling(60).mean()
@@ -165,8 +175,6 @@ def cal_one_day_mom(_df, _time_period=30):
     return slope, mom, gap_sum, _df.tail(1)["long"].item(), _df.tail(1)["value"].item()
 
 
-# futures = [cal_slope_mom.remote(stock) for stock in df_list]
-# ray.get(futures)
 def one_day_choose():
     df_path_ = "/root/adolf/dataset/stock/real_data/bs/pre_d"
     df_list_ = os.listdir(df_path_)
@@ -201,8 +209,7 @@ def one_day_choose():
                   index=False)
     print(result)
 
-
 # one_day_choose()
 
-df = pd.read_csv("/data3/stock_data/stock_data/real_data/bs/mom_choose/21-06-17.csv")
-print(df.tail(20))
+# df = pd.read_csv("/data3/stock_data/stock_data/real_data/bs/mom_choose/21-06-17.csv")
+# print(df.tail(20))

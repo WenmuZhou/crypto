@@ -6,7 +6,7 @@
 # @File     : parse_show_data.py
 # @Function  :
 import os
-from strategy.personalise.loop_pos.ma_wind import MaWind
+from strategy.personalise.loop_pos.strategy_lib.ma_wind import MaWind
 
 
 def parse_data(stock_id="600570", time_period="day", start_time="", end_time=""):

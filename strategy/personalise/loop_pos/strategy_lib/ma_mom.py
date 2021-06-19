@@ -5,11 +5,8 @@
 # @Author   : Adolf
 # @File     : ma_mom.py
 # @Function  :
-import pandas
-import talib
 import pandas as pd
-import numpy as np
-from strategy.personalise.loop_pos.base_structure import TradeStructure
+from strategy.personalise.loop_pos.strategy_srtucture.base_structure import TradeStructure
 
 pd.set_option("expand_frame_repr", False)
 pd.set_option("display.max_rows", 1000)
