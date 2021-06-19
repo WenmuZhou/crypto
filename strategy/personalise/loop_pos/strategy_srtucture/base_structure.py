@@ -95,7 +95,7 @@ class TradeStructure:
         self.position["value"] *= (1 + sell_price / self.position["pre_price"])
         self.position['value'] *= (1 - self.trade_rate)
 
-    def get_buy_sell_signal(self):
+    def get_buy_sell_signal(self, *args, **kwargs):
         self.data.loc[self.data["long"] == "True", "trade"] = "buy"
         self.data.loc[self.data["short"] == "True", "trade"] = "sell"
 
@@ -205,16 +205,17 @@ class TradeStructure:
         return result_eval
 
     def run_one_stock(self, data_path="", show_buy_and_sell=False, analyze_positions=True,
-                      print_log=False, make_plot_param={"is_make_plot": False}):
+                      print_log=False, make_plot_param={"is_make_plot": False},
+                      bs_signal_param={}):
         self.data = self.load_dataset(data_path)
         self.cal_technical_index()
-        self.get_buy_sell_signal()
-        # self.data.dropna(inplace=True)
+        self.data.dropna(inplace=True)
+        self.get_buy_sell_signal(**bs_signal_param)
         # print(self.data)
         # exit()
 
-        if len(self.data) < 500 or self.data.market_cap.tail(1).item() < 1e+10:
-            return None
+        # if len(self.data) < 500 or self.data.market_cap.tail(1).item() < 1e+10:
+        #     return None
 
         if show_buy_and_sell:
             res_list = []

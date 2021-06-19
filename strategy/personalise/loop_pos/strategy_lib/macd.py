@@ -9,6 +9,7 @@
 import pandas as pd
 from strategy.personalise.loop_pos.strategy_srtucture.base_structure import TradeStructure
 from strategy.personalise.loop_pos.utils.signal_point import up_cross, down_cross
+from strategy.personalise.loop_pos.utils.technical_indications import cal_atr
 
 pd.set_option("expand_frame_repr", False)
 pd.set_option("display.max_rows", 1000)
@@ -18,15 +19,21 @@ pd.set_option("display.max_rows", 1000)
 class MACD(TradeStructure):
     def cal_technical_index(self):
         self.base_technical_index(ma_parm=(5, 10, 20), macd_parm=(12, 26, 9), kdj_parm=(9, 3))
+        # print(self.data)
+        cal_atr(self.data)
 
         up_cross(self.data, "MACD", "MACDsignal", "long")
         down_cross(self.data, "MACD", "MACDsignal", "short")
 
         self.data = self.data[-500:]
 
-    def get_buy_sell_signal(self):
-        self.data.loc[self.data["long"] & (self.data["MACD"]/self.data["close"] > 0), "trade"] = "buy"
+    def get_buy_sell_signal(self, **kwargs):
+        self.data.loc[
+            self.data["long"] & (self.data["MACD"] / self.data["close"] > kwargs["macd_threshold"]), "trade"] = "buy"
         self.data.loc[self.data["short"], "trade"] = "sell"
+
+        # del self.data["long"], self.data["short"]
+        # self.data.dropna(inplace=True)
 
 
 if __name__ == '__main__':

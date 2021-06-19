@@ -15,8 +15,8 @@ def cal_vol_weight_ma(df, time_period=5):
 
 
 # 计算波动率的平均移动线
-def cal_atr(df, time_period=14):
-    pass
+def cal_atr(df, time_period=14, name="ATR"):
+    df[name] = talib.ATR(df.high.values, df.low.values, df.close.values, timeperiod=time_period)
 
 
 # 计算同花顺标注的多空点
