@@ -208,8 +208,10 @@ class TradeStructure:
                       print_log=False, make_plot_param={"is_make_plot": False}):
         self.data = self.load_dataset(data_path)
         self.cal_technical_index()
-        self.data.dropna(inplace=True)
         self.get_buy_sell_signal()
+        # self.data.dropna(inplace=True)
+        # print(self.data)
+        # exit()
 
         if len(self.data) < 500 or self.data.market_cap.tail(1).item() < 1e+10:
             return None

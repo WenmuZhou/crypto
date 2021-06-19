@@ -24,7 +24,6 @@ class SmaCross(TradeStructure):
 
         self.data = self.data[-2000:]
 
-
 if __name__ == '__main__':
     sc = SmaCross()
     # sc.cal_technical_index()
