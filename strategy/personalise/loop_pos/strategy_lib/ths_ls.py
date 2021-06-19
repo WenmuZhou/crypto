@@ -23,13 +23,9 @@ class TongHuaShunLongShort(TradeStructure):
         up_cross(self.data, "var2", "var4", "long")
         down_cross(self.data, "var2", "var4", "short")
 
-        self.data.loc[self.data["long"] == "True", "trade"] = "buy"
-        self.data.loc[self.data["short"] == "True", "trade"] = "sell"
         del self.data["var1"], self.data["var2"], self.data["var3_tmp"], self.data["var3"], self.data["var4"]
 
         self.data = self.data[-2000:]
-        # print(self.data)
-        # exit()
 
 
 if __name__ == '__main__':
