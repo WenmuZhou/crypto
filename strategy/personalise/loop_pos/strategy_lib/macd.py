@@ -22,11 +22,11 @@ class MACD(TradeStructure):
         up_cross(self.data, "MACD", "MACDsignal", "long")
         down_cross(self.data, "MACD", "MACDsignal", "short")
 
-        self.data = self.data[-2000:]
+        self.data = self.data[-500:]
 
     def get_buy_sell_signal(self):
-        self.data.loc[(self.data["long"] == "True") & (self.data["MACD"] > -8), "trade"] = "buy"
-        self.data.loc[self.data["short"] == "True", "trade"] = "sell"
+        self.data.loc[self.data["long"] & (self.data["MACD"]/self.data["close"] > 0), "trade"] = "buy"
+        self.data.loc[self.data["short"], "trade"] = "sell"
 
 
 if __name__ == '__main__':
