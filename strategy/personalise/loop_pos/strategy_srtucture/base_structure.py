@@ -200,10 +200,11 @@ class TradeStructure:
 
         return result_eval
 
-    def run_one_stock(self, data_path="", show_buy_and_sell=False, analyze_positions=False,
-                      print_log=False, make_plot_param={}):
+    def run_one_stock(self, data_path="", show_buy_and_sell=False, analyze_positions=True,
+                      print_log=False, make_plot_param={"is_make_plot": False}):
         self.data = self.load_dataset(data_path)
         self.cal_technical_index()
+        self.data.dropna(inplace=True)
 
         if len(self.data) < 500 or self.data.market_cap.tail(1).item() < 1e+10:
             return None
