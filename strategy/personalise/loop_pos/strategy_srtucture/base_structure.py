@@ -95,6 +95,10 @@ class TradeStructure:
         self.position["value"] *= (1 + sell_price / self.position["pre_price"])
         self.position['value'] *= (1 - self.trade_rate)
 
+    def get_buy_sell_signal(self):
+        self.data.loc[self.data["long"] == "True", "trade"] = "buy"
+        self.data.loc[self.data["short"] == "True", "trade"] = "sell"
+
     def strategy_exec(self):
         # self.data.to_csv("result/test_base.csv")
         asset_name = self.data.asset_name.unique()[0]
@@ -205,6 +209,7 @@ class TradeStructure:
         self.data = self.load_dataset(data_path)
         self.cal_technical_index()
         self.data.dropna(inplace=True)
+        self.get_buy_sell_signal()
 
         if len(self.data) < 500 or self.data.market_cap.tail(1).item() < 1e+10:
             return None

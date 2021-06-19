@@ -22,9 +22,6 @@ class SmaCross(TradeStructure):
         up_cross(self.data, "MA5", "MA10", "long")
         down_cross(self.data, "MA5", "MA10", "short")
 
-        self.data.loc[self.data["long"] == "True", "trade"] = "buy"
-        self.data.loc[self.data["short"] == "True", "trade"] = "sell"
-
         self.data = self.data[-2000:]
 
 
