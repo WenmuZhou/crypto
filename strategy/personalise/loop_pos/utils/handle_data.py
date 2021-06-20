@@ -20,7 +20,7 @@ for index, row in df.iterrows():
             if row[col] > best_odds:
                 best_odds = row[col]
                 best_odds_params = col.replace("macd_odds_", "")
-    df.loc[index,"best_odds_params"] = best_odds_params
+    df.loc[index, "best_odds_params"] = best_odds_params
 
 print(df)
 df.to_csv("result/macd_threshold_v2.csv")

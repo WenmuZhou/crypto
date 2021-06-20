@@ -27,8 +27,6 @@ class MACD(TradeStructure):
 
         self.data = self.data[-2000:]
 
-        self
-
     def get_buy_sell_signal(self, **kwargs):
         self.data.loc[
             self.data["long"] & (self.data["MACD"] / self.data["close"] > kwargs["macd_threshold"]), "trade"] = "buy"
