@@ -5,6 +5,9 @@
 # @Author   : Adolf
 # @File     : base_structure.py
 # @Function  :
+from functools import reduce
+import random
+
 import pandas as pd
 import mplfinance as mpf
 import json
@@ -32,7 +35,7 @@ class TradeStructure:
             "is_turn": False}
 
     @staticmethod
-    def init_one_pos_record(asset_name):
+    def init_one_pos_record(asset_name="empty"):
         return {"pos_asset": asset_name,
                 "buy_date": "",
                 "buy_price": 1,
@@ -103,6 +106,8 @@ class TradeStructure:
     def strategy_exec(self):
         # self.data.to_csv("result/test_base.csv")
         self.pos_tracking = []
+        self.position = self.init_position()
+
         asset_name = self.data.asset_name.unique()[0]
         one_pos_record = self.init_one_pos_record(asset_name=asset_name)
         for index, row in self.data.iterrows():
@@ -128,6 +133,34 @@ class TradeStructure:
                 self.position["pos_price"] = row["close"]
                 self.position["value"] *= (1 + self.position["pos_price"] / self.position["pre_price"])
 
+    def turn_strategy_exec(self, data):
+        self.pos_tracking = []
+        one_pos_record = self.init_one_pos_record()
+
+        df_col = data.columns.to_list()
+
+        for index, row in data.iterrows():
+            pos_asset = one_pos_record["pos_asset"]
+            if pos_asset == "empty":
+                buy_pool = []
+                for col in df_col:
+                    if "_trade" in col and row[col] == "buy":
+                        buy_pool.append(col.replace("_trade", ""))
+                # print(buy_pool)
+                if len(buy_pool) == 0:
+                    continue
+                buy_asset = random.choice(buy_pool)
+                one_pos_record["pos_asset"] = buy_asset
+                one_pos_record["buy_date"] = row["date"]
+                one_pos_record["buy_price"] = row[buy_asset+"_close"]
+                one_pos_record["holding_time"] = -index
+            elif row[pos_asset+"_trade"] == "sell":
+                one_pos_record["sell_date"] = row["date"]
+                one_pos_record["sell_price"] = row[pos_asset+"_close"]
+                one_pos_record["holding_time"] += index
+                self.pos_tracking.append(one_pos_record.copy())
+                one_pos_record = self.init_one_pos_record()
+
     @staticmethod
     def cal_max_down(df, pct_name="strategy_net", time_stamp="date"):
         res_df = df.copy()
@@ -144,7 +177,7 @@ class TradeStructure:
 
     def eval_index(self, print_log=False):
         eval_df = pd.DataFrame(self.pos_tracking)
-        eval_df["pct"] = (eval_df["sell_price"] / eval_df["buy_price"]) - 1
+        eval_df["pct"] = (eval_df["sell_price"] / (eval_df["buy_price"]*(1+self.trade_rate))) - 1
         eval_df['strategy_net'] = (1 + eval_df['pct']).cumprod()
         eval_df["pct_show"] = eval_df["pct"].apply(lambda x: format(x, '.2%'))
 
@@ -206,9 +239,20 @@ class TradeStructure:
 
         return result_eval
 
+    def eval_turn_strategy(self, print_log=False):
+        eval_df = pd.DataFrame(self.pos_tracking)
+        eval_df["pct"] = (eval_df["sell_price"] / eval_df["buy_price"]*(1+self.trade_rate)) - 1
+        eval_df['strategy_net'] = (1 + eval_df['pct']).cumprod()
+        eval_df["pct_show"] = eval_df["pct"].apply(lambda x: format(x, '.2%'))
+
+        if print_log:
+            print(eval_df)
+
+        # return result_eval
+
     def run_one_stock(self, data_path="", show_buy_and_sell=False, analyze_positions=True,
                       print_log=False, make_plot_param={"is_make_plot": False},
-                      bs_signal_param={}):
+                      bs_signal_param={}, exec_strategy=True):
         self.data = self.load_dataset(data_path)
         self.cal_technical_index()
         self.data.dropna(inplace=True)
@@ -229,6 +273,8 @@ class TradeStructure:
                     data_dict[item] = row[item]
                 res_list.append(data_dict.copy())
             return json.dumps(res_list, indent=2, ensure_ascii=False)
+        if not exec_strategy:
+            return self.data
         self.strategy_exec()
         if analyze_positions:
             return self.eval_index(print_log=print_log)
@@ -270,7 +316,8 @@ class TradeStructure:
             if limit_list is not None:
                 if data_csv.replace(".csv", "").replace("sh.", "").replace("sz.", "") not in limit_list:
                     continue
-            result_eval = self.run_one_stock(data_path=os.path.join(data_dir, data_csv), **kwargs)
+            result_eval = self.run_one_stock(data_path=os.path.join(data_dir, data_csv),
+                                             analyze_positions=False, **kwargs)
             if result_eval is not None:
                 result_["stock_id"].append(data_csv.replace("csv", ""))
 
@@ -296,3 +343,33 @@ class TradeStructure:
 
         result = pd.DataFrame(result_)
         result.to_csv(save_result_path, index=False)
+
+    def turn_asset_market(self, data_dir="", save_result_path="", limit_list=None, **kwargs):
+        data_list = os.listdir(data_dir)
+
+        df_list = []
+        turn_list = []
+        for data_csv in data_list:
+            if limit_list is not None:
+                if data_csv.replace(".csv", "").replace("sh.", "").replace("sz.", "") not in limit_list:
+                    continue
+
+            data = self.run_one_stock(data_path=os.path.join(data_dir, data_csv), exec_strategy=False, **kwargs)
+            data = data[["date", "close", "trade"]].copy()
+            data.rename(columns={'close': data_csv.replace(".csv", "") + '_close',
+                                 'trade': data_csv.replace(".csv", "") + '_trade'}, inplace=True)
+
+            turn_list.append(data_csv.replace(".csv", ""))
+            df_list.append(data)
+
+        df_merged = reduce(lambda left, right: pd.merge(left, right, on=['date'],
+                                                        how='outer'), df_list)
+
+        df_merged.sort_values(by=['date'], inplace=True)
+        df_merged = df_merged[-1000:]
+        # print(df_merged)
+        df_merged.to_csv("result/tmp.csv", index=False)
+        # exit()
+
+        self.turn_strategy_exec(df_merged)
+        self.eval_turn_strategy(print_log=True)
