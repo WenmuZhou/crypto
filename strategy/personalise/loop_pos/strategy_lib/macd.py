@@ -25,10 +25,8 @@ class MACD(TradeStructure):
         up_cross(self.data, "MACD", "MACDsignal", "long")
         down_cross(self.data, "MACD", "MACDsignal", "short")
 
-        self.data = self.data[-1000:]
         get_current_pos(self.data)
-        print(self.data)
-        exit()
+        self.data = self.data[-1000:]
 
     def get_buy_sell_signal(self, **kwargs):
         self.data.loc[
