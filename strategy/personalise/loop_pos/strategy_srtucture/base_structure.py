@@ -101,6 +101,7 @@ class TradeStructure:
 
     def strategy_exec(self):
         # self.data.to_csv("result/test_base.csv")
+        self.pos_tracking = []
         asset_name = self.data.asset_name.unique()[0]
         one_pos_record = self.init_one_pos_record(asset_name=asset_name)
         for index, row in self.data.iterrows():

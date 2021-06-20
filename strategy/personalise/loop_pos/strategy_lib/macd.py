@@ -25,7 +25,7 @@ class MACD(TradeStructure):
         up_cross(self.data, "MACD", "MACDsignal", "long")
         down_cross(self.data, "MACD", "MACDsignal", "short")
 
-        self.data = self.data[-500:]
+        self.data = self.data[-2000:]
 
     def get_buy_sell_signal(self, **kwargs):
         self.data.loc[
@@ -41,7 +41,8 @@ if __name__ == '__main__':
     # sc.cal_technical_index()
     macd.run_one_stock(data_path="/data3/stock_data/stock_data/real_data/bs/post_d/sh.600570.csv",
                        analyze_positions=True,
-                       print_log=True)
+                       print_log=True,
+                       bs_signal_param={"macd_threshold": -0.01})
 
     # stock_list = []
     # with open("strategy/personalise/portfolio/stock_pooling.md", 'r') as f:
