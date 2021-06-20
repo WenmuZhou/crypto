@@ -29,7 +29,7 @@ class TongHuaShunLongShort(TradeStructure):
 if __name__ == '__main__':
     ths_ls = TongHuaShunLongShort()
     # mawind.cal_technical_index()
-    ths_ls.run_one_stock(data_path="dataset/stock/day/600570_post.csv",
+    ths_ls.run_one_stock(data_path="/data3/stock_data/stock_data/real_data/bs/post_d/sh.600570.csv",
                          analyze_positions=True,
                          print_log=True)
 
