@@ -368,7 +368,7 @@ class TradeStructure:
         df_merged.sort_values(by=['date'], inplace=True)
         df_merged = df_merged[-1000:]
         # print(df_merged)
-        df_merged.to_csv("result/tmp.csv", index=False)
+        # df_merged.to_csv("result/tmp.csv", index=False)
         # exit()
 
         self.turn_strategy_exec(df_merged)
