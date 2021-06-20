@@ -105,6 +105,8 @@ class TradeStructure:
 
     def strategy_exec(self):
         # self.data.to_csv("result/test_base.csv")
+        if len(self.position) == 0:
+            return None
         self.pos_tracking = []
         self.position = self.init_position()
 
