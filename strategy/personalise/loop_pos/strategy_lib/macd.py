@@ -8,7 +8,7 @@
 
 import pandas as pd
 from strategy.personalise.loop_pos.strategy_srtucture.base_structure import TradeStructure
-from strategy.personalise.loop_pos.utils.signal_point import up_cross, down_cross,get_current_pos
+from strategy.personalise.loop_pos.utils.signal_point import up_cross, down_cross, get_current_pos
 from strategy.personalise.loop_pos.utils.technical_indications import cal_atr
 
 pd.set_option("expand_frame_repr", False)
@@ -25,7 +25,7 @@ class MACD(TradeStructure):
         up_cross(self.data, "MACD", "MACDsignal", "long")
         down_cross(self.data, "MACD", "MACDsignal", "short")
 
-        get_current_pos(self.data)
+        # get_current_pos(self.data)
         self.data = self.data[-1000:]
 
     def get_buy_sell_signal(self, **kwargs):

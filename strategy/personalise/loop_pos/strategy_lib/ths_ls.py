@@ -23,23 +23,21 @@ class TongHuaShunLongShort(TradeStructure):
         up_cross(self.data, "var2", "var4", "long")
         down_cross(self.data, "var2", "var4", "short")
 
-        del self.data["var1"], self.data["var2"], self.data["var3_tmp"], self.data["var3"], self.data["var4"]
-
         self.data = self.data[-2000:]
 
 
 if __name__ == '__main__':
     ths_ls = TongHuaShunLongShort()
     # mawind.cal_technical_index()
-    # ths_ls.run_one_stock(data_path="dataset/stock/day/600570_post.csv",
-    #                      analyze_positions=True,
-    #                      print_log=True)
+    ths_ls.run_one_stock(data_path="dataset/stock/day/600570_post.csv",
+                         analyze_positions=True,
+                         print_log=True)
 
-    stock_list = []
-    with open("strategy/personalise/portfolio/stock_pooling.md", 'r') as f:
-        for line in f.readlines():
-            stock_id = line.strip().split(",")[1].replace(";", "")
-            stock_list.append(stock_id)
-    ths_ls.run_all_market(data_dir="/data3/stock_data/stock_data/real_data/bs/post_d",
-                          limit_list=stock_list,
-                          save_result_path="result/ths_test.csv")
+    # stock_list = []
+    # with open("strategy/personalise/portfolio/stock_pooling.md", 'r') as f:
+    #     for line in f.readlines():
+    #         stock_id = line.strip().split(",")[1].replace(";", "")
+    #         stock_list.append(stock_id)
+    # ths_ls.run_all_market(data_dir="/data3/stock_data/stock_data/real_data/bs/post_d",
+    #                       limit_list=stock_list,
+    #                       save_result_path="result/ths_test.csv")

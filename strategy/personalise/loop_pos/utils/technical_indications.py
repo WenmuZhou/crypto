@@ -29,3 +29,6 @@ def cal_ths_ls(df):
     df["var3"] = 100 - df.var3_tmp.rolling(34).mean()
 
     df["var4"] = df.var3.rolling(6).mean()
+
+    del df["var1"], df["var3_tmp"], df["var3"]
+

@@ -10,6 +10,7 @@ import mplfinance as mpf
 import json
 import talib
 import os
+import ray
 
 
 class TradeStructure:
@@ -96,8 +97,8 @@ class TradeStructure:
         self.position['value'] *= (1 - self.trade_rate)
 
     def get_buy_sell_signal(self, *args, **kwargs):
-        self.data.loc[self.data["long"] == "True", "trade"] = "buy"
-        self.data.loc[self.data["short"] == "True", "trade"] = "sell"
+        self.data.loc[self.data["long"], "trade"] = "buy"
+        self.data.loc[self.data["short"], "trade"] = "sell"
 
     def strategy_exec(self):
         # self.data.to_csv("result/test_base.csv")
@@ -244,6 +245,7 @@ class TradeStructure:
                      addplot=add_plot)
 
     def run_all_market(self, data_dir="", save_result_path="", limit_list=None, **kwargs):
+        # ray.init()
         # data_dir = "/data3/stock_data/stock_data/real_data/bs/post_d/"
         data_list = os.listdir(data_dir)
         result_ = {
