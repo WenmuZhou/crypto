@@ -18,7 +18,7 @@ pd.set_option("display.max_rows", 1000)
 # 使用MACD来获取股票的买卖点
 class MACD(TradeStructure):
     def cal_technical_index(self):
-        self.base_technical_index(ma_parm=(5, 10, 20), macd_parm=(12, 26, 9), kdj_parm=(9, 3))
+        self.base_technical_index(ma_parm=(10, 20,60), macd_parm=(12, 26, 9), kdj_parm=(9, 3))
         # print(self.data)
         cal_atr(self.data)
 
@@ -30,7 +30,10 @@ class MACD(TradeStructure):
 
     def get_buy_sell_signal(self, **kwargs):
         self.data.loc[
-            self.data["long"] & (self.data["MACD"] / self.data["close"] > kwargs["macd_threshold"]), "trade"] = "buy"
+            self.data["long"]
+            & (self.data["MACD"] / self.data["close"] > kwargs["macd_threshold"])
+            & ((self.data["close"] / self.data["MA60"]) > kwargs["MA_threshold"])
+        ,"trade"] = "buy"
         self.data.loc[self.data["short"], "trade"] = "sell"
 
         # del self.data["long"], self.data["short"]
@@ -40,10 +43,10 @@ class MACD(TradeStructure):
 if __name__ == '__main__':
     macd = MACD()
     # sc.cal_technical_index()
-    macd.run_one_stock(data_path="/data3/stock_data/stock_data/real_data/bs/post_d/sh.600570.csv",
+    macd.run_one_stock(data_path="/data3/stock_data/stock_data/real_data/bs/post_d/sh.600036.csv",
                        analyze_positions=True,
                        print_log=True,
-                       bs_signal_param={"macd_threshold": -0.01})
+                       bs_signal_param={"macd_threshold": -0.01, "MA_threshold": 0.95})
 
     # stock_list = []
     # with open("strategy/personalise/portfolio/stock_pooling.md", 'r') as f:
