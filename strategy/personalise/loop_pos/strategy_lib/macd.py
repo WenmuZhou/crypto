@@ -8,14 +8,14 @@
 
 import pandas as pd
 from strategy.personalise.loop_pos.strategy_srtucture.base_structure import TradeStructure
-from strategy.personalise.loop_pos.utils.signal_point import up_cross, down_cross
+from strategy.personalise.loop_pos.utils.signal_point import up_cross, down_cross,get_current_pos
 from strategy.personalise.loop_pos.utils.technical_indications import cal_atr
 
 pd.set_option("expand_frame_repr", False)
 pd.set_option("display.max_rows", 1000)
 
 
-# 使用5日均线和10日均线交叉进行买卖
+# 使用MACD来获取股票的买卖点
 class MACD(TradeStructure):
     def cal_technical_index(self):
         self.base_technical_index(ma_parm=(5, 10, 20), macd_parm=(12, 26, 9), kdj_parm=(9, 3))
@@ -25,7 +25,10 @@ class MACD(TradeStructure):
         up_cross(self.data, "MACD", "MACDsignal", "long")
         down_cross(self.data, "MACD", "MACDsignal", "short")
 
-        self.data = self.data[-2000:]
+        self.data = self.data[-1000:]
+        get_current_pos(self.data)
+        print(self.data)
+        exit()
 
     def get_buy_sell_signal(self, **kwargs):
         self.data.loc[
