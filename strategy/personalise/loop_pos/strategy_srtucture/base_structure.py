@@ -318,8 +318,7 @@ class TradeStructure:
             if limit_list is not None:
                 if data_csv.replace(".csv", "").replace("sh.", "").replace("sz.", "") not in limit_list:
                     continue
-            result_eval = self.run_one_stock(data_path=os.path.join(data_dir, data_csv),
-                                             analyze_positions=False, **kwargs)
+            result_eval = self.run_one_stock(data_path=os.path.join(data_dir, data_csv), **kwargs)
             if result_eval is not None:
                 result_["stock_id"].append(data_csv.replace("csv", ""))
 

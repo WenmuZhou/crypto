@@ -18,6 +18,8 @@ import ray
 
 import datetime
 
+from tqdm import tqdm
+
 pd.set_option("expand_frame_repr", False)
 pd.set_option("display.max_rows", 1000)
 
@@ -96,15 +98,27 @@ df_path = "/root/adolf/dataset/stock/post_d"
 
 df_list = os.listdir(df_path)
 
-
 ray.init()
 
 
 @ray.remote(num_cpus=20)
 def cal_slope_mom(stock):
     df = pd.read_csv(os.path.join(df_path, stock))
-    if len(df) < 100:
+    # if os.path.exists(os.path.join("/root/adolf/dataset/stock/handle_stock/mom_res", stock)):
+    #     print(stock)
+    #     return 0
+
+    if len(df) < 120:
         return 0
+    df["gap"] = df["low"] / df["high"].shift(1) - 1
+    # _df["gap"] = _df["gap"]
+    df["gap"] = df["gap"].apply(lambda x: max(x, 0))
+
+    df["Day20Gap"] = df["gap"].rolling(20).sum()
+    df["Day30Gap"] = df["gap"].rolling(30).sum()
+    df["Day60Gap"] = df["gap"].rolling(60).sum()
+    df["Day90Gap"] = df["gap"].rolling(90).sum()
+
     df["DayPct"] = df["close"] / df["open"] - 1
     df["Day5Pct"] = df["close"].pct_change(5)
     df["Day5Pct"] = df["Day5Pct"].shift(-5)
@@ -119,6 +133,7 @@ def cal_slope_mom(stock):
     df["ma20"] = df["close"].rolling(20).mean()
     df["ma30"] = df["close"].rolling(30).mean()
     df["ma60"] = df["close"].rolling(60).mean()
+    df["ma250"] = df["close"].rolling(60).mean()
 
     df["ema12"] = talib.EMA(df["close"], timeperiod=12)
     df["ema26"] = talib.EMA(df["close"], timeperiod=26)
@@ -149,8 +164,9 @@ def cal_slope_mom(stock):
 # cal_slope_mom(stock="sh.600570.csv")
 
 
-futures = [cal_slope_mom.remote(stock) for stock in df_list]
+futures = [cal_slope_mom.remote(stock) for stock in tqdm(df_list)]
 ray.get(futures)
+
 
 def cal_one_day_mom(_df, _time_period=30):
     _df["ma60"] = _df["close"].rolling(60).mean()
@@ -176,7 +192,7 @@ def cal_one_day_mom(_df, _time_period=30):
 
 
 def one_day_choose():
-    df_path_ = "/root/adolf/dataset/stock/real_data/bs/pre_d"
+    df_path_ = "/data3/stock_data/stock_data/real_data/bs/pre_d"
     df_list_ = os.listdir(df_path_)
     result_ = {
         "stock_name": [],
@@ -207,7 +223,7 @@ def one_day_choose():
     today = datetime.date.today()
     result.to_csv("/data3/stock_data/stock_data/real_data/bs/mom_choose/" + today.strftime("%y-%m-%d") + ".csv",
                   index=False)
-    print(result)
+    print(result.tail(20))
 
 # one_day_choose()
 
