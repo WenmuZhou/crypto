@@ -98,10 +98,11 @@ df_path = "/root/adolf/dataset/stock/post_d"
 
 df_list = os.listdir(df_path)
 
-ray.init()
+
+# ray.init()
 
 
-@ray.remote(num_cpus=20)
+# @ray.remote(num_cpus=20)
 def cal_slope_mom(stock):
     df = pd.read_csv(os.path.join(df_path, stock))
     # if os.path.exists(os.path.join("/root/adolf/dataset/stock/handle_stock/mom_res", stock)):
@@ -164,8 +165,8 @@ def cal_slope_mom(stock):
 # cal_slope_mom(stock="sh.600570.csv")
 
 
-futures = [cal_slope_mom.remote(stock) for stock in tqdm(df_list)]
-ray.get(futures)
+# futures = [cal_slope_mom.remote(stock) for stock in tqdm(df_list)]
+# ray.get(futures)
 
 
 def cal_one_day_mom(_df, _time_period=30):
@@ -203,10 +204,15 @@ def one_day_choose():
         "value": []
     }
     for stock in df_list_:
-        df = pd.read_csv(os.path.join(df_path, stock))
+        # print(stock)
+        try:
+            df = pd.read_csv(os.path.join(df_path_, stock))
+        except Exception as e:
+            print(e)
+            print(stock)
         if len(df) < 100:
             continue
-        slope, mom, gap_sum, long, value = cal_one_day_mom(df)
+        slope, mom, gap_sum, long, value = cal_one_day_mom(df, _time_period=20)
         result_["stock_name"].append(stock.replace(".csv", ""))
         result_["slope"].append(slope)
         result_["mom"].append(mom)
@@ -225,7 +231,8 @@ def one_day_choose():
                   index=False)
     print(result.tail(20))
 
-# one_day_choose()
+
+one_day_choose()
 
 # df = pd.read_csv("/data3/stock_data/stock_data/real_data/bs/mom_choose/21-06-17.csv")
 # print(df.tail(20))

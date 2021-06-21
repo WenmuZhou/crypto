@@ -20,7 +20,7 @@ class TradeStructure:
     def __init__(self):
         self.position = self.init_position()
         # self.data = self.load_dataset(data_path)
-        self.trade_rate = 1 / 1000
+        self.trade_rate = 0 / 1000
         self.pos_tracking = []
 
     @staticmethod
@@ -318,7 +318,8 @@ class TradeStructure:
             if limit_list is not None:
                 if data_csv.replace(".csv", "").replace("sh.", "").replace("sz.", "") not in limit_list:
                     continue
-            result_eval = self.run_one_stock(data_path=os.path.join(data_dir, data_csv), **kwargs)
+            result_eval = self.run_one_stock(data_path=os.path.join(data_dir, data_csv),
+                                             analyze_positions=False, **kwargs)
             if result_eval is not None:
                 result_["stock_id"].append(data_csv.replace("csv", ""))
 

@@ -57,29 +57,30 @@ def analysis_day():
         df2 = df2[df2["close"] > df2["ma30"]]
 
         result["date"] = one_date
+        choose_num = 5
         df2.sort_values(by="mom_30", inplace=True)
 
-        result["mom30_day_pct"] = df2.tail(10)["DayPct"].mean()
-        result["mom30_5day_pct"] = df2.tail(10)["Day5Pct"].mean()
-        result["mom30_20day_pct"] = df2.tail(10)["Day20Pct"].mean()
+        result["mom30_day_pct"] = df2.tail(choose_num)["DayPct"].mean()
+        result["mom30_5day_pct"] = df2.tail(choose_num)["Day5Pct"].mean()
+        result["mom30_20day_pct"] = df2.tail(choose_num)["Day20Pct"].mean()
 
         df2.sort_values(by="mom_20", inplace=True)
 
-        result["mom20_day_pct"] = df2.tail(10)["DayPct"].mean()
-        result["mom20_5day_pct"] = df2.tail(10)["Day5Pct"].mean()
-        result["mom20_20day_pct"] = df2.tail(10)["Day20Pct"].mean()
+        result["mom20_day_pct"] = df2.tail(choose_num)["DayPct"].mean()
+        result["mom20_5day_pct"] = df2.tail(choose_num)["Day5Pct"].mean()
+        result["mom20_20day_pct"] = df2.tail(choose_num)["Day20Pct"].mean()
 
         df2.sort_values(by="mom_60", inplace=True)
 
-        result["mom60_day_pct"] = df2.tail(10)["DayPct"].mean()
-        result["mom60_5day_pct"] = df2.tail(10)["Day5Pct"].mean()
-        result["mom60_20day_pct"] = df2.tail(10)["Day20Pct"].mean()
+        result["mom60_day_pct"] = df2.tail(choose_num)["DayPct"].mean()
+        result["mom60_5day_pct"] = df2.tail(choose_num)["Day5Pct"].mean()
+        result["mom60_20day_pct"] = df2.tail(choose_num)["Day20Pct"].mean()
 
         df2.sort_values(by="mom_90", inplace=True)
 
-        result["mom90_day_pct"] = df2.tail(10)["DayPct"].mean()
-        result["mom90_5day_pct"] = df2.tail(10)["Day5Pct"].mean()
-        result["mom90_20day_pct"] = df2.tail(10)["Day20Pct"].mean()
+        result["mom90_day_pct"] = df2.tail(choose_num)["DayPct"].mean()
+        result["mom90_5day_pct"] = df2.tail(choose_num)["Day5Pct"].mean()
+        result["mom90_20day_pct"] = df2.tail(choose_num)["Day20Pct"].mean()
 
         result_list.append(result.copy())
 
@@ -91,11 +92,11 @@ def analysis_day():
     df.to_csv("dataset/stock/mom_analysis.csv", index=False)
 
 
-# analysis_day()
+analysis_day()
 # #
 df = pd.read_csv("dataset/stock/mom_analysis.csv")
 # # print(df)
-print(df.describe())
+# print(df.describe())
 # # df.sort_values()
 df_index = pd.read_csv("/data3/stock_data/stock_data/real_data/index/hu_shen_300.csv")
 df_index["ma60"] = df_index["close"].rolling(60).mean()
