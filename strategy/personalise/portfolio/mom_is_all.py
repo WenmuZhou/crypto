@@ -234,5 +234,5 @@ def one_day_choose():
 
 one_day_choose()
 
-# df = pd.read_csv("/data3/stock_data/stock_data/real_data/bs/mom_choose/21-06-17.csv")
-# print(df.tail(20))
+df = pd.read_csv("/data3/stock_data/stock_data/real_data/bs/mom_choose/" + today.strftime("%y-%m-%d") + ".csv")
+print(df.tail(20))

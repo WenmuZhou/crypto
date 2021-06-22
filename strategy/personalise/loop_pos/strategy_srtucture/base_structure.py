@@ -154,11 +154,11 @@ class TradeStructure:
                 buy_asset = random.choice(buy_pool)
                 one_pos_record["pos_asset"] = buy_asset
                 one_pos_record["buy_date"] = row["date"]
-                one_pos_record["buy_price"] = row[buy_asset+"_close"]
+                one_pos_record["buy_price"] = row[buy_asset + "_close"]
                 one_pos_record["holding_time"] = -index
-            elif row[pos_asset+"_trade"] == "sell":
+            elif row[pos_asset + "_trade"] == "sell":
                 one_pos_record["sell_date"] = row["date"]
-                one_pos_record["sell_price"] = row[pos_asset+"_close"]
+                one_pos_record["sell_price"] = row[pos_asset + "_close"]
                 one_pos_record["holding_time"] += index
                 self.pos_tracking.append(one_pos_record.copy())
                 one_pos_record = self.init_one_pos_record()
@@ -177,9 +177,10 @@ class TradeStructure:
         res_df.drop(['max2here', 'dd2here'], axis=1, inplace=True)
         return max_draw_down, start_date, end_date
 
+    # TODO 手续费交易部分需要优化
     def eval_index(self, print_log=False):
         eval_df = pd.DataFrame(self.pos_tracking)
-        eval_df["pct"] = (eval_df["sell_price"] / (eval_df["buy_price"]*(1+self.trade_rate))) - 1
+        eval_df["pct"] = (eval_df["sell_price"] / (eval_df["buy_price"] * (1 + self.trade_rate))) - 1
         eval_df['strategy_net'] = (1 + eval_df['pct']).cumprod()
         eval_df["pct_show"] = eval_df["pct"].apply(lambda x: format(x, '.2%'))
 
@@ -243,7 +244,7 @@ class TradeStructure:
 
     def eval_turn_strategy(self, print_log=False):
         eval_df = pd.DataFrame(self.pos_tracking)
-        eval_df["pct"] = (eval_df["sell_price"] / eval_df["buy_price"]*(1+self.trade_rate)) - 1
+        eval_df["pct"] = (eval_df["sell_price"] / eval_df["buy_price"] * (1 + self.trade_rate)) - 1
         eval_df['strategy_net'] = (1 + eval_df['pct']).cumprod()
         eval_df["pct_show"] = eval_df["pct"].apply(lambda x: format(x, '.2%'))
 
