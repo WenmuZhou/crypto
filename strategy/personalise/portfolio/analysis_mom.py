@@ -9,9 +9,10 @@ import os.path
 from tqdm import tqdm
 
 import pandas as pd
-
+# import ray
 # import modin.pandas as pd
 
+# ray.init()
 pd.set_option("expand_frame_repr", False)
 pd.set_option("display.max_rows", 1000)
 
@@ -37,7 +38,7 @@ def merge_mom_data():
     df_concat.to_csv("/root/adolf/dataset/stock/handle_stock/mom_pool.csv", index=False)
 
 
-# merge_mom_data()
+merge_mom_data()
 # df = pd.read_csv("/root/adolf/dataset/stock/handle_stock/mom_pool.csv")
 # df = df[df["date"] > "2016-06-07"]
 # df.to_csv("/root/adolf/dataset/stock/handle_stock/mom_pool_2016_06_08-2021_06_21.csv", index=False)
@@ -92,22 +93,22 @@ def analysis_day():
     df.to_csv("dataset/stock/mom_analysis.csv", index=False)
 
 
-analysis_day()
+# analysis_day()
 # #
-df = pd.read_csv("dataset/stock/mom_analysis.csv")
-# # print(df)
-# print(df.describe())
-# # df.sort_values()
-df_index = pd.read_csv("/data3/stock_data/stock_data/real_data/index/hu_shen_300.csv")
-df_index["ma60"] = df_index["close"].rolling(60).mean()
-#
-df_index = df_index[df_index["date"] > "2016-06-07"]
-df_index["niu"] = df_index["close"] > df_index["ma60"]
-df_index = df_index[["date", "niu"]]
+# df = pd.read_csv("dataset/stock/mom_analysis.csv")
+# # # print(df)
+# # print(df.describe())
+# # # df.sort_values()
+# df_index = pd.read_csv("/data3/stock_data/stock_data/real_data/index/hu_shen_300.csv")
+# df_index["ma60"] = df_index["close"].rolling(60).mean()
 # #
-result = pd.merge(df, df_index, on=["date"])
-# # print(result)
-# #
-result2 = result[result["niu"]]
-# # print(result2)
-print(result2.describe())
+# df_index = df_index[df_index["date"] > "2016-06-07"]
+# df_index["niu"] = df_index["close"] > df_index["ma60"]
+# df_index = df_index[["date", "niu"]]
+# # #
+# result = pd.merge(df, df_index, on=["date"])
+# # # print(result)
+# # #
+# result2 = result[result["niu"]]
+# # # print(result2)
+# print(result2.describe())

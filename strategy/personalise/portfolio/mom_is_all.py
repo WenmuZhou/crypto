@@ -98,11 +98,10 @@ df_path = "/root/adolf/dataset/stock/post_d"
 
 df_list = os.listdir(df_path)
 
+ray.init()
 
-# ray.init()
 
-
-# @ray.remote(num_cpus=20)
+@ray.remote(num_cpus=20)
 def cal_slope_mom(stock):
     df = pd.read_csv(os.path.join(df_path, stock))
     # if os.path.exists(os.path.join("/root/adolf/dataset/stock/handle_stock/mom_res", stock)):
@@ -120,7 +119,10 @@ def cal_slope_mom(stock):
     df["Day60Gap"] = df["gap"].rolling(60).sum()
     df["Day90Gap"] = df["gap"].rolling(90).sum()
 
-    df["DayPct"] = df["close"] / df["open"] - 1
+    # df["DayPct"] = df["close"] / df["open"] - 1
+    df["DayPct"] = df["close"].pct_change(1)
+    df["DayPct"] = df["DayPct"].shift(-1)
+
     df["Day5Pct"] = df["close"].pct_change(5)
     df["Day5Pct"] = df["Day5Pct"].shift(-5)
 
@@ -164,9 +166,44 @@ def cal_slope_mom(stock):
 
 # cal_slope_mom(stock="sh.600570.csv")
 
-
+#
 # futures = [cal_slope_mom.remote(stock) for stock in tqdm(df_list)]
 # ray.get(futures)
+@ray.remote(num_cpus=20)
+def fix_index(stock):
+    try:
+        df_origin = pd.read_csv(os.path.join(df_path, stock))
+        df_origin["DayPct"] = df_origin["close"].pct_change(1)
+        df_origin["DayPct"] = df_origin["DayPct"].shift(-1)
+
+        df_origin["Day5Pct"] = df_origin["close"].pct_change(5)
+        df_origin["Day5Pct"] = df_origin["Day5Pct"].shift(-5)
+
+        df_origin = df_origin[["date", "DayPct", "Day5Pct"]]
+
+        df_fix = pd.read_csv(os.path.join("/root/adolf/dataset/stock/handle_stock/mom_res", stock))
+        try:
+            del df_fix["DayPct"]
+        except:
+            pass
+        try:
+            del df_fix["Day5Pct"]
+        except:
+            pass
+        try:
+            del df_fix["Day5Pct_x"]
+        except:
+            pass
+        df_new = pd.merge(df_origin, df_fix, on=["date"])
+        df_new.to_csv(os.path.join("/root/adolf/dataset/stock/handle_stock/mom_res", stock), index=False)
+    except Exception as e:
+        # print(e)
+        print(stock)
+
+
+df_list_2 = os.listdir("/root/adolf/dataset/stock/handle_stock/mom_res")
+futures = [fix_index.remote(stock) for stock in tqdm(df_list_2)]
+ray.get(futures)
 
 
 def cal_one_day_mom(_df, _time_period=30):
@@ -189,13 +226,18 @@ def cal_one_day_mom(_df, _time_period=30):
     mom = slope * r_value ** 2
 
     gap_sum = sum(_df["gap"])
-    return slope, mom, gap_sum, _df.tail(1)["long"].item(), _df.tail(1)["value"].item()
+    return slope, mom, gap_sum, _df.tail(1)["long"].item(), _df.tail(1)["value"].item(), _df.tail(1)["name"].item()
 
 
-def one_day_choose():
-    df_path_ = "/data3/stock_data/stock_data/real_data/bs/pre_d"
+today = datetime.date.today().strftime("%y-%m-%d")
+
+
+# today = today.strftime("%y-%m-%d")
+
+def one_day_choose(df_path_):
     df_list_ = os.listdir(df_path_)
     result_ = {
+        "stock_code": [],
         "stock_name": [],
         "slope": [],
         "mom": [],
@@ -212,8 +254,12 @@ def one_day_choose():
             print(stock)
         if len(df) < 100:
             continue
-        slope, mom, gap_sum, long, value = cal_one_day_mom(df, _time_period=20)
-        result_["stock_name"].append(stock.replace(".csv", ""))
+
+        if df.date.tail(1).item()[2:] != today:
+            continue
+        slope, mom, gap_sum, long, value, name = cal_one_day_mom(df, _time_period=20)
+        result_["stock_code"].append(stock.replace(".csv", ""))
+        result_["stock_name"].append(name)
         result_["slope"].append(slope)
         result_["mom"].append(mom)
         result_["gap_sum"].append(gap_sum)
@@ -221,18 +267,18 @@ def one_day_choose():
         result_["value"].append(value)
 
     result = pd.DataFrame(result_)
-    result = result.sort_values(by="mom")
+    result = result.sort_values(by="mom", ascending=False)
     result = result[result["long"]]
     result = result[result["gap_sum"] < 0.2]
     result = result[result["value"] > 1e+10]
 
-    today = datetime.date.today()
-    result.to_csv("/data3/stock_data/stock_data/real_data/bs/mom_choose/" + today.strftime("%y-%m-%d") + ".csv",
+    result.to_csv("/data3/stock_data/stock_data/real_data/bs/mom_choose/" + today + ".csv",
                   index=False)
-    print(result.tail(20))
+    # print(result.head(20))
 
+# df_path = "/data3/stock_data/stock_data/real_data/bs/pre_d"
+# df_path = "/data3/stock_data/stock_data/real_data/dongcai/qfq"
+# one_day_choose(df_path)
 
-one_day_choose()
-
-df = pd.read_csv("/data3/stock_data/stock_data/real_data/bs/mom_choose/" + today.strftime("%y-%m-%d") + ".csv")
-print(df.tail(20))
+# df = pd.read_csv("/data3/stock_data/stock_data/real_data/bs/mom_choose/" + today + ".csv")
+# print(df.head(1))
